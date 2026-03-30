@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .admin-info { background: #3498db; color: white; padding: 8px 15px; border-radius: 20px; }
+        .logout-btn { background: #e74c3c; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; }
+        .add-btn { background: #2ecc71; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-bottom: 15px; }
+        .search-box { padding: 8px; width: 100%; max-width: 300px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #3498db; color: white; }
+        .edit-btn { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-right: 5px; }
+        .delete-btn { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .stats { background: #ecf0f1; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap; }
+        .stat-card { background: white; padding: 10px 20px; border-radius: 10px; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal-content input, .modal-content select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .modal-content button {
+            width: 100%;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .close { float: right; cursor: pointer; font-size: 20px; }
+        h2 { margin: 20px 0 10px; font-size: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div><h1>👑 Admin Control Panel</h1><p>Remote user management</p></div>
+            <div><span class="admin-info" id="adminIdDisplay"></span><button class="logout-btn" onclick="logout()">Logout</button></div>
+        </div>
+        <div class="stats" id="stats"></div>
+        <button class="add-btn" onclick="openAddModal()">➕ Add New User</button>
+        <input type="text" class="search-box" id="search" placeholder="Search by email or username..." onkeyup="searchUsers()">
+        <h2>📋 User List</h2>
+        <div style="overflow-x:auto;"><table id="userTable"><thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Phone</th><th>Role</th><th>Created</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+        <h2>📜 Activity Logs</h2>
+        <div style="overflow-x:auto;"><table id="logTable"><thead><tr><th>ID</th><th>User ID</th><th>Action</th><th>IP</th><th>Time</th></tr></thead><tbody></tbody></table></div>
+    </div>
+    <div id="addModal" class="modal"><div class="modal-content"><span class="close" onclick="closeAddModal()">&times;</span><h3>Add User</h3><input id="addUsername" placeholder="Username"><input id="addEmail" placeholder="Email"><input id="addPhone" placeholder="Phone"><input id="addPassword" type="password" placeholder="Password"><select id="addRole"><option value="user">User</option><option value="admin">Admin</option></select><button onclick="addUser()">Create</button></div></div>
+    <div id="editModal" class="modal"><div class="modal-content"><span class="close" onclick="closeEditModal()">&times;</span><h3>Edit User</h3><input type="hidden" id="editId"><input id="editUsername" placeholder="Username"><input id="editEmail" placeholder="Email"><input id="editPhone" placeholder="Phone"><select id="editRole"><option value="user">User</option><option value="admin">Admin</option></select><button onclick="updateUser()">Update</button></div></div>
+    <script>
+        const token = localStorage.getItem('adminToken');
+        const adminId = localStorage.getItem('adminId');
+        if (!token) window.location.href = '/admin-login.html';
+        document.getElementById('adminIdDisplay').innerText = 'Admin: ' + adminId;
+        let allUsers = [];
+        async function loadUsers() {
+            const res = await fetch('/api/admin/users', { headers: { 'Authorization': 'Bearer ' + token } });
+            allUsers = await res.json();
+            displayUsers(allUsers);
+            const total = allUsers.length, admins = allUsers.filter(u=>u.role==='admin').length;
+            document.getElementById('stats').innerHTML = `<div class="stat-card">👥 Total: ${total}</div><div class="stat-card">👑 Admins: ${admins}</div><div class="stat-card">👤 Users: ${total-admins}</div>`;
+        }
+        function displayUsers(users) {
+            const tbody = document.querySelector('#userTable tbody');
+            tbody.innerHTML = '';
+            users.forEach(u => {
+                tbody.innerHTML += `<tr><td>${u.id}</td><td>${u.username||'-'}</td><td>${u.email}</td><td>${u.phone||'-'}</td><td><span style="background:${u.role==='admin'?'#3498db':'#2ecc71'};color:white;padding:2px 8px;border-radius:10px;">${u.role}</span></td><td>${new Date(u.created_at).toLocaleDateString()}</td><td><button class="edit-btn" onclick="openEdit(${u.id})">Edit</button><button class="delete-btn" onclick="deleteUser(${u.id})">Delete</button></td></tr>`;
+            });
+        }
+        function searchUsers() {
+            const s = document.getElementById('search').value.toLowerCase();
+            displayUsers(allUsers.filter(u => u.email.toLowerCase().includes(s) || (u.username && u.username.toLowerCase().includes(s))));
+        }
+        function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
+        function closeAddModal() { document.getElementById('addModal').style.display = 'none'; }
+        async function addUser() {
+            const data = {
+                username: document.getElementById('addUsername').value,
+                email: document.getElementById('addEmail').value,
+                phone: document.getElementById('addPhone').value,
+                password: document.getElementById('addPassword').value,
+                role: document.getElementById('addRole').value
+            };
+            if (!data.email || !data.password) { alert('Email and password required'); return; }
+            const res = await fetch('/api/admin/users', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(data) });
+            if (res.ok) { closeAddModal(); loadUsers(); } else alert('Failed');
+        }
+        function openEdit(id) {
+            const u = allUsers.find(u=>u.id===id);
+            document.getElementById('editId').value = u.id;
+            document.getElementById('editUsername').value = u.username||'';
+            document.getElementById('editEmail').value = u.email;
+            document.getElementById('editPhone').value = u.phone||'';
+            document.getElementById('editRole').value = u.role;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
+        async function updateUser() {
+            const id = document.getElementById('editId').value;
+            const data = {
+                username: document.getElementById('editUsername').value,
+                email: document.getElementById('editEmail').value,
+                phone: document.getElementById('editPhone').value,
+                role: document.getElementById('editRole').value
+            };
+            const res = await fetch(`/api/admin/users/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify(data) });
+            if (res.ok) { closeEditModal(); loadUsers(); } else alert('Failed');
+        }
+        async function deleteUser(id) {
+            if (!confirm('Delete this user?')) return;
+            const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
+            if (res.ok) loadUsers(); else alert('Failed');
+        }
+        async function loadLogs() {
+            const res = await fetch('/api/admin/logs', { headers: { 'Authorization': 'Bearer ' + token } });
+            const logs = await res.json();
+            const tbody = document.querySelector('#logTable tbody');
+            tbody.innerHTML = '';
+            logs.forEach(l => {
+                tbody.innerHTML += `<tr><td>${l.id}</td><td>${l.user_id||'Guest'}</td><td>${l.action}</td><td>${l.ip_address||'-'}</td><td>${new Date(l.created_at).toLocaleString()}</td></tr>`;
+            });
+        }
+        function logout() { localStorage.clear(); window.location.href = '/admin-login.html'; }
+        loadUsers(); loadLogs();
+    </script>
+</body>
+</html>
