@@ -23,17 +23,19 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Database connection with IPv4 fix
+// Database connection - Force IPv4 by using direct parameters
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  user: 'postgres',
+  password: 'g2iHgVDJlcqPObie',
+  host: 'db.jdntekwhahnkoshitvdh.supabase.co',
+  port: 5432,
+  database: 'postgres',
   ssl: {
     rejectUnauthorized: false,
     require: true
   },
   keepAlive: true,
-  connectionTimeoutMillis: 10000,
-  query_timeout: 10000,
-  statement_timeout: 10000
+  connectionTimeoutMillis: 10000
 });
 
 // Test database connection
