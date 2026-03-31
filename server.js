@@ -1,3 +1,5 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // 🔥 SSL bypass (important)
+
 require('dotenv').config();
 const express = require('express');
 const { Pool } = require('pg');
@@ -24,15 +26,15 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-/* ✅ FIX 1: SSL issue fix */
+/* 🔥 FIXED DB CONNECTION */
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL && !process.env.DATABASE_URL.includes("localhost")
-    ? { rejectUnauthorized: false }
-    : false
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
-/* ✅ FIX 2: DB fail → server stop */
+/* 🔥 INIT DB */
 async function initDatabase() {
   try {
     await pool.query(`
@@ -45,7 +47,7 @@ async function initDatabase() {
         role VARCHAR(20) DEFAULT 'user',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
-      
+
       CREATE TABLE IF NOT EXISTS google_users (
         id SERIAL PRIMARY KEY,
         google_id VARCHAR(255) UNIQUE NOT NULL,
@@ -53,7 +55,7 @@ async function initDatabase() {
         name VARCHAR(100),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
-      
+
       CREATE TABLE IF NOT EXISTS user_logs (
         id SERIAL PRIMARY KEY,
         user_id INTEGER,
@@ -62,14 +64,15 @@ async function initDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+
     console.log('✅ Database initialized');
   } catch (err) {
     console.error('❌ DB init error:', err);
-    process.exit(1); // ❗ DB fail → server stop
+    process.exit(1);
   }
 }
 
-/* ✅ FIX 3: Google callback URL */
+/* 🔥 GOOGLE AUTH */
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -132,6 +135,7 @@ app.post('/api/signup', async (req, res) => {
     if (err.code === '23505') {
       res.status(400).json({ error: 'Email already exists' });
     } else {
+      console.error(err);
       res.status(500).json({ error: 'Database error' });
     }
   }
@@ -179,7 +183,7 @@ app.post('/api/guest', (req, res) => {
   res.json({ token, role: 'guest' });
 });
 
-/* Google Auth */
+/* GOOGLE ROUTES */
 app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
