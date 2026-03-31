@@ -23,8 +23,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Database connection - Force IPv4 by using direct parameters
-const pool = new Pool({
+// Database connection - DIRECT CONFIGURATION with IPv4 fallback
+const poolConfig = {
   user: 'postgres',
   password: 'g2iHgVDJlcqPObie',
   host: 'db.jdntekwhahnkoshitvdh.supabase.co',
@@ -34,14 +34,38 @@ const pool = new Pool({
     rejectUnauthorized: false,
     require: true
   },
+  connectionTimeoutMillis: 15000,
+  idleTimeoutMillis: 30000,
   keepAlive: true,
-  connectionTimeoutMillis: 10000
-});
+  keepAliveInitialDelayMillis: 10000
+};
+
+const pool = new Pool(poolConfig);
 
 // Test database connection
 pool.connect((err, client, release) => {
   if (err) {
     console.error('❌ Database connection error:', err.message);
+    console.error('Error code:', err.code);
+    console.error('Attempting with alternate connection method...');
+    
+    // Try with connection string as fallback
+    const altPool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 15000
+    });
+    
+    altPool.connect((altErr, altClient, altRelease) => {
+      if (altErr) {
+        console.error('❌ Alternate connection also failed:', altErr.message);
+      } else {
+        console.log('✅ Database connected via alternate method');
+        altRelease();
+        // Replace pool with working one (simplified - in production you'd handle this better)
+        Object.assign(pool, altPool);
+      }
+    });
   } else {
     console.log('✅ Database connected successfully');
     release();
@@ -138,6 +162,7 @@ app.post('/api/signup', async (req, res) => {
     if (err.code === '23505') {
       res.status(400).json({ error: 'Email already exists' });
     } else {
+      console.error('Signup error:', err);
       res.status(500).json({ error: 'Database error' });
     }
   }
@@ -162,6 +187,7 @@ app.post('/api/login', async (req, res) => {
     );
     res.json({ token, role: user.role });
   } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -208,6 +234,7 @@ app.get('/api/admin/users', async (req, res) => {
     const result = await pool.query('SELECT id, username, email, phone, role, created_at FROM local_users');
     res.json(result.rows);
   } catch (err) {
+    console.error('Admin users error:', err);
     res.status(401).json({ error: 'Invalid token' });
   }
 });
@@ -233,6 +260,7 @@ app.post('/api/admin/users', async (req, res) => {
     if (err.code === '23505') {
       res.status(400).json({ error: 'Email already exists' });
     } else {
+      console.error('Add user error:', err);
       res.status(500).json({ error: 'Database error' });
     }
   }
@@ -254,6 +282,7 @@ app.put('/api/admin/users/:id', async (req, res) => {
     );
     res.json({ message: 'User updated successfully' });
   } catch (err) {
+    console.error('Update user error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -269,6 +298,7 @@ app.delete('/api/admin/users/:id', async (req, res) => {
     await pool.query('DELETE FROM local_users WHERE id = $1', [req.params.id]);
     res.json({ message: 'User deleted' });
   } catch (err) {
+    console.error('Delete user error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -284,6 +314,7 @@ app.get('/api/admin/logs', async (req, res) => {
     const result = await pool.query('SELECT * FROM user_logs ORDER BY created_at DESC LIMIT 100');
     res.json(result.rows);
   } catch (err) {
+    console.error('Logs error:', err);
     res.status(401).json({ error: 'Invalid token' });
   }
 });
