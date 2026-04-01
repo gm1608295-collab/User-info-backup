@@ -4,6 +4,7 @@
     <title>Login System</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -43,6 +44,7 @@
             cursor: pointer;
             margin: 10px 0;
         }
+        button:disabled { background: #ccc; cursor: not-allowed; }
         .row-buttons { display: flex; gap: 10px; margin: 15px 0; }
         .row-buttons button { background: white; color: #667eea; border: 1px solid #667eea; margin: 0; }
         .link { text-align: center; margin-top: 15px; }
@@ -52,6 +54,9 @@
         .success { background: #efe; color: #3c3; }
         .admin-link { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
         .admin-link a { color: #e74c3c; font-size: 12px; text-decoration: none; }
+        .captcha-container { display: flex; justify-content: center; margin: 15px 0; }
+        .forgot-link { text-align: right; margin-top: -5px; margin-bottom: 10px; }
+        .forgot-link a { font-size: 12px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -60,7 +65,11 @@
             <h2>Sign in</h2>
             <input type="email" id="loginEmail" placeholder="Email">
             <input type="password" id="loginPassword" placeholder="Password">
-            <button onclick="doLogin()">Sign in</button>
+            <div class="forgot-link"><a onclick="showForgot()">Forgot password?</a></div>
+            <div class="captcha-container">
+                <div class="g-recaptcha" data-sitekey="6LcobYosAAAAAEfs-2onaMV2C86o_yE06JeA90vw" data-callback="onLoginCaptcha"></div>
+            </div>
+            <button id="loginBtn" disabled onclick="doLogin()">Sign in</button>
             <div class="row-buttons">
                 <button onclick="doGuest()">Guest</button>
                 <button onclick="window.location.href='/auth/google'">Google</button>
@@ -68,6 +77,7 @@
             <div class="link"><a onclick="showSignup()">Create account</a></div>
             <div class="admin-link"><a href="/admin-login.html">🔐 Admin Access</a></div>
         </div>
+        
         <div id="signupView" style="display:none">
             <h2>Create account</h2>
             <input type="text" id="signupUsername" placeholder="Username">
@@ -75,21 +85,68 @@
             <input type="email" id="signupEmail" placeholder="Email">
             <input type="password" id="signupPassword" placeholder="Password">
             <input type="password" id="signupConfirm" placeholder="Confirm password">
-            <button onclick="doSignup()">Sign up</button>
+            <div class="captcha-container">
+                <div class="g-recaptcha" data-sitekey="6LcobYosAAAAAEfs-2onaMV2C86o_yE06JeA90vw" data-callback="onSignupCaptcha"></div>
+            </div>
+            <button id="signupBtn" disabled onclick="doSignup()">Sign up</button>
             <div class="link"><a onclick="showLogin()">Back to sign in</a></div>
         </div>
+        
+        <div id="forgotView" style="display:none">
+            <h2>Reset password</h2>
+            <input type="email" id="forgotEmail" placeholder="Email">
+            <button onclick="doForgot()">Send reset link</button>
+            <div class="link"><a onclick="showLogin()">Back to sign in</a></div>
+        </div>
+        
         <div id="message" class="message"></div>
     </div>
+
     <script>
+        let loginCaptchaToken = null;
+        let signupCaptchaToken = null;
+        
+        function onLoginCaptcha(token) {
+            loginCaptchaToken = token;
+            document.getElementById('loginBtn').disabled = false;
+        }
+        
+        function onSignupCaptcha(token) {
+            signupCaptchaToken = token;
+            document.getElementById('signupBtn').disabled = false;
+        }
+        
         async function doLogin() {
+            if (!loginCaptchaToken) {
+                showMsg('Please verify you are human', 'error');
+                return;
+            }
+            
+            const captchaRes = await fetch('/api/verify-captcha', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: loginCaptchaToken })
+            });
+            const captchaData = await captchaRes.json();
+            
+            if (!captchaData.success) {
+                showMsg('Captcha verification failed', 'error');
+                return;
+            }
+            
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            if (!email || !password) { showMsg('Fill all fields', 'error'); return; }
+            
+            if (!email || !password) {
+                showMsg('Fill all fields', 'error');
+                return;
+            }
+            
             try {
                 const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ email, password, captchaToken: loginCaptchaToken })
                 });
                 const data = await res.json();
                 if (data.token) {
@@ -100,17 +157,44 @@
                 } else {
                     showMsg(data.error, 'error');
                 }
-            } catch (err) { showMsg('Network error', 'error'); }
+            } catch (err) {
+                showMsg('Network error', 'error');
+            }
         }
         
         async function doSignup() {
+            if (!signupCaptchaToken) {
+                showMsg('Please verify you are human', 'error');
+                return;
+            }
+            
+            const captchaRes = await fetch('/api/verify-captcha', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: signupCaptchaToken })
+            });
+            const captchaData = await captchaRes.json();
+            
+            if (!captchaData.success) {
+                showMsg('Captcha verification failed', 'error');
+                return;
+            }
+            
             const username = document.getElementById('signupUsername').value;
             const phone = document.getElementById('signupPhone').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
             const confirm = document.getElementById('signupConfirm').value;
-            if (!email || !password) { showMsg('Email and password required', 'error'); return; }
-            if (password !== confirm) { showMsg('Passwords do not match', 'error'); return; }
+            
+            if (!email || !password) {
+                showMsg('Email and password required', 'error');
+                return;
+            }
+            if (password !== confirm) {
+                showMsg('Passwords do not match', 'error');
+                return;
+            }
+            
             try {
                 const res = await fetch('/api/signup', {
                     method: 'POST',
@@ -124,7 +208,9 @@
                 } else {
                     showMsg(data.error, 'error');
                 }
-            } catch (err) { showMsg('Network error', 'error'); }
+            } catch (err) {
+                showMsg('Network error', 'error');
+            }
         }
         
         async function doGuest() {
@@ -137,6 +223,19 @@
             }
         }
         
+        async function doForgot() {
+            const email = document.getElementById('forgotEmail').value;
+            if (!email) { showMsg('Enter email', 'error'); return; }
+            const res = await fetch('/api/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            showMsg(data.message, 'success');
+            setTimeout(() => showLogin(), 2000);
+        }
+        
         function showMsg(msg, type) {
             const m = document.getElementById('message');
             m.className = 'message ' + type;
@@ -147,13 +246,24 @@
         function showLogin() {
             document.getElementById('loginView').style.display = 'block';
             document.getElementById('signupView').style.display = 'none';
+            document.getElementById('forgotView').style.display = 'none';
         }
+        
         function showSignup() {
             document.getElementById('loginView').style.display = 'none';
             document.getElementById('signupView').style.display = 'block';
+            document.getElementById('forgotView').style.display = 'none';
         }
         
-        if (localStorage.getItem('token')) window.location.href = '/dashboard.html';
+        function showForgot() {
+            document.getElementById('loginView').style.display = 'none';
+            document.getElementById('signupView').style.display = 'none';
+            document.getElementById('forgotView').style.display = 'block';
+        }
+        
+        if (localStorage.getItem('token')) {
+            window.location.href = '/dashboard.html';
+        }
     </script>
 </body>
 </html>
