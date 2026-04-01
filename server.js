@@ -7,11 +7,11 @@ const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 app.use(express.static('public'));
@@ -23,8 +23,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Database connection - DIRECT CONFIGURATION with IPv4 fallback
-const poolConfig = {
+const pool = new Pool({
   user: 'postgres',
   password: 'g2iHgVDJlcqPObie',
   host: 'db.jdntekwhahnkoshitvdh.supabase.co',
@@ -34,45 +33,19 @@ const poolConfig = {
     rejectUnauthorized: false,
     require: true
   },
-  connectionTimeoutMillis: 15000,
-  idleTimeoutMillis: 30000,
   keepAlive: true,
-  keepAliveInitialDelayMillis: 10000
-};
+  connectionTimeoutMillis: 10000
+});
 
-const pool = new Pool(poolConfig);
-
-// Test database connection
 pool.connect((err, client, release) => {
   if (err) {
     console.error('❌ Database connection error:', err.message);
-    console.error('Error code:', err.code);
-    console.error('Attempting with alternate connection method...');
-    
-    // Try with connection string as fallback
-    const altPool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
-      connectionTimeoutMillis: 15000
-    });
-    
-    altPool.connect((altErr, altClient, altRelease) => {
-      if (altErr) {
-        console.error('❌ Alternate connection also failed:', altErr.message);
-      } else {
-        console.log('✅ Database connected via alternate method');
-        altRelease();
-        // Replace pool with working one (simplified - in production you'd handle this better)
-        Object.assign(pool, altPool);
-      }
-    });
   } else {
     console.log('✅ Database connected successfully');
     release();
   }
 });
 
-// Initialize database tables
 async function initDatabase() {
   try {
     await pool.query(`
@@ -109,7 +82,6 @@ async function initDatabase() {
 }
 initDatabase();
 
-// Google OAuth
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -140,12 +112,21 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// Captcha bypass
+// ============ reCAPTCHA ============
 app.post('/api/verify-captcha', async (req, res) => {
-  res.json({ success: true });
+  const { token } = req.body;
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  
+  try {
+    const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`);
+    const data = await response.json();
+    res.json({ success: data.success });
+  } catch (error) {
+    res.json({ success: false });
+  }
 });
 
-// Signup
+// ============ SIGNUP ============
 app.post('/api/signup', async (req, res) => {
   const { username, phone, email, password, confirmPassword } = req.body;
   if (password !== confirmPassword) {
@@ -162,15 +143,26 @@ app.post('/api/signup', async (req, res) => {
     if (err.code === '23505') {
       res.status(400).json({ error: 'Email already exists' });
     } else {
-      console.error('Signup error:', err);
       res.status(500).json({ error: 'Database error' });
     }
   }
 });
 
-// Login
+// ============ LOGIN (with reCAPTCHA) ============
 app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, captchaToken } = req.body;
+  
+  if (!captchaToken) {
+    return res.status(400).json({ error: 'Please verify you are human' });
+  }
+  
+  const captchaRes = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`);
+  const captchaData = await captchaRes.json();
+  
+  if (!captchaData.success) {
+    return res.status(400).json({ error: 'Captcha verification failed' });
+  }
+  
   try {
     const result = await pool.query('SELECT * FROM local_users WHERE email = $1', [email]);
     if (result.rows.length === 0) {
@@ -187,12 +179,11 @@ app.post('/api/login', async (req, res) => {
     );
     res.json({ token, role: user.role });
   } catch (err) {
-    console.error('Login error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// Guest login
+// ============ GUEST LOGIN ============
 app.post('/api/guest', (req, res) => {
   const token = jwt.sign(
     { type: 'guest', email: 'guest@example.com', role: 'guest' },
@@ -201,7 +192,7 @@ app.post('/api/guest', (req, res) => {
   res.json({ token, role: 'guest' });
 });
 
-// Google Auth routes
+// ============ GOOGLE AUTH ============
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google', { session: false, failureRedirect: '/' }), (req, res) => {
   const token = jwt.sign(
@@ -211,7 +202,7 @@ app.get('/auth/google/callback', passport.authenticate('google', { session: fals
   res.redirect(`/dashboard.html?token=${token}`);
 });
 
-// Admin verify
+// ============ ADMIN ============
 app.post('/api/admin/verify', (req, res) => {
   const { adminId } = req.body;
   const validIds = ['ADMIN001', 'ADMIN002', 'MASTER2024'];
@@ -223,7 +214,6 @@ app.post('/api/admin/verify', (req, res) => {
   }
 });
 
-// Admin - Get users
 app.get('/api/admin/users', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
@@ -234,12 +224,10 @@ app.get('/api/admin/users', async (req, res) => {
     const result = await pool.query('SELECT id, username, email, phone, role, created_at FROM local_users');
     res.json(result.rows);
   } catch (err) {
-    console.error('Admin users error:', err);
     res.status(401).json({ error: 'Invalid token' });
   }
 });
 
-// Admin - Add user
 app.post('/api/admin/users', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
@@ -260,13 +248,11 @@ app.post('/api/admin/users', async (req, res) => {
     if (err.code === '23505') {
       res.status(400).json({ error: 'Email already exists' });
     } else {
-      console.error('Add user error:', err);
       res.status(500).json({ error: 'Database error' });
     }
   }
 });
 
-// Admin - Update user
 app.put('/api/admin/users/:id', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
@@ -282,12 +268,10 @@ app.put('/api/admin/users/:id', async (req, res) => {
     );
     res.json({ message: 'User updated successfully' });
   } catch (err) {
-    console.error('Update user error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
-// Admin - Delete user
 app.delete('/api/admin/users/:id', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
@@ -298,12 +282,10 @@ app.delete('/api/admin/users/:id', async (req, res) => {
     await pool.query('DELETE FROM local_users WHERE id = $1', [req.params.id]);
     res.json({ message: 'User deleted' });
   } catch (err) {
-    console.error('Delete user error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
-// Admin - Get logs
 app.get('/api/admin/logs', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
@@ -314,17 +296,14 @@ app.get('/api/admin/logs', async (req, res) => {
     const result = await pool.query('SELECT * FROM user_logs ORDER BY created_at DESC LIMIT 100');
     res.json(result.rows);
   } catch (err) {
-    console.error('Logs error:', err);
     res.status(401).json({ error: 'Invalid token' });
   }
 });
 
-// Logout
 app.post('/api/logout', (req, res) => {
   res.json({ message: 'Logged out' });
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
