@@ -117,23 +117,6 @@
         }
         
         async function doLogin() {
-            if (!loginCaptchaToken) {
-                showMsg('Please verify you are human', 'error');
-                return;
-            }
-            
-            const captchaRes = await fetch('/api/verify-captcha', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: loginCaptchaToken })
-            });
-            const captchaData = await captchaRes.json();
-            
-            if (!captchaData.success) {
-                showMsg('Captcha verification failed', 'error');
-                return;
-            }
-            
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             
@@ -146,7 +129,7 @@
                 const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password, captchaToken: loginCaptchaToken })
+                    body: JSON.stringify({ email, password })
                 });
                 const data = await res.json();
                 if (data.token) {
@@ -163,23 +146,6 @@
         }
         
         async function doSignup() {
-            if (!signupCaptchaToken) {
-                showMsg('Please verify you are human', 'error');
-                return;
-            }
-            
-            const captchaRes = await fetch('/api/verify-captcha', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: signupCaptchaToken })
-            });
-            const captchaData = await captchaRes.json();
-            
-            if (!captchaData.success) {
-                showMsg('Captcha verification failed', 'error');
-                return;
-            }
-            
             const username = document.getElementById('signupUsername').value;
             const phone = document.getElementById('signupPhone').value;
             const email = document.getElementById('signupEmail').value;
