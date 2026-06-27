@@ -23,8 +23,8 @@ const io = new Server(server, {
     transports: ['polling', 'websocket']
 });
 
-// ✅ Dashboard Route ကို အရင်ထားပါ (ဒါမှ /dashboard ကို ဦးစားပေးမယ်)
-app.get('/dashboard', (req, res) => {
+// ✅ ဒါကို ပြောင်းကြည့်ပါ
+app.get('/dashboard.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
