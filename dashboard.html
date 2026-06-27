@@ -386,30 +386,114 @@
         </div>
         
         <div class="sidebar-menu-area">
-            <div class="sidebar-section-title">Main Menu</div>
-            <a href="/topup.html" class="s-item"><img src="https://i.ibb.co/3yZY2YxQ/15d0577a27d35275599d24192cd54620.jpg" class="menu-icon-img" onerror="this.style.display='none'">Top Up</a>
-            <a href="/buycode.html" class="s-item"><img src="https://i.ibb.co/xKBM4tKK/a9a00eb6fcd713fa39f9a0b7ab6e5342-1.jpg" class="menu-icon-img" onerror="this.style.display='none'">Buy Code MLBB</a>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section-title">Account</div>
-            <a href="/data.html" class="s-item"><img src="https://i.ibb.co/bRDx3yD3/4f7e7f43f0f304f7396742b87dadc527.jpg" class="menu-icon-img" onerror="this.style.display='none'">Data</a>
-            <a href="/history.html" class="s-item"><img src="https://i.ibb.co/xSRcr1sT/09f582fda7fabf47764bc3265a68f522.jpg" class="menu-icon-img" onerror="this.style.display='none'">History</a>
-            <a href="/password.html" class="s-item"><img src="https://i.ibb.co/6RVHVKgz/88787aaf36b908ef3c59ef2b634e1730.jpg" class="menu-icon-img" onerror="this.style.display='none'">Password</a>
-            <a href="/recovery.html" class="s-item"><img src="https://i.ibb.co/279szJJ3/ac0453045ae108755715ea28868021e3.jpg" class="menu-icon-img" onerror="this.style.display='none'">Recovery</a>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section-title">Support</div>
-            <a href="/contact.html" class="s-item"><img src="https://i.ibb.co/537V1P7/a3122d2eb543d4f189aa471ddc54c01e.jpg" class="menu-icon-img" onerror="this.style.display='none'">Contact</a>
-            <a href="/aboutredeem.html" class="s-item"><img src="https://i.ibb.co/S7swb5ps/de30ff8bc3ee4309b278457c2cc4c9bb.jpg" class="menu-icon-img" onerror="this.style.display='none'">About Redeem</a>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section-title">Event Updates</div>
-            <a href="/events.html" class="s-item"><img src="https://i.ibb.co/S7swb5ps/de30ff8bc3ee4309b278457c2cc4c9bb.jpg" class="menu-icon-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-calendar-alt\'></i>'">ဒီလအတွက် Event Update များ</a>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section-title">Resources</div>
-            <a href="/websites.html" class="s-item"><img src="https://i.ibb.co/27ZxbYFv/62df54008725a0abf388e46d249cccd5.jpg" class="menu-icon-img" onerror="this.style.display='none'">တရားဝင် ဝဘ်ဆိုဒ်များ</a>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section-title">Game & Exchange</div>
-            <a href="/game.html" class="s-item"><img src="https://i.ibb.co/WvvX0BwZ/27f06e0c24137909f6d66bb3146b69da.jpg" class="menu-icon-img" onerror="this.style.display='none'">Lucky Spin 🎰</a>
-            <a href="/exchange.html" class="s-item"><img src="https://i.ibb.co/7qwKSdn/6b7de186ff2442f54067982c5309e613.jpg" class="menu-icon-img" onerror="this.style.display='none'">USD Exchange 💱</a>
-            <a href="/chat.html" class="s-item"><img src="https://i.ibb.co/qL5zGMQJ/b33f0d10bab5c0d68a006844f7eda264.jpg" class="menu-icon-img" onerror="this.style.display='none'">Chat<span id="chatBadge" style="display:none;background:var(--r);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;margin-left:auto">0</span></a>
+    <div class="sidebar-section-title">Main Menu</div>
+    
+    <!-- ✅ Top Up (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/3yZY2YxQ/15d0577a27d35275599d24192cd54620.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">Top Up</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+
+    <!-- ✅ Buy Code MLBB (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/xKBM4tKK/a9a00eb6fcd713fa39f9a0b7ab6e5342-1.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">Buy Code MLBB</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+    
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-title">Account</div>
+
+    <!-- ✅ Data (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/bRDx3yD3/4f7e7f43f0f304f7396742b87dadc527.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">Data</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+
+    <!-- ✅ History (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/xSRcr1sT/09f582fda7fabf47764bc3265a68f522.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">History</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+
+    <!-- ✅ Password (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/6RVHVKgz/88787aaf36b908ef3c59ef2b634e1730.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">Password</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+
+    <!-- ✅ Recovery (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/279szJJ3/ac0453045ae108755715ea28868021e3.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">Recovery</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+    
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-title">Support</div>
+
+    <!-- ✅ Contact (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/537V1P7/a3122d2eb543d4f189aa471ddc54c01e.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">Contact</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+
+    <!-- ✅ About Redeem (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/S7swb5ps/de30ff8bc3ee4309b278457c2cc4c9bb.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">About Redeem</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-title">Event Updates</div>
+
+    <!-- ✅ Event Updates (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/S7swb5ps/de30ff8bc3ee4309b278457c2cc4c9bb.jpg" class="menu-icon-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-calendar-alt\' style=\'opacity: 0.5;\'></i>'">
+        <span style="color: #fff;">ဒီလအတွက် Event Update များ</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+    
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-title">Resources</div>
+
+    <!-- ✅ Websites (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/27ZxbYFv/62df54008725a0abf388e46d249cccd5.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">တရားဝင် ဝဘ်ဆိုဒ်များ</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-title">Game & Exchange</div>
+
+    <!-- ✅ Lucky Spin (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/WvvX0BwZ/27f06e0c24137909f6d66bb3146b69da.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">Lucky Spin 🎰</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+
+    <!-- ✅ USD Exchange (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/7qwKSdn/6b7de186ff2442f54067982c5309e613.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">USD Exchange 💱</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
+
+    <!-- ✅ Chat (ပိတ်ထားပြီး "ပြုလုပ်နေဆဲ" ပြမယ်) -->
+    <div class="s-item" style="opacity: 0.5; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.02);">
+        <img src="https://i.ibb.co/qL5zGMQJ/b33f0d10bab5c0d68a006844f7eda264.jpg" class="menu-icon-img" onerror="this.style.display='none'">
+        <span style="color: #fff;">Chat</span>
+        <span id="chatBadge" style="display:none;background:var(--r);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;margin-left:auto">0</span>
+        <span style="font-size: 9px; background: rgba(243, 156, 18, 0.2); color: #f39c12; padding: 2px 8px; border-radius: 10px; margin-left: auto;">ပြုလုပ်နေဆဲ</span>
+    </div>
         </div>
         <div class="sidebar-logout-area"><button class="logout-btn" onclick="closeSidebar(); showLogoutConfirm();"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
     </div>
