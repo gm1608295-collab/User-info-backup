@@ -1,6 +1,5 @@
 const express = require('express');
-const https = require('https');
-const fs = require('fs');
+const http = require('http'); // ✅ http ကိုပဲ သုံးမယ်
 const { Server } = require('socket.io');
 const cors = require('cors');
 const path = require('path');
@@ -20,15 +19,8 @@ const db = {
     roomIdCounter: 1
 };
 
-// ✅ HTTPS Options (Render အတွက် Certificate မလိုပါဘူး)
-// Render က auto-generate လုပ်ပေးတဲ့အတွက် ဒီအတိုင်းထားရင် အဆင်ပြေပါတယ်
-const options = {
-    key: fs.readFileSync('./privkey.pem'),  // Local မှာ စမ်းရင် ဒါတွေလိုမယ်
-    cert: fs.readFileSync('./cert.pem')     // Render မှာတော့ ဒါတွေမလိုပါဘူး
-};
-
-// ✅ Server Create (HTTPS)
-const server = https.createServer(app);
+// ✅ Server Create (HTTP) - Render က HTTPS ကို auto-convert လုပ်ပေးမယ်
+const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
 // ✅ Frontend Route (chat.html)
@@ -146,6 +138,6 @@ function getRoomListForUser(userId) {
 // ==================== START SERVER ====================
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`✅ HTTPS Chat Server running on port ${PORT}`);
+    console.log(`✅ Test Chat Server running on port ${PORT}`);
     console.log(`📌 Database: In-Memory (No PostgreSQL)`);
 });
