@@ -7,7 +7,7 @@ const path = require('path');
 const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
-app.use(express.static(__dirname)); // ✅ Dashboard နဲ့ Chat HTML တွေကို ရှာဖို့
+app.use(express.static(__dirname));
 
 // ==================== IN-MEMORY DATABASE (Chat & Users) ====================
 const db = {
@@ -23,19 +23,17 @@ const io = new Server(server, {
     transports: ['polling', 'websocket']
 });
 
-// ✅ ဒါကို ပြောင်းကြည့်ပါ
-app.get('/dashboard.html', (req, res) => {
+// ✅ ဒါကို ပြင်လိုက်ပါ။ Root (/) က Dashboard ကို ပြမယ်။
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-// ✅ Chat Route (Root) ကို အောက်မှာထားပါ
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'chat.html'));
+// ✅ Dashboard Route ကို ဒီအတိုင်း ထားနိုင်ပါတယ် (သို့) ဖယ်လို့လည်းရပါတယ်။
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-// ✅ ==================== DASHBOARD MOCK APIs (Test Data) ====================
-
-// 1. Slider Images
+// ✅ ==================== DASHBOARD MOCK APIs ====================
 app.get('/api/slider_images', (req, res) => {
     res.json({ 
         success: true, 
@@ -46,7 +44,6 @@ app.get('/api/slider_images', (req, res) => {
     });
 });
 
-// 2. Notice (Dashboard Notice)
 app.get('/api/notice', (req, res) => {
     res.json({ 
         success: true, 
@@ -56,36 +53,30 @@ app.get('/api/notice', (req, res) => {
     });
 });
 
-// 3. Video Player
 app.get('/api/video', (req, res) => {
     res.json({ 
         success: true, 
-        url: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1', // Test Video
+        url: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1',
         isYouTube: true 
     });
 });
 
-// 4. User Balance (Test Data)
 app.post('/api/get_balance', (req, res) => {
-    res.json({ balance: 50000 }); // Test Balance
+    res.json({ balance: 50000 });
 });
 
-// 5. Check Banned (Test - Never Banned)
 app.post('/api/check_banned', (req, res) => {
     res.json({ banned: false });
 });
 
-// 6. Chat Unread Badge (Test - No Unread)
 app.post('/api/chat/unread', (req, res) => {
     res.json({ count: 0 });
 });
 
-// 7. Logout (Test)
 app.post('/api/logout', (req, res) => {
     res.json({ success: true });
 });
 
-// 8. Page Status (Test - All ON)
 app.get('/api/admin/page_status', (req, res) => {
     res.json({ 
         pages: [
@@ -95,11 +86,10 @@ app.get('/api/admin/page_status', (req, res) => {
     });
 });
 
-// ✅ ==================== CHAT SYSTEM (Socket.io) ====================
+// ✅ ==================== CHAT SYSTEM ====================
 io.on('connection', (socket) => {
     console.log('✅ Socket connected:', socket.id);
 
-    // 1. User Login
     socket.on('login', (data) => {
         let username = data.username || 'Guest_' + db.userIdCounter;
         let userId = db.userIdCounter++;
@@ -111,7 +101,6 @@ io.on('connection', (socket) => {
         console.log(`👤 User logged in: ${username} (ID: ${userId})`);
     });
 
-    // 2. Create Room
     socket.on('create_room', (data) => {
         const roomName = data.roomName || 'New Chat';
         const userId = socket.userId;
@@ -125,7 +114,6 @@ io.on('connection', (socket) => {
         console.log(`📌 Room created: ${roomName} (ID: ${roomId})`);
     });
 
-    // 3. Join Room
     socket.on('join_room', (roomId) => {
         const room = db.rooms[roomId];
         if (!room) return socket.emit('error', 'Room not found');
@@ -137,7 +125,6 @@ io.on('connection', (socket) => {
         console.log(`📌 User ${socket.username} joined room: ${roomId}`);
     });
 
-    // 4. Send Message
     socket.on('send_message', (data) => {
         const roomId = data.roomId;
         const text = data.message;
@@ -149,12 +136,10 @@ io.on('connection', (socket) => {
         console.log(`📨 ${socket.username} sent: ${text}`);
     });
 
-    // 5. Get Rooms
     socket.on('get_rooms', () => {
         socket.emit('room_list', getRoomListForUser(socket.userId));
     });
 
-    // 6. Disconnect
     socket.on('disconnect', () => {
         console.log('❌ Socket disconnected:', socket.id);
         for (const [userId, user] of Object.entries(db.users)) {
@@ -166,7 +151,6 @@ io.on('connection', (socket) => {
     });
 });
 
-// ==================== HELPER FUNCTION ====================
 function getRoomListForUser(userId) {
     return Object.values(db.rooms)
         .filter(r => r.participants.includes(userId))
@@ -178,11 +162,9 @@ function getRoomListForUser(userId) {
         }));
 }
 
-// ==================== START SERVER ====================
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Test Server running on port ${PORT}`);
-    console.log(`📌 Dashboard: /dashboard`);
-    console.log(`💬 Chat: / (Root)`);
+    console.log(`📌 Dashboard: / (Root)`);
     console.log(`📌 Database: In-Memory (No PostgreSQL)`);
 });
