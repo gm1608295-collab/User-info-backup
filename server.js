@@ -1,296 +1,142 @@
-require('dotenv').config();
 const express = require('express');
-const { Pool } = require('pg');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const http = require('http');
+const { Server } = require('socket.io');
 const cors = require('cors');
-const session = require('express-session');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
+app.use(cors({ origin: '*' }));
 app.use(express.json());
-app.use(cors());
-app.use(express.static('public'));
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'secretkey',
-  resave: false,
-  saveUninitialized: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(express.static(path.join(__dirname, 'public')));
 
-const pool = new Pool({
-  user: 'postgres',
-  password: 'g2iHgVDJlcqPObie',
-  host: 'db.jdntekwhahnkoshitvdh.supabase.co',
-  port: 5432,
-  database: 'postgres',
-  ssl: {
-    rejectUnauthorized: false,
-    require: true
-  },
-  keepAlive: true,
-  connectionTimeoutMillis: 10000
+// In-Memory Database (Chat Rooms & Messages)
+const db = {
+    rooms: {}, // roomId -> { id, name, type, participants: [userId], messages: [], createdBy }
+    users: {}, // userId -> { id, username, socketId }
+    roomIdCounter: 1,
+    userIdCounter: 1
+};
+
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: '*' } });
+
+io.on('connection', (socket) => {
+    console.log('✅ Socket connected:', socket.id);
+
+    // 1. User Login / Register
+    socket.on('login', (data) => {
+        let userId = data.userId;
+        let username = data.username || 'Guest_' + db.userIdCounter;
+
+        // If user already exists, update socket
+        if (userId && db.users[userId]) {
+            db.users[userId].socketId = socket.id;
+            socket.userId = userId;
+            socket.username = db.users[userId].username;
+        } else {
+            // Create new user
+            userId = db.userIdCounter++;
+            db.users[userId] = { id: userId, username, socketId: socket.id };
+            socket.userId = userId;
+            socket.username = username;
+        }
+
+        socket.emit('login_success', { userId, username });
+        socket.emit('room_list', getRoomListForUser(userId));
+        console.log(`👤 User logged in: ${username} (ID: ${userId})`);
+    });
+
+    // 2. Create Room
+    socket.on('create_room', (data) => {
+        const roomName = data.roomName || 'New Chat';
+        const userId = socket.userId;
+        if (!userId) return;
+
+        const roomId = db.roomIdCounter++;
+        const newRoom = {
+            id: roomId,
+            name: roomName,
+            type: data.type || 'private',
+            participants: [userId],
+            messages: [],
+            createdBy: userId
+        };
+        db.rooms[roomId] = newRoom;
+        socket.join('room_' + roomId);
+
+        socket.emit('room_created', newRoom);
+        io.emit('room_list_update'); // Update all users
+        console.log(`📌 Room created: ${roomName} (ID: ${roomId})`);
+    });
+
+    // 3. Join Room
+    socket.on('join_room', (roomId) => {
+        const room = db.rooms[roomId];
+        if (!room) return socket.emit('error', 'Room not found');
+
+        if (!room.participants.includes(socket.userId)) {
+            room.participants.push(socket.userId);
+        }
+        socket.join('room_' + roomId);
+        
+        // Send existing messages
+        socket.emit('room_joined', { room, messages: room.messages });
+        console.log(`📌 User ${socket.username} joined room: ${roomId}`);
+    });
+
+    // 4. Send Message
+    socket.on('send_message', (data) => {
+        const roomId = data.roomId;
+        const text = data.message;
+        const room = db.rooms[roomId];
+        if (!room || !text) return;
+
+        const msg = {
+            id: Date.now(),
+            senderId: socket.userId,
+            username: socket.username,
+            text: text,
+            timestamp: new Date().toLocaleTimeString(),
+            isMine: false
+        };
+        room.messages.push(msg);
+
+        // Send to everyone in the room
+        io.to('room_' + roomId).emit('new_message', { ...msg, isMine: false });
+        console.log(`📨 ${socket.username}: ${text}`);
+    });
+
+    // 5. Get Rooms
+    socket.on('get_rooms', () => {
+        socket.emit('room_list', getRoomListForUser(socket.userId));
+    });
+
+    // 6. Disconnect
+    socket.on('disconnect', () => {
+        console.log('❌ Socket disconnected:', socket.id);
+        // Remove user from memory if socket disconnects
+        for (const [userId, user] of Object.entries(db.users)) {
+            if (user.socketId === socket.id) {
+                delete db.users[userId];
+                break;
+            }
+        }
+    });
 });
 
-pool.connect((err, client, release) => {
-  if (err) {
-    console.error('❌ Database connection error:', err.message);
-  } else {
-    console.log('✅ Database connected successfully');
-    release();
-  }
-});
-
-async function initDatabase() {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS local_users (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(50),
-        phone VARCHAR(20),
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password_hash VARCHAR(255) NOT NULL,
-        role VARCHAR(20) DEFAULT 'user',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-      
-      CREATE TABLE IF NOT EXISTS google_users (
-        id SERIAL PRIMARY KEY,
-        google_id VARCHAR(255) UNIQUE NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        name VARCHAR(100),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-      
-      CREATE TABLE IF NOT EXISTS user_logs (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER,
-        action VARCHAR(255),
-        ip_address VARCHAR(45),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-    console.log('✅ Database tables initialized');
-  } catch (err) {
-    console.error('❌ DB init error:', err.message);
-  }
+function getRoomListForUser(userId) {
+    return Object.values(db.rooms)
+        .filter(r => r.participants.includes(userId))
+        .map(r => ({
+            id: r.id,
+            name: r.name,
+            type: r.type,
+            lastMessage: r.messages.length > 0 ? r.messages[r.messages.length-1].text : 'No messages'
+        }));
 }
-initDatabase();
 
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3000/auth/google/callback'
-}, async (accessToken, refreshToken, profile, done) => {
-  try {
-    const result = await pool.query('SELECT * FROM google_users WHERE google_id = $1', [profile.id]);
-    if (result.rows.length > 0) {
-      return done(null, result.rows[0]);
-    }
-    const insert = await pool.query(
-      'INSERT INTO google_users (google_id, email, name) VALUES ($1, $2, $3) RETURNING *',
-      [profile.id, profile.emails[0].value, profile.displayName]
-    );
-    done(null, insert.rows[0]);
-  } catch (err) {
-    done(err);
-  }
-}));
-
-passport.serializeUser((user, done) => done(null, user.id));
-passport.deserializeUser(async (id, done) => {
-  try {
-    const result = await pool.query('SELECT * FROM google_users WHERE id = $1', [id]);
-    done(null, result.rows[0]);
-  } catch (err) {
-    done(err);
-  }
-});
-
-// ============ reCAPTCHA (BYPASSED FOR TESTING) ============
-app.post('/api/verify-captcha', async (req, res) => {
-  // Temporarily bypass captcha - always return success
-  res.json({ success: true });
-});
-
-// ============ SIGNUP ============
-app.post('/api/signup', async (req, res) => {
-  const { username, phone, email, password, confirmPassword } = req.body;
-  if (password !== confirmPassword) {
-    return res.status(400).json({ error: 'Passwords do not match' });
-  }
-  try {
-    const hashed = await bcrypt.hash(password, 10);
-    await pool.query(
-      'INSERT INTO local_users (username, phone, email, password_hash) VALUES ($1, $2, $3, $4)',
-      [username, phone, email, hashed]
-    );
-    res.json({ message: 'Signup successful!' });
-  } catch (err) {
-    if (err.code === '23505') {
-      res.status(400).json({ error: 'Email already exists' });
-    } else {
-      res.status(500).json({ error: 'Database error' });
-    }
-  }
-});
-
-// ============ LOGIN (with bypassed captcha) ============
-app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
-  
-  // Captcha bypass - no verification needed
-  
-  try {
-    const result = await pool.query('SELECT * FROM local_users WHERE email = $1', [email]);
-    if (result.rows.length === 0) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    const user = result.rows[0];
-    const match = await bcrypt.compare(password, user.password_hash);
-    if (!match) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET || 'jwtsecret'
-    );
-    res.json({ token, role: user.role });
-  } catch (err) {
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// ============ GUEST LOGIN ============
-app.post('/api/guest', (req, res) => {
-  const token = jwt.sign(
-    { type: 'guest', email: 'guest@example.com', role: 'guest' },
-    process.env.JWT_SECRET || 'jwtsecret'
-  );
-  res.json({ token, role: 'guest' });
-});
-
-// ============ GOOGLE AUTH ============
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/google/callback', passport.authenticate('google', { session: false, failureRedirect: '/' }), (req, res) => {
-  const token = jwt.sign(
-    { id: req.user.id, email: req.user.email, name: req.user.name, role: 'user' },
-    process.env.JWT_SECRET || 'jwtsecret'
-  );
-  res.redirect(`/dashboard.html?token=${token}`);
-});
-
-// ============ FORGOT PASSWORD ============
-app.post('/api/forgot-password', (req, res) => {
-  res.json({ message: 'Reset link sent to email' });
-});
-
-// ============ ADMIN ============
-app.post('/api/admin/verify', (req, res) => {
-  const { adminId } = req.body;
-  const validIds = ['ADMIN001', 'ADMIN002', 'MASTER2024'];
-  if (validIds.includes(adminId)) {
-    const token = jwt.sign({ adminId, role: 'admin' }, process.env.JWT_SECRET || 'jwtsecret');
-    res.json({ success: true, token });
-  } else {
-    res.json({ success: false, error: 'Invalid Admin ID' });
-  }
-});
-
-app.get('/api/admin/users', async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'jwtsecret');
-    if (decoded.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
-    const result = await pool.query('SELECT id, username, email, phone, role, created_at FROM local_users');
-    res.json(result.rows);
-  } catch (err) {
-    res.status(401).json({ error: 'Invalid token' });
-  }
-});
-
-app.post('/api/admin/users', async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'jwtsecret');
-    if (decoded.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
-    
-    const { username, email, phone, password, role } = req.body;
-    if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
-    const hashed = await bcrypt.hash(password, 10);
-    await pool.query(
-      'INSERT INTO local_users (username, email, phone, password_hash, role) VALUES ($1, $2, $3, $4, $5)',
-      [username || null, email, phone || null, hashed, role || 'user']
-    );
-    res.json({ message: 'User added successfully' });
-  } catch (err) {
-    if (err.code === '23505') {
-      res.status(400).json({ error: 'Email already exists' });
-    } else {
-      res.status(500).json({ error: 'Database error' });
-    }
-  }
-});
-
-app.put('/api/admin/users/:id', async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'jwtsecret');
-    if (decoded.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
-    
-    const { username, email, phone, role } = req.body;
-    await pool.query(
-      'UPDATE local_users SET username = $1, email = $2, phone = $3, role = $4 WHERE id = $5',
-      [username || null, email, phone || null, role, req.params.id]
-    );
-    res.json({ message: 'User updated successfully' });
-  } catch (err) {
-    res.status(500).json({ error: 'Database error' });
-  }
-});
-
-app.delete('/api/admin/users/:id', async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'jwtsecret');
-    if (decoded.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
-    await pool.query('DELETE FROM local_users WHERE id = $1', [req.params.id]);
-    res.json({ message: 'User deleted' });
-  } catch (err) {
-    res.status(500).json({ error: 'Database error' });
-  }
-});
-
-app.get('/api/admin/logs', async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'jwtsecret');
-    if (decoded.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
-    const result = await pool.query('SELECT * FROM user_logs ORDER BY created_at DESC LIMIT 100');
-    res.json(result.rows);
-  } catch (err) {
-    res.status(401).json({ error: 'Invalid token' });
-  }
-});
-
-app.post('/api/logout', (req, res) => {
-  res.json({ message: 'Logged out' });
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ Test Chat Server running on port ${PORT}`);
+    console.log(`📌 Database: In-Memory (No PostgreSQL)`);
 });
