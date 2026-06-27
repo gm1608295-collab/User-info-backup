@@ -10,7 +10,7 @@ app.use(express.json());
 
 // ✅ 1. 'public' folder ကို သေချာရှာဖို့ ဒါကို ထားပါ
 // (အကယ်၍ ခင်ဗျား file တွေကို public folder ထဲထားရင် ဒီအတိုင်းပါ၊ အပြင်မှာထားရင် __dirname ပဲထားပါ)
-app.use(express.static(path.join(__dirname, 'Public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // In-Memory Database (Chat Rooms & Messages)
 const db = {
@@ -26,7 +26,7 @@ const io = new Server(server, { cors: { origin: '*' } });
 // ✅ 2. Frontend ကို ပြဖို့ Route ထည့်ပါ (ဒါမှ Cannot GET / Error ပျောက်မယ်)
 app.get('/', (req, res) => {
     // public folder ထဲက chat.html ကို ခေါ်ပါ
-    res.sendFile(path.join(__dirname, 'Public', 'chat.html'));
+    res.sendFile(path.join(__dirname, 'public', 'chat.html'));
 });
 
 io.on('connection', (socket) => {
