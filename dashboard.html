@@ -189,20 +189,14 @@
                 <span style="font-size:10px;font-weight:bold;letter-spacing:1px;position:relative;z-index:2;color:#f39c12;margin-left:6px;">MENU</span>
             </span>
 
-            <!-- ✅ Advance Test Server Button with Timer (အချိန်အကန့်သတ်နဲ့ ပိတ်ထားမယ်) -->
-            <div id="advanceServerContainer" style="position: absolute; top: 58px; left: 15px; z-index: 10; display: flex; justify-content: flex-start;">
-                <!-- Timer မကုန်သေးရင် ပြမယ် -->
-                <div id="advanceServerTimerDisplay" style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 4px; background: rgba(231, 76, 60, 0.15); border: 1px solid rgba(231, 76, 60, 0.3); color: #e74c3c; font-size: 11px; font-weight: 500;">
-                    <span>ပြန်ဖွင့်ရန်</span>
-                    <span id="advanceTimerText" style="font-family: monospace; font-weight: bold; font-size: 12px; color: #ffd700;">--:--:--</span>
-                </div>
-                <!-- Timer ကုန်သွားရင် ပြမယ် -->
-                <a id="advanceServerButton" href="https://new-version-web-advance-test-server.onrender.com" target="_blank" 
-                   style="display: none; padding: 6px 14px; border-radius: 6px; background: rgba(15, 10, 30, 0.95); border: 2px solid #e74c3c; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-                    <i class="fas fa-flask" style="color: #ffd700; font-size: 14px;"></i>
-                    A.T Server
-                </a>
-            </div>
+            <!-- ✅ Advance Test Server Button (Width ကို စာသားအရှည်အတိုင်း ဖြစ်အောင် ပြင်ထားတယ်) -->
+<div style="position: absolute; top: 58px; left: 15px; z-index: 10; display: flex; justify-content: flex-start;">
+    <a href="https://solo-m-store-security-system-and-user.onrender.com" target="_blank" 
+       style="width: auto; padding: 6px 14px; border-radius: 6px; background: rgba(15, 10, 30, 0.95); border: 2px solid #e74c3c; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+        <i class="fas fa-flask" style="color: #ffd700; font-size: 14px;"></i>
+        Official Server
+    </a>
+</div>
             
             <div class="led-corner-left"></div>
             <div class="led-corner-right"></div>
@@ -464,42 +458,6 @@
             if (!id || id === '------') return;
             navigator.clipboard.writeText(id).then(() => showToast('✅ ID Copied: ' + id)).catch(() => showToast('❌ Failed', 'error'));
         }
-
-        // ==================== ADVANCE SERVER TIMER SYSTEM ====================
-        (function() {
-            const TARGET_DATE = new Date('2026-06-30T14:10:00').getTime();
-            const STORAGE_KEY = 'advance_server_timer_start';
-            let startTime = localStorage.getItem(STORAGE_KEY);
-            if (!startTime) {
-                startTime = Date.now();
-                localStorage.setItem(STORAGE_KEY, startTime);
-            } else {
-                startTime = parseInt(startTime, 10);
-            }
-            function updateTimer() {
-                const now = Date.now();
-                const remaining = TARGET_DATE - now;
-                const timerDisplay = document.getElementById('advanceServerTimerDisplay');
-                const timerText = document.getElementById('advanceTimerText');
-                const serverButton = document.getElementById('advanceServerButton');
-                if (remaining <= 0) {
-                    if (timerDisplay) timerDisplay.style.display = 'none';
-                    if (serverButton) serverButton.style.display = 'flex';
-                    localStorage.removeItem(STORAGE_KEY);
-                    return;
-                }
-                const totalSec = Math.floor(remaining / 1000);
-                const days = Math.floor(totalSec / 86400);
-                const hours = Math.floor((totalSec % 86400) / 3600);
-                const minutes = Math.floor((totalSec % 3600) / 60);
-                const seconds = totalSec % 60;
-                const totalHours = (days * 24) + hours;
-                const timeStr = `${String(totalHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                if (timerText) timerText.textContent = timeStr;
-                setTimeout(updateTimer, 1000);
-            }
-            updateTimer();
-        })();
 
         // ==================== FORCE UPDATE SYSTEM ====================
         let forceUpdateActive = false, forceUpdateData = null;
