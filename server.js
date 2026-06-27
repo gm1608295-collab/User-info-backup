@@ -7,6 +7,9 @@ const path = require('path');
 const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
+
+// ✅ 1. 'public' folder ကို သေချာရှာဖို့ ဒါကို ထားပါ
+// (အကယ်၍ ခင်ဗျား file တွေကို public folder ထဲထားရင် ဒီအတိုင်းပါ၊ အပြင်မှာထားရင် __dirname ပဲထားပါ)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // In-Memory Database (Chat Rooms & Messages)
@@ -20,6 +23,12 @@ const db = {
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
+// ✅ 2. Frontend ကို ပြဖို့ Route ထည့်ပါ (ဒါမှ Cannot GET / Error ပျောက်မယ်)
+app.get('/', (req, res) => {
+    // public folder ထဲက chat.html ကို ခေါ်ပါ
+    res.sendFile(path.join(__dirname, 'public', 'chat.html'));
+});
+
 io.on('connection', (socket) => {
     console.log('✅ Socket connected:', socket.id);
 
@@ -28,13 +37,11 @@ io.on('connection', (socket) => {
         let userId = data.userId;
         let username = data.username || 'Guest_' + db.userIdCounter;
 
-        // If user already exists, update socket
         if (userId && db.users[userId]) {
             db.users[userId].socketId = socket.id;
             socket.userId = userId;
             socket.username = db.users[userId].username;
         } else {
-            // Create new user
             userId = db.userIdCounter++;
             db.users[userId] = { id: userId, username, socketId: socket.id };
             socket.userId = userId;
@@ -65,7 +72,7 @@ io.on('connection', (socket) => {
         socket.join('room_' + roomId);
 
         socket.emit('room_created', newRoom);
-        io.emit('room_list_update'); // Update all users
+        io.emit('room_list_update'); 
         console.log(`📌 Room created: ${roomName} (ID: ${roomId})`);
     });
 
@@ -79,7 +86,6 @@ io.on('connection', (socket) => {
         }
         socket.join('room_' + roomId);
         
-        // Send existing messages
         socket.emit('room_joined', { room, messages: room.messages });
         console.log(`📌 User ${socket.username} joined room: ${roomId}`);
     });
@@ -101,7 +107,6 @@ io.on('connection', (socket) => {
         };
         room.messages.push(msg);
 
-        // Send to everyone in the room
         io.to('room_' + roomId).emit('new_message', { ...msg, isMine: false });
         console.log(`📨 ${socket.username}: ${text}`);
     });
@@ -114,7 +119,6 @@ io.on('connection', (socket) => {
     // 6. Disconnect
     socket.on('disconnect', () => {
         console.log('❌ Socket disconnected:', socket.id);
-        // Remove user from memory if socket disconnects
         for (const [userId, user] of Object.entries(db.users)) {
             if (user.socketId === socket.id) {
                 delete db.users[userId];
