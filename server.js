@@ -1,53 +1,54 @@
 const express = require('express');
-const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
+
+// ✅ CORS: အကုန်လုံးအတွက် ခွင့်ပြုမယ် (Mobile/Desktop/Other)
 app.use(cors({ origin: '*' }));
 app.use(express.json());
+app.use(express.static(__dirname));
 
-// ✅ 1. 'public' folder ကို သေချာရှာဖို့ ဒါကို ထားပါ
-// (အကယ်၍ ခင်ဗျား file တွေကို public folder ထဲထားရင် ဒီအတိုင်းပါ၊ အပြင်မှာထားရင် __dirname ပဲထားပါ)
-app.use(express.static(path.join(__dirname, 'public')));
-
-// In-Memory Database (Chat Rooms & Messages)
+// ✅ In-Memory Database (Chat Data)
 const db = {
-    rooms: {}, // roomId -> { id, name, type, participants: [userId], messages: [], createdBy }
-    users: {}, // userId -> { id, username, socketId }
-    roomIdCounter: 1,
-    userIdCounter: 1
+    users: {},      // { userId: { id, username, socketId } }
+    rooms: {},      // { roomId: { id, name, type, participants: [userId], messages: [], createdBy } }
+    userIdCounter: 1,
+    roomIdCounter: 1
 };
 
-const server = http.createServer(app);
+// ✅ HTTPS Options (Render အတွက် Certificate မလိုပါဘူး)
+// Render က auto-generate လုပ်ပေးတဲ့အတွက် ဒီအတိုင်းထားရင် အဆင်ပြေပါတယ်
+const options = {
+    key: fs.readFileSync('./privkey.pem'),  // Local မှာ စမ်းရင် ဒါတွေလိုမယ်
+    cert: fs.readFileSync('./cert.pem')     // Render မှာတော့ ဒါတွေမလိုပါဘူး
+};
+
+// ✅ Server Create (HTTPS)
+const server = https.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
-// ✅ 2. Frontend ကို ပြဖို့ Route ထည့်ပါ (ဒါမှ Cannot GET / Error ပျောက်မယ်)
+// ✅ Frontend Route (chat.html)
 app.get('/', (req, res) => {
-    // public folder ထဲက chat.html ကို ခေါ်ပါ
-    res.sendFile(path.join(__dirname, 'public', 'chat.html'));
+    res.sendFile(path.join(__dirname, 'chat.html'));
 });
 
+// ==================== SOCKET.IO ====================
 io.on('connection', (socket) => {
     console.log('✅ Socket connected:', socket.id);
 
-    // 1. User Login / Register
+    // 1. User Login (Auto-Guest)
     socket.on('login', (data) => {
-        let userId = data.userId;
         let username = data.username || 'Guest_' + db.userIdCounter;
-
-        if (userId && db.users[userId]) {
-            db.users[userId].socketId = socket.id;
-            socket.userId = userId;
-            socket.username = db.users[userId].username;
-        } else {
-            userId = db.userIdCounter++;
-            db.users[userId] = { id: userId, username, socketId: socket.id };
-            socket.userId = userId;
-            socket.username = username;
-        }
-
+        let userId = db.userIdCounter++;
+        
+        db.users[userId] = { id: userId, username, socketId: socket.id };
+        socket.userId = userId;
+        socket.username = username;
+        
         socket.emit('login_success', { userId, username });
         socket.emit('room_list', getRoomListForUser(userId));
         console.log(`👤 User logged in: ${username} (ID: ${userId})`);
@@ -63,7 +64,7 @@ io.on('connection', (socket) => {
         const newRoom = {
             id: roomId,
             name: roomName,
-            type: data.type || 'private',
+            type: 'private',
             participants: [userId],
             messages: [],
             createdBy: userId
@@ -72,8 +73,8 @@ io.on('connection', (socket) => {
         socket.join('room_' + roomId);
 
         socket.emit('room_created', newRoom);
-        io.emit('room_list_update'); 
-        console.log(`📌 Room created: ${roomName} (ID: ${roomId})`);
+        io.emit('room_list_update');
+        console.log(`📌 Room created: ${roomName} (ID: ${roomId}) by ${socket.username}`);
     });
 
     // 3. Join Room
@@ -99,16 +100,18 @@ io.on('connection', (socket) => {
 
         const msg = {
             id: Date.now(),
+            roomId: roomId,
             senderId: socket.userId,
             username: socket.username,
             text: text,
-            timestamp: new Date().toLocaleTimeString(),
-            isMine: false
+            timestamp: new Date().toISOString(),
+            isRead: false
         };
         room.messages.push(msg);
 
-        io.to('room_' + roomId).emit('new_message', { ...msg, isMine: false });
-        console.log(`📨 ${socket.username}: ${text}`);
+        // ✅ Send to everyone in the room (Cross-Platform)
+        io.to('room_' + roomId).emit('new_message', msg);
+        console.log(`📨 ${socket.username} sent: ${text}`);
     });
 
     // 5. Get Rooms
@@ -128,6 +131,7 @@ io.on('connection', (socket) => {
     });
 });
 
+// ==================== HELPER FUNCTION ====================
 function getRoomListForUser(userId) {
     return Object.values(db.rooms)
         .filter(r => r.participants.includes(userId))
@@ -139,8 +143,9 @@ function getRoomListForUser(userId) {
         }));
 }
 
+// ==================== START SERVER ====================
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`✅ Test Chat Server running on port ${PORT}`);
+    console.log(`✅ HTTPS Chat Server running on port ${PORT}`);
     console.log(`📌 Database: In-Memory (No PostgreSQL)`);
 });
