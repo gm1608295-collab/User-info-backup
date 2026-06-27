@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SOLO M Game Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{--bg:#0c0e27;--p:#1a1f4b;--a:#4a1c7a;--r:#e74c3c;--g:#2ecc71;--w:#f39c12;--b:#3498db;--t:#fff}
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+        html,body{height:auto!important;min-height:100vh!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important}
+        body {
+            background: url('https://i.ibb.co/ZR7QxPfM/b31356c316f2efdb65ef2c8ca4025c89.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--t);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-y: auto !important;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: -1;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .container {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 auto;
+            padding: 0 4px 20px 4px;
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .header{background:linear-gradient(to right,var(--a),var(--p));padding:15px;text-align:center;border-radius:12px;border-bottom:4px solid var(--w);margin-bottom:15px;position:relative;overflow:hidden}
+        .header .brand{font-size:18px;font-weight:bold;color:var(--w);animation:blink 1.5s ease-in-out infinite}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+        .header .subtitle{font-size:11px;opacity:0.8;margin-bottom:5px}
+        .menu-btn{position:absolute;top:12px;left:12px;color:var(--w);font-size:22px;cursor:pointer;z-index:10;width:80px!important;height:38px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);border:2px solid var(--w);border-radius:8px;transition:all 0.3s;gap:6px}
+        .menu-btn:hover{background:rgba(255,255,255,0.2);transform:scale(1.05)}
+        .menu-btn:active{transform:scale(0.95)}
+        .menu-icon-img{width:22px;height:22px;object-fit:contain;border-radius:3px;flex-shrink:0}
+        .menu-btn::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;bottom:-1px;background:linear-gradient(45deg,#ff0000,#ff7300,#fffb00,#48ff00,#00ffd5,#002bff,#7a00ff,#ff00c8,#ff0000);background-size:400% 400%;border-radius:9px;z-index:-1;animation:menuLedBorder 2s linear infinite}
+        .menu-btn::after{content:'';position:absolute;top:1px;left:1px;right:1px;bottom:1px;background:rgba(10,10,30,0.95);border-radius:7px;z-index:-1}
+        @keyframes menuLedBorder{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .menu-btn:hover{box-shadow:0 0 15px rgba(243,156,18,0.5),0 0 30px rgba(74,28,122,0.3)}
+        .content{padding:5px 0;display:flex;flex-direction:column;gap:10px}
+        .time-block{text-align:center}
+        .time-block .time-label{font-size:9px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+        .time-block .time-value{font-size:16px;font-weight:bold;color:var(--w);font-family:'Courier New',monospace}
+        .time-block .date-value{font-size:9px;color:rgba(255,255,255,0.6);margin-top:2px}
+        .time-divider{width:1px;height:35px;background:rgba(255,255,255,0.15)}
+        .time-panel,.id-panel{background:linear-gradient(rgba(12,14,39,0.7),rgba(12,14,39,0.7)),url('https://i.ibb.co/wFKmxrCT/Picsart-26-05-23-23-44-24-799.jpg') center/contain no-repeat}
+        .time-panel{border:1px solid rgba(74,28,122,0.2);border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+        .id-panel{border:1px solid rgba(74,28,122,0.2);border-radius:10px;padding:12px 15px}
+        .id-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px 10px;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(255,255,255,0.08)}
+        .id-row:last-child{margin-bottom:0}
+        .id-label{font-size:11px;color:rgba(255,255,255,0.6);min-width:50px}
+        .id-value{font-size:12px;font-weight:bold;color:var(--t);flex:1;font-family:'Courier New',monospace}
+        .id-email-value{font-size:11px;color:var(--t);flex:1;word-break:break-all}
+        .id-copy-btn{color:var(--b);cursor:pointer;font-size:14px;padding:4px;background:rgba(52,152,219,0.1);border-radius:4px;transition:all 0.2s}
+        .id-copy-btn:hover{background:rgba(52,152,219,0.2)}
+        .id-help-btn{color:var(--w);cursor:pointer;font-size:12px;background:rgba(243,156,18,0.15);border:1px solid var(--w);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:bold;transition:all 0.2s}
+        .id-help-btn:hover{background:rgba(243,156,18,0.3)}
+        .marquee-box{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 10px;overflow:hidden;height:28px;display:flex;align-items:center;margin-top:5px}
+        .marquee-text{font-size:12px;color:rgba(255,255,255,0.8);white-space:nowrap;animation:marquee 25s linear infinite}
+        @keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+        .slider-container{background:rgba(26,31,75,0.7);border:1px solid rgba(74,28,122,0.5);border-radius:10px;overflow:hidden}
+        .slider-wrapper{display:flex;transition:transform 0.5s ease-in-out}
+        .slider-slide{min-width:100%}
+        .slider-slide img{width:100%;height:auto;max-height:160px;object-fit:contain;padding:0px}
+        .slider-dots{display:flex;justify-content:center;gap:6px;padding:6px 0;background:rgba(0,0,0,0.3)}
+        .slider-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.3);transition:all 0.3s}
+        .slider-dot.active{background:var(--w);width:18px;border-radius:4px}
+        .notice-banner{background:linear-gradient(135deg,rgba(74,28,122,0.3),rgba(26,31,75,0.5));border:1px solid rgba(243,156,18,0.4);border-radius:10px;padding:12px 15px;position:relative;overflow:hidden}
+        .notice-banner::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--w);border-radius:2px}
+        .notice-header{font-size:10px;color:var(--w);font-weight:bold;margin-bottom:6px;letter-spacing:0.5px;text-transform:uppercase}
+        .notice-msg{font-size:12px;font-weight:bold;line-height:1.5}
+        .notice-time{font-size:9px;color:rgba(255,255,255,0.5);margin-top:6px;text-align:right}
+        .video-container{position:relative;background:#000;border-radius:12px;overflow:hidden;border:none;margin:8px 0;padding:3px}
+        .video-container::before{content:'';position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;background:linear-gradient(45deg,#ff0000,#ff7300,#fffb00,#48ff00,#00ffd5,#002bff,#7a00ff,#ff00c8,#ff0000);background-size:400% 400%;z-index:0;border-radius:14px;animation:ledBorder 3s linear infinite}
+        @keyframes ledBorder{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .video-container::after{content:'';position:absolute;top:3px;left:3px;right:3px;bottom:3px;background:#000;border-radius:10px;z-index:0}
+        .video-container video,.video-container iframe{position:relative;z-index:1;width:100%;border-radius:8px;display:block;background:#000}
+        .video-container iframe{height:220px;border:none}
+        .page-timer-banner{background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);border-radius:10px;padding:12px 15px;display:none;text-align:center}
+        .page-timer-banner .timer-icon{font-size:24px;color:var(--r);margin-bottom:5px}
+        .page-timer-banner .timer-title{font-size:11px;color:var(--r);font-weight:bold;margin-bottom:4px}
+        .page-timer-banner .timer-countdown{font-size:20px;font-weight:bold;color:var(--w);font-family:'Courier New',monospace}
+        .sec-note{background:rgba(255,193,7,0.1);border-left:4px solid var(--w);padding:10px;border-radius:6px;font-size:11px;text-align:center;margin-top:5px}
+        .footer{text-align:center;padding:15px 10px;color:rgba(255,255,255,0.7);font-size:10px;border-top:1px solid rgba(74,28,122,0.5);margin-top:10px}
+        .confirm-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:7000;justify-content:center;align-items:center}
+        .confirm-modal.active{display:flex}
+        .confirm-box{background:var(--p);border:2px solid var(--w);border-radius:12px;padding:25px;width:90%;max-width:350px;text-align:center}
+        .confirm-box h3{color:var(--w);margin-bottom:15px}
+        .confirm-box p{color:rgba(255,255,255,0.7);margin-bottom:15px;font-size:13px}
+        .confirm-btns{display:flex;gap:10px;justify-content:center}
+        .confirm-btns button{padding:10px 25px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:13px}
+        .confirm-yes{background:var(--r);color:#fff}.confirm-no{background:rgba(255,255,255,0.2);color:#fff}
+        .banned-container{text-align:center;padding:40px 20px;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center}
+        .banned-icon{font-size:80px;margin-bottom:20px}
+        .banned-title{color:var(--r);font-size:20px;font-weight:bold}
+        .banned-contact{background:rgba(0,0,0,0.3);padding:18px;border-radius:10px;max-width:350px;width:100%;margin-bottom:20px;text-align:left}
+        .banned-contact h4{color:var(--w);font-size:13px;text-align:center}
+        .banned-contact p{font-size:12px;margin:6px 0}
+        .banned-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+        .banned-btns button{padding:10px 20px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:12px}
+        .btn-stay{background:rgba(255,255,255,0.2);color:var(--t)}.btn-new{background:var(--b);color:var(--t)}
+        .sidebar-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:3000}
+        .sidebar-overlay.active{display:block}
+        .sidebar-panel{position:fixed;top:0;left:0;width:62%;max-width:360px;height:100%;background:linear-gradient(rgba(12,14,39,0.1),rgba(12,14,39,0.1)),url('https://i.ibb.co/HDwHrVry/7e8d9f786d02.webp') center/cover no-repeat;z-index:3001;transition:transform 0.3s ease;overflow-y:auto;border-right:2px solid #4a1c7a;transform:translateX(-100%);box-shadow:4px 0 25px rgba(0,0,0,0.7);display:flex;flex-direction:column}
+        .sidebar-panel.active{transform:translateX(0)}
+        .sidebar-close-btn{position:absolute;top:12px;right:12px;color:#e74c3c;font-size:20px;cursor:pointer;z-index:15;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:rgba(231,76,60,0.2);border-radius:50%}
+        .sidebar-profile{padding:15px 15px 15px!important;text-align:center;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0}
+        .sidebar-menu-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:5px 0}
+        .sidebar-divider{height:1px;background:rgba(255,255,255,0.06);margin:8px 15px}
+        .sidebar-section-title{color:#f39c12;font-size:10px;font-weight:bold;text-transform:uppercase;letter-spacing:1.5px;padding:10px 15px 5px;opacity:0.8}
+        .s-item{display:flex;align-items:center;gap:12px;padding:12px 15px;color:#fff;font-size:14px;cursor:pointer;text-decoration:none;transition:all 0.2s;border-left:3px solid transparent}
+        .s-item:hover{background:rgba(74,28,122,0.4);border-left-color:#f39c12}
+        .s-item i{font-size:16px;color:#f39c12;width:22px;text-align:center}
+        .sidebar-logout-area{padding:12px 15px;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0}
+        .logout-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;background:rgba(231,76,60,0.2);color:#e74c3c;border:1px solid rgba(231,76,60,0.3);border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer}
+        .header{text-align:right}.header .brand,.header .subtitle{text-align:right;margin-right:10px}
+        .header .brand{font-size:18px;font-weight:bold;background:linear-gradient(45deg,#ff0000,#ff7300,#fffb00,#48ff00,#00ffd5,#002bff,#7a00ff,#ff00c8);background-size:400% 400%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:textGradient 3s linear infinite;text-shadow:none;filter:drop-shadow(0 0 10px rgba(243,156,18,0.6))}
+        .header .subtitle{font-size:11px;background:linear-gradient(90deg,#ffd700,#ff3399,#00d4ff,#ffd700);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:textGradient 2s linear infinite}
+        @keyframes textGradient{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .header{position:relative;overflow:visible}
+        .header::before{content:'';position:absolute;top:-2px;left:10px;right:10px;height:2px;background:linear-gradient(90deg,transparent,#ff0000,#ff7300,#fffb00,#48ff00,#00ffd5,#002bff,#7a00ff,#ff00c8,transparent);background-size:200% 100%;animation:ledSweep 2s linear infinite;border-radius:2px;box-shadow:0 0 10px rgba(243,156,18,0.8),0 0 20px rgba(243,156,18,0.4)}
+        .header::after{content:'';position:absolute;bottom:-2px;left:10px;right:10px;height:2px;background:linear-gradient(90deg,transparent,#ff00c8,#7a00ff,#002bff,#00ffd5,#48ff00,#fffb00,#ff7300,#ff0000,transparent);background-size:200% 100%;animation:ledSweepReverse 2s linear infinite;border-radius:2px;box-shadow:0 0 10px rgba(243,156,18,0.8),0 0 20px rgba(243,156,18,0.4)}
+        @keyframes ledSweep{0%{background-position:200% 50%}100%{background-position:-200% 50%}}
+        @keyframes ledSweepReverse{0%{background-position:-200% 50%}100%{background-position:200% 50%}}
+        .header .led-corner-left,.header .led-corner-right{position:absolute;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:#ffd700;box-shadow:0 0 8px #ffd700,0 0 15px #ffd700,0 0 25px #ff3399;animation:cornerPulse 1.5s ease-in-out infinite;z-index:5}
+        .header .led-corner-left{left:6px;animation-delay:0s}.header .led-corner-right{right:6px;animation-delay:0.75s}
+        @keyframes cornerPulse{0%,100%{opacity:0.4;transform:translateY(-50%) scale(0.8)}50%{opacity:1;transform:translateY(-50%) scale(1.5)}}
+        .led-dots-row{display:flex;justify-content:center;gap:4px;padding:4px 0;background:transparent}
+        .led-dot{width:4px;height:4px;border-radius:50%;background:#ffd700;box-shadow:0 0 6px #ffd700;animation:dotBlink 1s ease-in-out infinite}
+        .led-dot:nth-child(1){animation-delay:0s;background:#ff0000;box-shadow:0 0 6px #ff0000}
+        .led-dot:nth-child(2){animation-delay:0.1s;background:#ff7300;box-shadow:0 0 6px #ff7300}
+        .led-dot:nth-child(3){animation-delay:0.2s;background:#fffb00;box-shadow:0 0 6px #fffb00}
+        .led-dot:nth-child(4){animation-delay:0.3s;background:#48ff00;box-shadow:0 0 6px #48ff00}
+        .led-dot:nth-child(5){animation-delay:0.4s;background:#00ffd5;box-shadow:0 0 6px #00ffd5}
+        .led-dot:nth-child(6){animation-delay:0.5s;background:#002bff;box-shadow:0 0 6px #002bff}
+        .led-dot:nth-child(7){animation-delay:0.6s;background:#7a00ff;box-shadow:0 0 6px #7a00ff}
+        .led-dot:nth-child(8){animation-delay:0.7s;background:#ff00c8;box-shadow:0 0 6px #ff00c8}
+        .led-dot:nth-child(9){animation-delay:0.8s;background:#ff0000;box-shadow:0 0 6px #ff0000}
+        .led-dot:nth-child(10){animation-delay:0.9s;background:#ffd700;box-shadow:0 0 6px #ffd700}
+        @keyframes dotBlink{0%,100%{opacity:0.3}50%{opacity:1}}
+        @media(max-width:480px){.force-update-inner{padding:10px 12px;flex-direction:column;text-align:center}.force-update-buttons{width:100%}.force-update-btn{width:100%;justify-content:center;padding:10px 16px}.force-update-icon{display:none}.force-update-title{font-size:12px}.force-update-message{font-size:10px}}
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <!-- ==================== TOP BANNER IMAGE ==================== -->
+        <div style="position:relative;border-radius:12px;overflow:hidden;margin-bottom:10px;box-shadow:0 5px 25px rgba(243,156,18,0.3);">
+            <div style="position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;background:linear-gradient(45deg,#ff0000,#ff7300,#fffb00,#48ff00,#00ffd5,#002bff,#7a00ff,#ff00c8,#ff0000);background-size:400% 400%;z-index:-1;animation:ledBorder 3s linear infinite;border-radius:14px;"></div>
+            <img src="https://i.ibb.co/RT99hkvw/file-00000000cbdc7208b3dbfa85e5ec0111.png" style="width:100%;height:80px;object-fit:cover;display:block;position:relative;z-index:1;" alt="Banner" onerror="this.style.display='none'">
+        </div>
+        
+        <div class="header" style="padding-bottom: 55px;">
+            <span class="menu-btn" onclick="openSidebar()">
+                <img src="https://i.ibb.co/7tvvPm7T/file-00000000e43471fa9d7a0ad636aaaacc.png" alt="Menu" style="width:24px;height:24px;object-fit:contain;border-radius:3px;position:relative;z-index:2;" onerror="this.style.display='none';">
+                <span style="font-size:10px;font-weight:bold;letter-spacing:1px;position:relative;z-index:2;color:#f39c12;margin-left:6px;">MENU</span>
+            </span>
+
+            <!-- ✅ Advance Test Server Button with Timer (အချိန်အကန့်သတ်နဲ့ ပိတ်ထားမယ်) -->
+            <div id="advanceServerContainer" style="position: absolute; top: 58px; left: 15px; z-index: 10; display: flex; justify-content: flex-start;">
+                <!-- Timer မကုန်သေးရင် ပြမယ် -->
+                <div id="advanceServerTimerDisplay" style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 4px; background: rgba(231, 76, 60, 0.15); border: 1px solid rgba(231, 76, 60, 0.3); color: #e74c3c; font-size: 11px; font-weight: 500;">
+                    <span>ပြန်ဖွင့်ရန်</span>
+                    <span id="advanceTimerText" style="font-family: monospace; font-weight: bold; font-size: 12px; color: #ffd700;">--:--:--</span>
+                </div>
+                <!-- Timer ကုန်သွားရင် ပြမယ် -->
+                <a id="advanceServerButton" href="https://new-version-web-advance-test-server.onrender.com" target="_blank" 
+                   style="display: none; padding: 6px 14px; border-radius: 6px; background: rgba(15, 10, 30, 0.95); border: 2px solid #e74c3c; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                    <i class="fas fa-flask" style="color: #ffd700; font-size: 14px;"></i>
+                    A.T Server
+                </a>
+            </div>
+            
+            <div class="led-corner-left"></div>
+            <div class="led-corner-right"></div>
+            <div class="brand">SOLO M Game Store(SMGS)</div>
+            <div class="subtitle">Security & Data Management</div>
+            <div class="led-dots-row">
+                <div class="led-dot"></div><div class="led-dot"></div><div class="led-dot"></div>
+                <div class="led-dot"></div><div class="led-dot"></div><div class="led-dot"></div>
+                <div class="led-dot"></div><div class="led-dot"></div><div class="led-dot"></div>
+                <div class="led-dot"></div>
+            </div> 
+            <div class="marquee-box" style="margin-top: 35px;">
+                <span class="marquee-text">SOLO M Game Shop မှ ingame items, MLBB Redeem Code နှင့် အခြားသော services များဝယ်ယူလိုပါက menu button မှတစ်ဆင့် Top Up နှင့် Buy Code တို့အပြင် အခြားသော ဝန်ဆောင်မှု စာမျက်နှာများကိုလည်း ယုံကြည်စိတ်ချစွာ အသုံးပြုနိုင်ပါသည်</span>
+            </div>
+        </div>
+
+        <!-- Maintenance Message -->
+        <div id="maintenanceMessage" style="display:none">
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center;padding:20px">
+                <div style="font-size:70px;color:#f39c12;margin-bottom:20px"><i class="fas fa-tools"></i></div>
+                <div style="font-size:20px;font-weight:bold;color:#f39c12;margin-bottom:10px">ယခုစာမျက်နှာကို ပြုပြင်မွမ်းမံနေပါသည်</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:8px">စာမျက်နှာ ပြန်ဖွင့်ရန်</div>
+                <div style="font-size:26px;font-weight:bold;color:#f39c12;font-family:'Courier New',monospace;margin:15px 0" id="maintenanceCountdown">--:--:--</div>
+                <a href="/dashboard" style="display:inline-block;padding:12px 30px;background:#f39c12;color:#000;text-decoration:none;border-radius:8px;font-weight:bold;font-size:14px;margin-top:10px"><i class="fas fa-arrow-left"></i> ပင်မစာမျက်နှာသို့</a>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="time-panel">
+                <div class="time-block">
+                    <div class="time-label">Local Time</div>
+                    <div class="time-value" id="localTime">--:--:--</div>
+                    <div class="date-value" id="localDate">---</div>
+                </div>
+                <div class="time-divider"></div>
+                <div class="time-block">
+                    <div class="time-label">UTC Time</div>
+                    <div class="time-value" id="utcTime">--:--:--</div>
+                    <div class="date-value" id="utcDate">---</div>
+                </div>
+            </div>
+            
+            <div class="id-panel">
+                <div class="id-row">
+                    <span class="id-label">📧 Email</span>
+                    <span class="id-email-value" id="myEmail">---</span>
+                </div>
+                <div class="id-row">
+                    <span class="id-label">🆔 U ID</span>
+                    <span class="id-value" id="myUserIdDisp">U ID - ------</span>
+                    <span class="id-copy-btn" onclick="copyUserId()" title="Copy ID"><i class="fas fa-copy"></i></span>
+                    <span class="id-help-btn" onclick="showHelpModal()">?</span>
+                </div>
+            </div>
+
+            <!-- MLBB Event Banner - Hero Creation Contest -->
+            <div style="margin: 10px 0; position: relative;">
+                <div style="position: relative; border-radius: 0px; overflow: hidden; cursor: pointer; box-shadow: 0 5px 25px rgba(243,156,18,0.3);" onclick="openMLBBEvent()">
+                    <div style="position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, #1a0033, #2d0066, #4a0099, #2d0066, #1a0033, #ff0066, #ff3399, #1a0033); background-size: 400% 400%; z-index: -1; animation: ledBorder 3s linear infinite;"></div>
+                    <div style="position: relative; z-index: 1;">
+                        <img src="https://i.ibb.co/jP75GWJt/theme-DDw1t3gk.jpg" style="width: 100%; height: 150px; object-fit: cover; display: block;" alt="MLBB Event" onerror="this.style.display='none'">
+                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px 12px; background: linear-gradient(to top, rgba(10,0,20,0.95), transparent);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="color: #ff3399; font-weight: bold; font-size: 12px; text-shadow: 0 0 8px rgba(255,51,153,0.5);">🎨 S41 New Hero Creation Contest</div>
+                                    <div style="color: rgba(255,255,255,0.7); font-size: 9px; margin-top: 2px;">ဖန်တီးလိုက်ပါ ဆုကြေးများစွာ ရယူလိုက်ပါ</div>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #1a0033, #4a0099); color: #ff3399; padding: 4px 14px; font-size: 10px; font-weight: bold; border: 1px solid #ff3399; box-shadow: 0 0 10px rgba(255,51,153,0.3);">ဝင်ရောက်ယှဉ်ပြိုင်မည်</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 5px;">
+                    <span onclick="showMLBBEventInfo()" style="color: #ff3399; font-size: 10px; cursor: pointer; text-decoration: underline; font-weight: bold;">📖 Hero Creation Contest အကြောင်း အသေးစိတ်</span>
+                </div>
+            </div>
+            
+            <div class="page-timer-banner" id="pageTimerBanner">
+                <div class="timer-icon"><i class="fas fa-clock"></i></div>
+                <div class="timer-title">စာမျက်နှာ ပြန်ဖွင့်ရန်</div>
+                <div class="timer-countdown" id="pageTimerCountdown">--:--:--</div>
+            </div>
+
+            <div class="slider-container" id="sliderContainer" style="display:none">
+                <div class="slider-wrapper" id="sliderWrapper"></div>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+  
+            <div class="notice-banner" id="noticeBanner" style="display:none">
+                <div class="notice-header">📢 SOLO M Game Shop မှ အသိပေးခြင်း</div>
+                <div class="notice-msg" id="noticeMsgDisplay"></div>
+                <div class="notice-time" id="noticeTime"></div>
+            </div>
+
+            <div style="background:linear-gradient(rgba(12,14,39,0.85),rgba(12,14,39,0.85)),url('https://i.ibb.co/Xr8z4PBY/43bce9d1caae.jpg') center/cover no-repeat;border:1px solid rgba(255,255,255,0.1);padding:20px;margin:8px 0;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+                <div style="font-size:14px;font-weight:bold;color:#fff;margin-bottom:2px;">📱 SOLO M Game Store App</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:16px;">Version 10+ • 10 MB • Android 10+</div>
+                <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:140px;max-width:200px;">
+                        <a href="https://drive.google.com/file/d/13Adx-ucYt7JzDxR1ZFOxV2pUH6UtLxqd/view?usp=drivesdk" target="_blank" style="display:block;background:#1a1f4b;color:#fff;padding:12px 16px;border:1px solid rgba(255,255,255,0.2);text-decoration:none;font-size:12px;font-weight:600;text-align:center;"><i class="fab fa-android" style="margin-right:6px;"></i> Android</a>
+                        <a onclick="showGoogleVerifyInfo()" style="display:block;font-size:9px;color:#3498db;text-align:center;margin-top:4px;cursor:pointer;text-decoration:underline;">✅ Google မှ အတည်ပြုခြင်း</a>
+                    </div>
+                    <div style="flex:1;min-width:140px;max-width:200px;">
+                        <div style="display:block;background:#1a1f4b;color:rgba(255,255,255,0.4);padding:12px 16px;border:1px solid rgba(255,255,255,0.1);font-size:12px;font-weight:600;text-align:center;"><i class="fab fa-apple" style="margin-right:6px;"></i> iOS</div>
+                        <div style="font-size:9px;color:rgba(255,255,255,0.3);text-align:center;margin-top:4px;">Coming Soon</div>
+                    </div>
+                </div>
+                <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:14px;">Powered by Median.co</div>
+            </div>
+
+            <div id="googleVerifyModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;justify-content:center;align-items:center;">
+                <div style="background:#1a1f4b;border:1px solid rgba(255,255,255,0.15);border-radius:0px;padding:24px;width:90%;max-width:400px;max-height:80vh;overflow-y:auto;color:#fff;" onclick="event.stopPropagation()">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><h3 style="font-size:16px;color:#fff;margin:0;">✅ Google မှ အတည်ပြုခြင်း</h3><span onclick="closeGoogleVerify()" style="font-size:20px;color:#e74c3c;cursor:pointer;">&times;</span></div>
+                    <table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.8;">
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.1);"><td style="padding:10px 8px;color:rgba(255,255,255,0.6);">🛡️ လုံခြုံရေး</td><td style="padding:10px 8px;color:#fff;">Google Drive မှတဆင့် လုံခြုံစွာ ဖြန့်ချိထားပါသည်</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.1);"><td style="padding:10px 8px;color:rgba(255,255,255,0.6);">🔒 ဗိုင်းရပ်စ် စစ်ဆေးမှု</td><td style="padding:10px 8px;color:#fff;">Google Play Protect ဖြင့် အလိုအလျောက် စစ်ဆေးပြီးဖြစ်ပါသည်</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.1);"><td style="padding:10px 8px;color:rgba(255,255,255,0.6);">📦 ဖိုင်အရွယ်အစား</td><td style="padding:10px 8px;color:#fff;">10.54 MB</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.1);"><td style="padding:10px 8px;color:rgba(255,255,255,0.6);">📱 အနည်းဆုံး Android</td><td style="padding:10px 8px;color:#fff;">Android 8.0 (Oreo) နှင့်အထက်</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.1);"><td style="padding:10px 8px;color:rgba(255,255,255,0.6);">🔑 လက်မှတ်</td><td style="padding:10px 8px;color:#fff;">Median.co မှ တရားဝင် လက်မှတ်ထိုးထားပါသည်</td></tr>
+                    </table>
+                    <div style="background:rgba(46,204,113,0.1);border-left:3px solid #2ecc71;padding:12px;margin-top:14px;border-radius:0px;"><p style="font-size:11px;color:rgba(255,255,255,0.8);margin:0;line-height:1.6;">✅ ဤ APK ဖိုင်သည် SOLO M Game Shop မှ တရားဝင်ထုတ်လုပ်ထားသော App ဖြစ်ပါသည်။ Google Drive မှတဆင့် လုံခြုံစွာ ဒေါင်းလုဒ်ပြုလုပ်နိုင်ပြီး သင့်စက်၏ လုံခြုံရေးစနစ်များက အလိုအလျောက် စစ်ဆေးပေးမည်ဖြစ်ပါသည်။</p></div>
+                    <button onclick="closeGoogleVerify()" style="width:100%;padding:12px;background:#3498db;color:#fff;border:none;font-size:13px;font-weight:bold;cursor:pointer;margin-top:14px;">ပိတ်မည်</button>
+                </div>
+            </div>
+            
+            <div style="font-size:8px;color:rgba(255,255,255,0.4);margin-top:10px;">Powered by Median.co</div>
+        </div>
+
+        <div id="forceUpdateBottomBar" class="force-update-bottom-bar" style="display: none;">
+            <div class="force-update-inner">
+                <div class="force-update-icon"><i class="fas fa-bolt"></i></div>
+                <div class="force-update-content">
+                    <div class="force-update-title">ဗားရှင်း အဆင့်မြှင့်တင်ခြင်း</div>
+                    <div class="force-update-message" id="forceUpdateMessageText">📱 APK latest version အသစ်ထွက်ရှိပြီးဖြစ်ပါသည်။ ကျေးဇူးပြု၍ နောက်ဆုံး ဗားရှင်းအသစ်သို့ အဆင့်မြှင့်တင်ပါ။(မှတ်ချက်- ကြာမြင့်ချိန် ၁ မိနစ်မှ ၂ မိနစ်အတွင်း)</div>
+                    <div class="force-update-version" id="forceUpdateVersionText">Version: 1.0.0</div>
+                </div>
+                <div class="force-update-buttons"><button class="force-update-btn" onclick="performForceUpdate()"><i class="fas fa-sync-alt"></i> ယခု အဆင့်မြှင့်တင်ရန်</button></div>
+            </div>
+        </div>
+        
+        <div class="video-container" id="videoContainer" style="display:none">
+            <video id="dashboardVideo" controls playsinline webkit-playsinline muted autoplay style="display:none"></video>
+            <iframe id="dashboardYoutube" style="display:none" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="sec-note"><i class="fas fa-shield-alt"></i> <strong>System Security:</strong> All data is encrypted. Use <strong>☰ Menu</strong> to navigate.</div>
+        </div>
+        
+        <div class="footer"> 2026 SOLO M Game Shop | Contact: @Solo_m28</div>
+    </div>
+
+    <!-- Confirm Logout Modal -->
+    <div class="confirm-modal" id="logoutConfirmModal">
+        <div class="confirm-box">
+            <h3><i class="fas fa-sign-out-alt"></i> Logout</h3>
+            <p>အကောင့်မှ ထွက်ခွာမှာ သေချာပါသလား?</p>
+            <div class="confirm-btns"><button class="confirm-yes" onclick="logout()">Yes, Logout</button><button class="confirm-no" onclick="closeLogoutConfirm()">Cancel</button></div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div class="sidebar-panel" id="sidebarPanel">
+        <div class="sidebar-close-btn" onclick="closeSidebar()"><i class="fas fa-times"></i></div>
+        <div style="flex-shrink:0; padding:0;"><img src="https://i.ibb.co/ynxh4Qzn/file-000000002a2072089eaa1aa8ec69df28.png" alt="Banner" style="width:100%; height:85px; object-fit:cover; display:block;" onerror="this.style.display='none'"></div>
+        <div class="sidebar-profile" style="position:relative; text-align:center; padding:15px 15px 20px; border-bottom:1px solid rgba(255,255,255,0.08); flex-shrink:0; background:rgba(0,0,0,0.2); backdrop-filter:blur(4px);">
+            <div style="position:absolute; top:10px; left:10px; z-index:20;">
+                <div class="profile-dots-menu" onclick="toggleProfileMenu()" style="width:28px; height:28px; background:rgba(0,0,0,0.7); border:1px solid rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; color:#fff; font-size:14px; box-shadow:0 2px 5px rgba(0,0,0,0.3);">⋮</div>
+                <div id="profileDeleteMenu" style="display:none; position:absolute; top:34px; left:0; background:rgba(20,15,35,0.95); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 0; width:150px; box-shadow:0 8px 25px rgba(0,0,0,0.5); z-index:25;">
+                    <label for="profilePhotoInput" style="padding:8px 14px; font-size:11px; color:#f39c12; cursor:pointer; display:flex; align-items:center; gap:8px; transition:0.2s; border-bottom:1px solid rgba(255,255,255,0.05);"><i class="fas fa-camera" style="font-size:11px;"></i> Upload Photo</label>
+                    <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;" onchange="uploadProfilePhoto(this)">
+                    <div onclick="deleteProfilePhoto()" style="padding:8px 14px; font-size:11px; color:#e74c3c; cursor:pointer; display:flex; align-items:center; gap:8px; transition:0.2s; border-top:1px solid rgba(255,255,255,0.05);"><i class="fas fa-trash-alt" style="font-size:11px;"></i> Delete Photo</div>
+                </div>
+            </div>
+            <div style="position:absolute; top:10px; right:10px; z-index:20; cursor:pointer;" onclick="openProfileHelpModal()"><span style="color:#f39c12; font-size:18px; font-weight:bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">?</span></div>
+            <div id="profileCollapsibleContent">
+                <div style="position:relative; display:inline-block; margin-bottom:8px;">
+                    <div style="width:130px; height:130px; background-image:url('https://i.ibb.co/sp500GPF/817073600ba1f1866ec46ab803562700.jpg'); background-size:100% 100%; background-position:center; background-repeat:no-repeat; position:relative; display:flex; align-items:center; justify-content:center; border-radius:0px;">
+                        <img id="sidebarAvatarImg" src="" style="width:95px; height:95px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.3); display:none; background:#0a0a1a;" onerror="this.style.display='none'; document.getElementById('sidebarAvatarText').style.display='flex';">
+                        <div id="sidebarAvatarText" style="width:95px; height:95px; border-radius:50%; background:linear-gradient(135deg,#4a1c7a,#f39c12); display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:bold; color:#fff; border:2px solid rgba(255,255,255,0.3); box-shadow:0 4px 15px rgba(0,0,0,0.5);">S</div>
+                    </div>
+                </div>
+                <div class="sidebar-profile-name" id="sidebarName" style="color:#fff; font-size:15px; font-weight:bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">User</div>
+                <div class="sidebar-profile-email" id="sidebarEmail" style="color:rgba(255,255,255,0.8); font-size:11px; word-break:break-all; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">user@mlbb.com</div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:center; margin-top:6px;"><div onclick="toggleProfileCollapse()" style="cursor:pointer; transition:all 0.2s; color:rgba(255,255,255,0.5); font-size:14px; padding:2px;"><i class="fas fa-chevron-up" id="profileCollapseIcon"></i></div></div>
+        </div>
+        
+        <div class="sidebar-menu-area">
+            <div class="sidebar-section-title">Main Menu</div>
+            <a href="/topup.html" class="s-item"><img src="https://i.ibb.co/3yZY2YxQ/15d0577a27d35275599d24192cd54620.jpg" class="menu-icon-img" onerror="this.style.display='none'">Top Up</a>
+            <a href="/buycode.html" class="s-item"><img src="https://i.ibb.co/xKBM4tKK/a9a00eb6fcd713fa39f9a0b7ab6e5342-1.jpg" class="menu-icon-img" onerror="this.style.display='none'">Buy Code MLBB</a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-title">Account</div>
+            <a href="/data.html" class="s-item"><img src="https://i.ibb.co/bRDx3yD3/4f7e7f43f0f304f7396742b87dadc527.jpg" class="menu-icon-img" onerror="this.style.display='none'">Data</a>
+            <a href="/history.html" class="s-item"><img src="https://i.ibb.co/xSRcr1sT/09f582fda7fabf47764bc3265a68f522.jpg" class="menu-icon-img" onerror="this.style.display='none'">History</a>
+            <a href="/password.html" class="s-item"><img src="https://i.ibb.co/6RVHVKgz/88787aaf36b908ef3c59ef2b634e1730.jpg" class="menu-icon-img" onerror="this.style.display='none'">Password</a>
+            <a href="/recovery.html" class="s-item"><img src="https://i.ibb.co/279szJJ3/ac0453045ae108755715ea28868021e3.jpg" class="menu-icon-img" onerror="this.style.display='none'">Recovery</a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-title">Support</div>
+            <a href="/contact.html" class="s-item"><img src="https://i.ibb.co/537V1P7/a3122d2eb543d4f189aa471ddc54c01e.jpg" class="menu-icon-img" onerror="this.style.display='none'">Contact</a>
+            <a href="/aboutredeem.html" class="s-item"><img src="https://i.ibb.co/S7swb5ps/de30ff8bc3ee4309b278457c2cc4c9bb.jpg" class="menu-icon-img" onerror="this.style.display='none'">About Redeem</a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-title">Event Updates</div>
+            <a href="/events.html" class="s-item"><img src="https://i.ibb.co/S7swb5ps/de30ff8bc3ee4309b278457c2cc4c9bb.jpg" class="menu-icon-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-calendar-alt\'></i>'">ဒီလအတွက် Event Update များ</a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-title">Resources</div>
+            <a href="/websites.html" class="s-item"><img src="https://i.ibb.co/27ZxbYFv/62df54008725a0abf388e46d249cccd5.jpg" class="menu-icon-img" onerror="this.style.display='none'">တရားဝင် ဝဘ်ဆိုဒ်များ</a>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section-title">Game & Exchange</div>
+            <a href="/game.html" class="s-item"><img src="https://i.ibb.co/WvvX0BwZ/27f06e0c24137909f6d66bb3146b69da.jpg" class="menu-icon-img" onerror="this.style.display='none'">Lucky Spin 🎰</a>
+            <a href="/exchange.html" class="s-item"><img src="https://i.ibb.co/7qwKSdn/6b7de186ff2442f54067982c5309e613.jpg" class="menu-icon-img" onerror="this.style.display='none'">USD Exchange 💱</a>
+            <a href="/chat.html" class="s-item"><img src="https://i.ibb.co/qL5zGMQJ/b33f0d10bab5c0d68a006844f7eda264.jpg" class="menu-icon-img" onerror="this.style.display='none'">Chat<span id="chatBadge" style="display:none;background:var(--r);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;margin-left:auto">0</span></a>
+        </div>
+        <div class="sidebar-logout-area"><button class="logout-btn" onclick="closeSidebar(); showLogoutConfirm();"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+    </div>
+
+    <div id="profileHelpModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:linear-gradient(160deg, #1a1f4b, #0a0a1a); border:2px solid #f39c12; border-radius:16px; padding:25px; width:90%; max-width:420px; max-height:80vh; overflow-y:auto; position:relative; box-shadow:0 20px 50px rgba(0,0,0,0.6);">
+            <div onclick="closeProfileHelpModal()" style="position:absolute; top:12px; right:12px; width:30px; height:30px; background:rgba(231,76,60,0.2); border:1px solid rgba(231,76,60,0.3); border-radius:50%; color:#e74c3c; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:bold;">✕</div>
+            <h3 style="color:#f39c12; text-align:center; margin-bottom:16px; font-size:18px;">📋 Profile အသုံးပြုနည်း</h3>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="background:rgba(0,0,0,0.3); border-left:3px solid #3498db; padding:12px 14px; border-radius:6px;">
+                    <div style="color:#3498db; font-size:11px; font-weight:bold; margin-bottom:4px; display:flex; align-items:center; gap:6px;"><i class="fas fa-image"></i> ပုံတင်ခြင်း (Upload Photo)</div>
+                    <div style="color:rgba(255,255,255,0.8); font-size:10px; line-height:1.6;">Profile ပုံရဲ့ အောက်ဘက်ရှိ <b style="color:#f39c12;">"Upload Photo"</b> ခလုတ်ကို နှိပ်ပြီး ကိုယ်ကြိုက်သော ဓာတ်ပုံကို ရွေးချယ်တင်နိုင်ပါသည်။ ဓာတ်ပုံကို သင့်အကောင့်တွင် သိမ်းဆည်းထားမည်ဖြစ်ပါသည်။</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); border-left:3px solid #e74c3c; padding:12px 14px; border-radius:6px;">
+                    <div style="color:#e74c3c; font-size:11px; font-weight:bold; margin-bottom:4px; display:flex; align-items:center; gap:6px;"><i class="fas fa-trash-alt"></i> ပုံဖျက်ခြင်း (Delete Photo)</div>
+                    <div style="color:rgba(255,255,255,0.8); font-size:10px; line-height:1.6;">Profile ပုံရဲ့ ဘယ်ဘက်အပေါ်ထောင့်ရှိ <b style="color:#f39c12;">"⋮"</b> ခလုတ်ကို နှိပ်ပါ။ ပေါ်လာသော Menu မှ <b style="color:#e74c3c;">"Delete Photo"</b> ကိုရွေးချယ်ပါက လက်ရှိတင်ထားသော ပုံကို ဖျက်ပစ်နိုင်ပါသည်။</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); border-left:3px solid #2ecc71; padding:12px 14px; border-radius:6px;">
+                    <div style="color:#2ecc71; font-size:11px; font-weight:bold; margin-bottom:4px; display:flex; align-items:center; gap:6px;"><i class="fas fa-user-circle"></i> အမည်နှင့် အီးမေးလ် ပြောင်းခြင်း</div>
+                    <div style="color:rgba(255,255,255,0.8); font-size:10px; line-height:1.6;">သင့်အမည် (Name) နှင့် အီးမေးလ် (Email) ကို ပြောင်းလဲလိုပါက Menu မှ <b style="color:#f39c12;">"Data"</b> စာမျက်နှာသို့ သွားရောက်ပြင်ဆင်နိုင်ပါသည်။</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); border-left:3px solid #9b59b6; padding:12px 14px; border-radius:6px;">
+                    <div style="color:#9b59b6; font-size:11px; font-weight:bold; margin-bottom:4px; display:flex; align-items:center; gap:6px;"><i class="fas fa-shield-alt"></i> လုံခြုံရေး အကြံပြုချက်</div>
+                    <div style="color:rgba(255,255,255,0.8); font-size:10px; line-height:1.6;">သင့် Profile အချက်အလက်များကို ကာကွယ်ရန် <b style="color:#f39c12;">"Password"</b> စာမျက်နှာတွင် လုံခြုံသော စကားဝှက်ကို ပြောင်းလဲထားရန် အကြံပြုအပ်ပါသည်။</div>
+                </div>
+            </div>
+            <button onclick="closeProfileHelpModal()" style="display:block; width:100%; padding:12px; margin-top:18px; background:#f39c12; color:#000; border:none; border-radius:8px; font-size:14px; font-weight:bold; cursor:pointer;">ပိတ်မည် (Close)</button>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== PROFILE HELP MODAL FUNCTIONS ====================
+        function openProfileHelpModal() { document.getElementById('profileHelpModal').style.display = 'flex'; }
+        function closeProfileHelpModal() { document.getElementById('profileHelpModal').style.display = 'none'; }
+        
+        // ==================== TOAST & COPY ====================
+        function showToast(msg, t = "success") {
+            const el = document.createElement('div');
+            el.textContent = msg;
+            el.style.cssText = `position:fixed;top:20px;right:20px;background:${t === "success" ? "#2ecc71" : "#e74c3c"};color:#000;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:bold;z-index:9999;animation:fadeInOut 2s forwards`;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 2000);
+        }
+        function copyUserId() {
+            const id = document.getElementById("myUserIdDisp").textContent.replace('U ID - ', '').trim();
+            if (!id || id === '------') return;
+            navigator.clipboard.writeText(id).then(() => showToast('✅ ID Copied: ' + id)).catch(() => showToast('❌ Failed', 'error'));
+        }
+
+        // ==================== ADVANCE SERVER TIMER SYSTEM ====================
+        (function() {
+            const TARGET_DATE = new Date('2026-06-30T14:10:00').getTime();
+            const STORAGE_KEY = 'advance_server_timer_start';
+            let startTime = localStorage.getItem(STORAGE_KEY);
+            if (!startTime) {
+                startTime = Date.now();
+                localStorage.setItem(STORAGE_KEY, startTime);
+            } else {
+                startTime = parseInt(startTime, 10);
+            }
+            function updateTimer() {
+                const now = Date.now();
+                const remaining = TARGET_DATE - now;
+                const timerDisplay = document.getElementById('advanceServerTimerDisplay');
+                const timerText = document.getElementById('advanceTimerText');
+                const serverButton = document.getElementById('advanceServerButton');
+                if (remaining <= 0) {
+                    if (timerDisplay) timerDisplay.style.display = 'none';
+                    if (serverButton) serverButton.style.display = 'flex';
+                    localStorage.removeItem(STORAGE_KEY);
+                    return;
+                }
+                const totalSec = Math.floor(remaining / 1000);
+                const days = Math.floor(totalSec / 86400);
+                const hours = Math.floor((totalSec % 86400) / 3600);
+                const minutes = Math.floor((totalSec % 3600) / 60);
+                const seconds = totalSec % 60;
+                const totalHours = (days * 24) + hours;
+                const timeStr = `${String(totalHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                if (timerText) timerText.textContent = timeStr;
+                setTimeout(updateTimer, 1000);
+            }
+            updateTimer();
+        })();
+
+        // ==================== FORCE UPDATE SYSTEM ====================
+        let forceUpdateActive = false, forceUpdateData = null;
+        function loadForceUpdateSettings() {
+            const saved = localStorage.getItem('force_update_settings');
+            if (saved) {
+                try {
+                    const settings = JSON.parse(saved);
+                    forceUpdateData = settings;
+                    return settings.is_active;
+                } catch(e) {}
+            }
+            return false;
+        }
+        function saveForceUpdateSettings(settings) { localStorage.setItem('force_update_settings', JSON.stringify(settings)); }
+        async function checkForceUpdate() {
+            const bar = document.getElementById('forceUpdateBottomBar');
+            if (!bar) return;
+            const settings = loadForceUpdateSettings();
+            if (settings) {
+                forceUpdateActive = true;
+                forceUpdateData = settings;
+                const msgEl = document.getElementById('forceUpdateMessageText');
+                const versionEl = document.getElementById('forceUpdateVersionText');
+                if (msgEl && settings.message) msgEl.innerHTML = settings.message.replace(/\n/g, '<br>');
+                if (versionEl && settings.version_name) versionEl.innerHTML = `📦 New Version: ${settings.version_name}`;
+                bar.style.display = 'block';
+                setTimeout(() => { bar.classList.add('show'); bar.classList.remove('hide'); }, 50);
+            } else {
+                if (forceUpdateActive) { bar.classList.add('hide'); bar.classList.remove('show'); setTimeout(() => { bar.style.display = 'none'; }, 300); forceUpdateActive = false; }
+            }
+        }
+        function performForceUpdate() {
+            const url = forceUpdateData?.apk_url || 'https://drive.google.com/file/d/1M-htRNRJtRBPEpppPRAn84sIn0fXZSDS/view?usp=drivesdk';
+            window.open(url, '_blank');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const userId = user.id || 'guest';
+            localStorage.setItem(`force_update_done_${userId}`, 'true');
+            const bar = document.getElementById('forceUpdateBottomBar');
+            if (bar) { bar.classList.add('hide'); bar.classList.remove('show'); setTimeout(() => { bar.style.display = 'none'; }, 300); }
+            showToast('✅ Update completed! Thank you.', 'success');
+            forceUpdateActive = false;
+        }
+        window.activateForceUpdateLocal = function(message, version, url) {
+            const settings = { is_active: true, message: message || '📱 APK latest version 4.0.0 ထွက်ရှိပြီးဖြစ်ပါသည်။\nကျေးဇူးပြု၍ နောက်ဆုံးဗားရှင်းသို့ အဆင့်မြှင့်တင်ပါရန်။', apk_url: url || 'https://drive.google.com/file/d/13Adx-ucYt7JzDxR1ZFOxV2pUH6UtLxqd/view?usp=drivesdk', version_code: 4, version_name: version || '4.0.0' };
+            saveForceUpdateSettings(settings);
+            checkForceUpdate();
+            console.log('✅ Force update activated!');
+        };
+        window.deactivateForceUpdateLocal = function() { localStorage.removeItem('force_update_settings'); checkForceUpdate(); console.log('✅ Force update deactivated!'); };
+        setTimeout(() => { checkForceUpdate(); }, 1000);
+
+        // ==================== SIDEBAR FUNCTIONS ====================
+        function openSidebar() {
+            const u = JSON.parse(localStorage.getItem('user') || '{}');
+            document.getElementById("sidebarName").textContent = u.username || 'User';
+            document.getElementById("sidebarEmail").textContent = u.email || 'user@mlbb.com';
+            const savedPhoto = localStorage.getItem('profilePhoto_' + u.id);
+            const img = document.getElementById('sidebarAvatarImg');
+            const textAvatar = document.getElementById('sidebarAvatarText');
+            if (savedPhoto) { img.src = savedPhoto; img.style.display = 'block'; textAvatar.style.display = 'none'; textAvatar.textContent = (u.username || 'U').charAt(0).toUpperCase(); }
+            else { img.style.display = 'none'; textAvatar.style.display = 'flex'; textAvatar.textContent = (u.username || 'U').charAt(0).toUpperCase(); }
+            document.getElementById("sidebarPanel").classList.add("active");
+            document.getElementById("sidebarOverlay").classList.add("active");
+            document.body.style.overflow = 'hidden';
+            const content = document.getElementById('profileCollapsibleContent');
+            const icon = document.getElementById('profileCollapseIcon');
+            if (content) { content.style.display = 'block'; icon.className = 'fas fa-chevron-up'; }
+        }
+        function closeSidebar() {
+            document.getElementById("sidebarPanel").classList.remove("active");
+            document.getElementById("sidebarOverlay").classList.remove("active");
+            document.body.style.overflow = '';
+        }
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profileDeleteMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+        function toggleProfileCollapse() {
+            const content = document.getElementById('profileCollapsibleContent');
+            const icon = document.getElementById('profileCollapseIcon');
+            if (!content) return;
+            if (content.style.display === 'none') { content.style.display = 'block'; icon.className = 'fas fa-chevron-up'; }
+            else { content.style.display = 'none'; icon.className = 'fas fa-chevron-down'; }
+        }
+        function uploadProfilePhoto(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const u = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!u.id) { showToast('❌ User ID not found', 'error'); return; }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Image = e.target.result;
+                localStorage.setItem('profilePhoto_' + u.id, base64Image);
+                const img = document.getElementById('sidebarAvatarImg');
+                const textAvatar = document.getElementById('sidebarAvatarText');
+                img.src = base64Image; img.style.display = 'block'; textAvatar.style.display = 'none';
+                document.getElementById('profileDeleteMenu').style.display = 'none';
+                showToast('✅ Profile photo uploaded!', 'success');
+            };
+            reader.readAsDataURL(file);
+            input.value = '';
+        }
+        function deleteProfilePhoto() {
+            const u = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!u.id) return;
+            if (!confirm('Are you sure you want to delete your profile photo?')) return;
+            localStorage.removeItem('profilePhoto_' + u.id);
+            const img = document.getElementById('sidebarAvatarImg');
+            const textAvatar = document.getElementById('sidebarAvatarText');
+            img.style.display = 'none'; textAvatar.style.display = 'flex'; textAvatar.textContent = (u.username || 'U').charAt(0).toUpperCase();
+            document.getElementById('profileDeleteMenu').style.display = 'none';
+            showToast('🗑️ Photo deleted!', 'error');
+        }
+        function openMLBBEvent() { window.open('https://sg-play.mobilelegends.com/events/v26edf9dgugc/global', '_blank'); }
+        function showMLBBEventInfo() {
+            var overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:9999;display:flex;justify-content:center;align-items:center;';
+            overlay.onclick = function(e) { if(e.target === overlay) overlay.remove(); };
+            overlay.innerHTML = `<div style="background:#0a0a1a;border:2px solid #ff3399;border-radius:0px;padding:20px;width:90%;max-width:440px;max-height:85vh;overflow-y:auto;color:#fff;font-size:11px;line-height:1.6;" onclick="event.stopPropagation()"><h3 style="color:#ff3399;text-align:center;margin-bottom:12px;font-size:16px;">🎨 S41 New Hero Creation Contest</h3><p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.6);margin-bottom:15px;">အစီအစဉ်ကာလ - ဇွန်လမှ စတင်မည်</p><table style="width:100%;border-collapse:collapse;margin-bottom:15px;font-size:10px;"><thead><tr style="background:rgba(255,51,153,0.2);"><th style="padding:8px;text-align:left;color:#ff3399;border-bottom:1px solid rgba(255,51,153,0.3);">🎁 ဖြစ်နိုင်ချေရှိသော ဆုလက်ဆောင်များ</th><th style="padding:8px;text-align:right;color:#ff3399;border-bottom:1px solid rgba(255,51,153,0.3);">ပမာဏ</th></tr></thead><tbody><tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px;">Deluxe Skin</td><td style="padding:7px 8px;text-align:right;color:#ffd700;font-weight:bold;">1</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px;">Premium Skin Fragment</td><td style="padding:7px 8px;text-align:right;color:#ffd700;font-weight:bold;">3</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px;">Hero Fragment</td><td style="padding:7px 8px;text-align:right;color:#ffd700;font-weight:bold;">5</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px;">Hirara's Exclusive Battle Emote</td><td style="padding:7px 8px;text-align:right;color:#ffd700;font-weight:bold;">1</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px;">Double BP Card (3-Day)</td><td style="padding:7px 8px;text-align:right;color:#ffd700;font-weight:bold;">1</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px;">Magic Dust</td><td style="padding:7px 8px;text-align:right;color:#ffd700;font-weight:bold;">10</td></tr></tbody></table><table style="width:100%;border-collapse:collapse;margin-bottom:15px;font-size:10px;"><thead><tr style="background:rgba(255,215,0,0.15);"><th style="padding:8px;text-align:left;color:#ffd700;border-bottom:1px solid rgba(255,215,0,0.3);">🏆 ဖန်တီးရှင်ဆုများ (ကြည့်ရှုမှုအများဆုံး)</th><th style="padding:8px;text-align:right;color:#ffd700;border-bottom:1px solid rgba(255,215,0,0.3);">ဆုကြေး</th></tr></thead><tbody><tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px;">ပထမဆု</td><td style="padding:7px 8px;text-align:right;color:#ffd700;font-weight:bold;">$800 + 8,000 Diamonds</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px;">ဒုတိယဆု</td><td style="padding:7px 8px;text-align:right;color:#ffd700;font-weight:bold;">$500 + 5,000 Diamonds</td></tr><tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px;">တတိယဆု</td><td style="padding:7px 8px;text-align:right;color:#ffd700;font-weight:bold;">$300 + 3,000 Diamonds</td></tr><tr><td style="padding:7px 8px;">၄-၁၀ ဆု</td><td style="padding:7px 8px;text-align:right;color:#ffd700;font-weight:bold;">$100 + 1,000 Diamonds</td></tr></tbody></table><table style="width:100%;border-collapse:collapse;margin-bottom:15px;font-size:10px;"><thead><tr style="background:rgba(46,204,113,0.15);"><th style="padding:8px;text-align:left;color:#2ecc71;border-bottom:1px solid rgba(46,204,113,0.3);">🎨 ထူးချွန်ဆုများ (Fan Art)</th><th style="padding:8px;text-align:right;color:#2ecc71;border-bottom:1px solid rgba(46,204,113,0.3);">ဆုကြေး</th></tr></thead><tbody><tr><td style="padding:7px 8px;">ပထမဆု</td><td style="padding:7px 8px;text-align:right;color:#2ecc71;font-weight:bold;">$1,000 + 10,000 Diamonds</td></tr><tr><td style="padding:7px 8px;">ဒုတိယဆု</td><td style="padding:7px 8px;text-align:right;color:#2ecc71;font-weight:bold;">$500 + 5,000 Diamonds</td></tr><tr><td style="padding:7px 8px;">တတိယဆု</td><td style="padding:7px 8px;text-align:right;color:#2ecc71;font-weight:bold;">$300 + 3,000 Diamonds</td></tr></tbody></table><table style="width:100%;border-collapse:collapse;margin-bottom:15px;font-size:10px;"><thead><tr style="background:rgba(155,89,182,0.15);"><th style="padding:8px;text-align:left;color:#9b59b6;border-bottom:1px solid rgba(155,89,182,0.3);">🤖 AI အကူအညီဖြင့် ဖန်တီးမှုဆုများ</th><th style="padding:8px;text-align:right;color:#9b59b6;border-bottom:1px solid rgba(155,89,182,0.3);">ဆုကြေး</th></tr></thead><tbody><tr><td style="padding:7px 8px;">ပထမဆု</td><td style="padding:7px 8px;text-align:right;color:#9b59b6;font-weight:bold;">$800 + 8,000 Diamonds</td></tr><tr><td style="padding:7px 8px;">ဒုတိယဆု</td><td style="padding:7px 8px;text-align:right;color:#9b59b6;font-weight:bold;">$350 + 3,500 Diamonds</td></tr><tr><td style="padding:7px 8px;">တတိယဆု</td><td style="padding:7px 8px;text-align:right;color:#9b59b6;font-weight:bold;">$200 + 2,000 Diamonds</td></tr></tbody></table><p style="text-align:center;color:#ff3399;font-weight:bold;font-size:13px;margin-top:10px;">📌 Hashtags: #MLBBS41 #MLBBHirara #MLBBCreator</p><button onclick="this.parentElement.parentElement.remove()" style="width:100%;padding:10px;background:#ff3399;color:#fff;border:none;font-size:13px;font-weight:bold;cursor:pointer;margin-top:8px;">ပိတ်မည်</button></div>`;
+            document.body.appendChild(overlay);
+        }
+        
+        // ==================== TIME SYSTEM ====================
+        function updateTime(){
+            const now=new Date();
+            document.getElementById("localTime").textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+            document.getElementById("localDate").textContent=now.toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+            document.getElementById("utcTime").textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:'UTC'});
+            document.getElementById("utcDate").textContent=now.toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric',timeZone:'UTC'});
+        }
+        setInterval(updateTime,1000);updateTime();
+
+        // ==================== LOGOUT WITH CONFIRM ====================
+        function showLogoutConfirm(){document.getElementById("logoutConfirmModal").classList.add("active")}
+        function closeLogoutConfirm(){document.getElementById("logoutConfirmModal").classList.remove("active")}
+        async function logout(){try{await fetch("/api/logout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:localStorage.getItem("auth_token")})})}catch(e){}localStorage.removeItem("auth_token");localStorage.removeItem("user");window.location.href="/"}
+
+        // ==================== MASK EMAIL ====================
+        function maskEmail(email){if(!email)return'---';const p=email.split('@');if(p.length<2)return'****'+email.slice(-2);const n=p[0],d=p[1];if(n.length<=4)return n[0]+'***@'+d;return n.slice(0,2)+'****'+n.slice(-1)+'@'+d}
+
+        // ==================== SLIDER ====================
+        let sliderImages=[],currentSlide=0,slideInterval=null;
+        function renderSlider(){const c=document.getElementById('sliderContainer'),w=document.getElementById('sliderWrapper'),d=document.getElementById('sliderDots');const ca=localStorage.getItem('sliderImagesCache');if(ca){try{sliderImages=JSON.parse(ca)}catch(e){sliderImages=[]}}if(!sliderImages||sliderImages.length===0){c.style.display='none';return}c.style.display='block';w.innerHTML=sliderImages.map(u=>`<div class="slider-slide"><img src="${u}" onerror="this.parentElement.remove()"></div>`).join('');d.innerHTML=sliderImages.map((_,i)=>`<div class="slider-dot ${i===currentSlide?'active':''}"></div>`).join('');goToSlide(currentSlide);if(sliderImages.length>1){if(slideInterval)clearInterval(slideInterval);slideInterval=setInterval(()=>{currentSlide=(currentSlide+1)%sliderImages.length;goToSlide(currentSlide)},5000)}}
+        function goToSlide(i){currentSlide=i;document.getElementById('sliderWrapper').style.transform=`translateX(-${i*100}%)`;document.querySelectorAll('.slider-dot').forEach((d,j)=>{d.classList.toggle('active',j===i)})}
+        async function loadSliderImages(){
+            try{
+                const r=await fetch('/api/slider_images');
+                const d=await r.json();
+                if(d.success && d.images && d.images.length>0){
+                    localStorage.setItem('sliderImagesCache', JSON.stringify(d.images));
+                    sliderImages = d.images;
+                    renderSlider();
+                } else {
+                    localStorage.removeItem('sliderImagesCache');
+                    document.getElementById('sliderContainer').style.display='none';
+                }
+            }catch(e){}
+        }
+        
+        // ==================== NOTICE ====================
+        function renderNotice(d){const b=document.getElementById('noticeBanner'),m=document.getElementById('noticeMsgDisplay'),t=document.getElementById('noticeTime');if(d&&d.message){b.style.display='block';m.textContent=d.message;m.style.color=d.color||'var(--t)';t.textContent=new Date(d.created_at).toLocaleString()}else{b.style.display='none'}}
+        async function loadNotice(){const ca=localStorage.getItem('noticeCache');if(ca){try{const d=JSON.parse(ca);if(d.message)renderNotice(d)}catch(e){}}try{const r=await fetch("/api/notice");const d=await r.json();if(d.success&&d.message){const cn={message:d.message,color:d.color,id:d.id,created_at:d.created_at};const old=localStorage.getItem('noticeCache');if(old!==JSON.stringify(cn)){localStorage.setItem('noticeCache',JSON.stringify(cn));renderNotice(cn)}}else{localStorage.removeItem('noticeCache')}}catch(e){}}
+        
+        // ==================== VIDEO PLAYER ====================
+        async function loadDashboardVideo() {
+            const c=document.getElementById('videoContainer'),v=document.getElementById('dashboardVideo'),yt=document.getElementById('dashboardYoutube');
+            if (v.src&&!v.paused&&v.currentTime>0)return;
+            if (yt.src&&yt.style.display!=='none')return;
+            try{
+                const r=await fetch('/api/video');const d=await r.json();
+                console.log('[VIDEO] API Response:',d);
+                if(d.success&&d.url){
+                    c.style.display='block';
+                    if(d.isYouTube){console.log('[VIDEO] YouTube detected');v.style.display='none';yt.style.display='block';yt.src=d.url;}else{console.log('[VIDEO] Direct video detected');yt.style.display='none';v.style.display='block';v.src=d.url;v.muted=true;v.autoplay=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('webkit-playsinline','');v.load();setTimeout(()=>{v.play().catch(e=>{console.log('[VIDEO] Play failed:',e.message);v.controls=true;})},500);}
+                } else {console.log('[VIDEO] No video found');c.style.display='none';}
+            }catch(e){console.error('[VIDEO] Error:',e.message);}
+        }
+        
+        // ==================== PAGE ACCESS CHECK ====================
+        async function checkPageAccess() {
+            try{
+                const r=await fetch('/api/admin/page_status');const d=await r.json();
+                if(d.pages){const dp=d.pages.find(p=>p.id==='dashboard');if(dp&&dp.status==='off'){document.getElementById('maintenanceMessage').style.display='block';const content=document.querySelector('.content');const footer=document.querySelector('.footer');if(content)content.style.display='none';if(footer)footer.style.display='none';checkPageTimer();return false;}}
+                return true;
+            }catch(e){return true;}
+        }
+        
+        // ==================== PAGE TIMER COUNTDOWN ====================
+        async function checkPageTimer() {
+            const pageId=window.location.pathname.replace('.html','').replace('/','')||'dashboard';
+            let timer=null;
+            try{
+                const saved=localStorage.getItem('pageTimers');
+                if(saved){const timers=JSON.parse(saved);timer=timers[pageId];}
+                if(!timer){const cookieTimers=getCookie('pageTimers');if(cookieTimers){const timers=JSON.parse(decodeURIComponent(cookieTimers));timer=timers[pageId];}}
+                if(!timer){const sessionTimers=sessionStorage.getItem('pageTimers');if(sessionTimers){const timers=JSON.parse(sessionTimers);timer=timers[pageId];}}
+            }catch(e){}
+            if(!timer||timer<=Date.now())return;
+            const maintMsg=document.getElementById('maintenanceMessage');
+            if(maintMsg)maintMsg.style.display='block';
+            const pageBanner=document.getElementById('pageTimerBanner');
+            if(pageBanner)pageBanner.style.display='block';
+            const maintTimer=document.getElementById('maintenanceCountdown');
+            const pageCountdown=document.getElementById('pageTimerCountdown');
+            const update=()=>{
+                const rem=timer-Date.now();
+                if(rem<=0){
+                    try{
+                        const saved=localStorage.getItem('pageTimers');
+                        if(saved){const timers=JSON.parse(saved);delete timers[pageId];localStorage.setItem('pageTimers',JSON.stringify(timers));}
+                        setCookie('pageTimers','',-1);sessionStorage.removeItem('pageTimers');
+                    }catch(e){}
+                    location.reload();return;
+                }
+                const s=Math.floor(rem/1000);const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);const sec=s%60;const timeStr=`${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+                if(maintTimer)maintTimer.textContent=timeStr;if(pageCountdown)pageCountdown.textContent=timeStr;
+            };
+            update();setInterval(update,1000);
+        }
+        function setCookie(name,value,days){let expires='';if(days){const date=new Date();date.setTime(date.getTime()+(days*24*60*60*1000));expires='; expires='+date.toUTCString();}document.cookie=name+'='+encodeURIComponent(value||'')+expires+'; path=/';}
+        function getCookie(name){const nameEQ=name+'=';const ca=document.cookie.split(';');for(let i=0;i<ca.length;i++){let c=ca[i];while(c.charAt(0)===' ')c=c.substring(1,c.length);if(c.indexOf(nameEQ)===0)return c.substring(nameEQ.length,c.length);}return null;}
+
+        // ==================== INIT ====================
+        window.onload=async function(){
+            const pageOn=await checkPageAccess();
+            if(!pageOn)return;
+            if(!localStorage.getItem("auth_token")){window.location.href="/";return;}
+            try{
+                const user=JSON.parse(localStorage.getItem("user")||'{}');
+                document.getElementById("myUserIdDisp").textContent=user.id?'U ID - '+user.id.toString().padStart(6,'0'):'U ID - ------';
+                document.getElementById("myEmail").textContent=maskEmail(user.email||'');
+                document.getElementById("sidebarName").textContent=user.username||'User';
+                document.getElementById("sidebarEmail").textContent=user.email||'user@mlbb.com';
+                loadSliderImages();loadNotice();loadDashboardVideo();checkPageTimer();
+                setInterval(loadSliderImages,5000);setInterval(loadNotice,3000);setInterval(loadDashboardVideo,30000);
+                setInterval(async()=>{
+                    try{const r=await fetch('/api/video');const d=await r.json();const v=document.getElementById('dashboardVideo');const yt=document.getElementById('dashboardYoutube');if(d.success&&d.url){const cur=v.style.display!=='none'?v.src:yt.src;if(d.url!==cur&&d.originalUrl!==cur){v.src='';yt.src='';loadDashboardVideo();}}}catch(e){}
+                },30000);
+                if(user.id){
+                    fetch("/api/check_banned",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({userId:user.id.toString()})}).then(r=>r.json()).then(d=>{
+                        if(d.banned){document.body.innerHTML=`<div class="banned-container"><div class="banned-icon">🚫</div><h2 class="banned-title">သင်၏အကောင့် ဘန်းခံထားရပါသည်</h2><div class="banned-contact"><h4>ဆက်သွယ်ရန်</h4><p>📧 gm1608295@gmail.com</p><p>📞 09672093790</p><p>💬 @Solo_m28</p></div><div class="banned-btns"><button class="btn-stay" onclick="location.reload()">ဆက်နေမည်</button><button class="btn-new" onclick="localStorage.clear();window.location.href='/'">အကောင့်သစ်ဖွင့်မည်</button></div></div>`;}
+                    }).catch(()=>{});
+                }
+            }catch(e){console.error('[DASHBOARD ERROR]',e);}
+        };
+        
+        async function checkAccountStatus(){const token=localStorage.getItem('auth_token');const user=JSON.parse(localStorage.getItem('user')||'{}');if(!token||token==='guest')return;if(!user||!user.id)return;try{const r=await fetch('/api/check_banned',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:user.id.toString()})});const d=await r.json();if(d.banned){alert('⚠️ သင်၏အကောင့်ကို Admin မှ ပိတ်သိမ်းထားပါသည်။\n\nဆက်သွယ်ရန်: @Solo_m28');localStorage.removeItem('auth_token');localStorage.removeItem('user');window.location.href='/';}}catch(e){}}
+        async function checkUserBan(){const token=localStorage.getItem('auth_token');if(!token||token==='guest')return;try{const uid=token.replace('token_','');const r=await fetch('/api/check_banned',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:parseInt(uid)})});const d=await r.json();if(d.banned){alert('⛔ Your account has been banned. Contact @Solo_m28');localStorage.removeItem('auth_token');localStorage.removeItem('user');window.location.href='/';}}catch(e){}}
+        checkUserBan();setInterval(checkUserBan,30000);setInterval(checkAccountStatus,10000);checkAccountStatus();
+        function updateChatBadge(){const token=localStorage.getItem('auth_token');if(!token||token==='guest')return;fetch('/api/chat/unread',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})}).then(r=>r.json()).then(d=>{const badge=document.getElementById('chatBadge');if(badge&&d.count>0){badge.textContent=d.count>99?'99+':d.count;badge.style.display='inline-block';}else if(badge){badge.style.display='none';}});}
+        setInterval(updateChatBadge,10000);updateChatBadge();
+    </script>
+</body>
+</html>
