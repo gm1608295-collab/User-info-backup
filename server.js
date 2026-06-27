@@ -23,13 +23,14 @@ const io = new Server(server, {
     transports: ['polling', 'websocket']
 });
 
-// ✅ ==================== FRONTEND ROUTES ====================
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'chat.html')); // Test Chat
+// ✅ Dashboard Route ကို အရင်ထားပါ (ဒါမှ /dashboard ကို ဦးစားပေးမယ်)
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dashboard.html')); // ✅ Dashboard
+// ✅ Chat Route (Root) ကို အောက်မှာထားပါ
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'chat.html'));
 });
 
 // ✅ ==================== DASHBOARD MOCK APIs (Test Data) ====================
