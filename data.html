@@ -1,0 +1,3692 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Data - SOLO M Game Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0a0a1a;
+            --p: #1a1f4b;
+            --a: #4a1c7a;
+            --r: #e74c3c;
+            --g: #2ecc71;
+            --w: #f39c12;
+            --b: #3498db;
+            --t: #fff;
+            --card-bg: rgba(26, 31, 75, 0.7);
+            --border-glow: rgba(243, 156, 18, 0.4);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        html, body {
+            height: auto !important;
+            min-height: 100vh !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+        body {
+            background: linear-gradient(135deg, #0c0e27, #1a1f4b, #2c3e50);
+            color: var(--t);
+            min-height: 100vh;
+            padding: 15px;
+            overflow-y: auto !important;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding-bottom: 20px;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            background: linear-gradient(to right, var(--a), var(--p));
+            padding: 14px 15px;
+            border-radius: 12px;
+            border-bottom: 3px solid var(--w);
+            position: relative;
+        }
+        .header a {
+            color: var(--w);
+            font-size: 20px;
+            text-decoration: none;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .header a:hover {
+            transform: scale(1.1);
+        }
+        .header h2 {
+            color: var(--w);
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* ========== MARQUEE ========== */
+        .marquee-box {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 7px 12px;
+            overflow: hidden;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .marquee-text {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.85);
+            white-space: nowrap;
+            animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* ========== MAINTENANCE ========== */
+        .maintenance-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            text-align: center;
+            padding: 20px;
+        }
+        .maintenance-icon {
+            font-size: 70px;
+            color: var(--w);
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+        .maintenance-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--w);
+            margin-bottom: 10px;
+        }
+        .maintenance-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+        }
+        .maintenance-timer {
+            font-size: 26px;
+            font-weight: bold;
+            color: var(--w);
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+        }
+        .maintenance-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--w);
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* ========== PAGE TIMER BANNER ========== */
+        .page-timer-banner {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: none;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .page-timer-banner .timer-icon {
+            font-size: 22px;
+            color: var(--r);
+            margin-bottom: 4px;
+        }
+        .page-timer-banner .timer-title {
+            font-size: 11px;
+            color: var(--r);
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .page-timer-banner .timer-countdown {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--w);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ========== DATA INFO LINK ========== */
+        .data-info-link {
+            text-align: right;
+            margin-bottom: 8px;
+        }
+        .data-info-link a {
+            color: var(--b);
+            font-size: 10px;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .data-info-link a:hover {
+            color: var(--w);
+        }
+
+        /* ========== PANEL ========== */
+        .panel {
+            background: var(--card-bg);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(74, 28, 122, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .panel h3 {
+            color: var(--w);
+            font-size: 14px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid rgba(74, 28, 122, 0.5);
+            padding-bottom: 8px;
+        }
+
+        /* ========== DATA CARD SELECT ========== */
+        .data-select {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .data-card {
+            flex: 1;
+            padding: 14px 8px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            transition: background 0.3s;
+        }
+        .data-card:hover {
+            background: rgba(74, 28, 122, 0.4);
+            border-color: var(--w);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+        .data-card.sel {
+            background: rgba(74, 28, 122, 0.5);
+            border-color: var(--w);
+            box-shadow: 0 0 20px rgba(243, 156, 18, 0.2);
+        }
+        .data-card.sel::before {
+            background: linear-gradient(to right, var(--w), var(--r), var(--w));
+        }
+        .data-card img {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s;
+        }
+        .data-card:hover img {
+            transform: scale(1.08);
+        }
+        .data-card p {
+            font-size: 10px;
+            color: var(--t);
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== SUB TAB ========== */
+        .sub-tab {
+            display: none;
+        }
+        .sub-tab.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== FORM ELEMENTS ========== */
+        .pass-wrapper {
+            position: relative;
+        }
+        .pass-wrapper input {
+            padding-right: 42px !important;
+        }
+        .pass-wrapper .eye-btn {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            font-size: 13px;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .pass-wrapper .eye-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--w);
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 4px;
+            color: #ccc;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--t);
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--w);
+            box-shadow: 0 0 12px rgba(243, 156, 18, 0.15);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .form-group select {
+            cursor: pointer;
+        }
+        .form-group select option {
+            background: var(--bg);
+            color: var(--t);
+            padding: 8px;
+        }
+
+        /* ========== COUNTRY SELECT WITH FLAG ========== */
+        .country-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .country-flag {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            width: 100%;
+            padding: 11px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-w {
+            background: linear-gradient(135deg, var(--w), #e67e22);
+            color: #000;
+        }
+        .btn-w:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.3);
+        }
+        .btn-g {
+            background: linear-gradient(135deg, var(--g), #27ae60);
+            color: #000;
+        }
+        .btn-g:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        /* ========== INPUT ROW (ADD/REMOVE) ========== */
+        .input-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 6px;
+            animation: fadeIn 0.2s ease;
+        }
+        .input-row input {
+            flex: 1;
+        }
+        .add-btn {
+            background: var(--w);
+            color: #000;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .add-btn:hover {
+            background: #e67e22;
+            transform: scale(1.1);
+        }
+        .remove-btn {
+            background: var(--r);
+            color: #fff;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 13px;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remove-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        /* ========== TOAST ========== */
+        .notif {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 18px;
+            border-radius: 8px;
+            z-index: 10000;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            animation: slideIn 0.3s ease;
+            display: none;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* ========== MODAL ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-box {
+            background: var(--p);
+            border: 2px solid var(--w);
+            border-radius: 14px;
+            padding: 22px;
+            width: 90%;
+            max-width: 420px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+        .modal-box h3 {
+            color: var(--w);
+            margin-bottom: 14px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .modal-close {
+            float: right;
+            color: var(--r);
+            cursor: pointer;
+            font-size: 22px;
+            transition: transform 0.2s;
+        }
+        .modal-close:hover {
+            transform: scale(1.2);
+        }
+
+        /* ========== INFO MODAL STYLES ========== */
+        .info-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-left: 3px solid var(--w);
+        }
+        .info-section h4 {
+            color: var(--w);
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-section p {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+        }
+        .password-display {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            transition: border-color 0.3s;
+        }
+        .password-display:hover {
+            border-color: var(--w);
+        }
+        .password-display code {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--w);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .copy-pass-btn {
+            background: rgba(52, 152, 219, 0.2);
+            color: var(--b);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            cursor: pointer;
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .copy-pass-btn:hover {
+            background: rgba(52, 152, 219, 0.4);
+        }
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 10px;
+            color: var(--g);
+            margin-top: 8px;
+        }
+        /* ========== SECURITY CONTROL CENTER ========== */
+.security-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+}
+.security-card:hover {
+    border-color: rgba(243, 156, 18, 0.3);
+}
+.security-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+.security-card-header:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+.security-card-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(243, 156, 18, 0.1);
+    border-radius: 10px;
+}
+.security-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    flex: 1;
+}
+.security-card-desc {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+}
+.security-card-arrow {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+}
+.security-card-arrow.open {
+    transform: rotate(180deg);
+}
+.security-card-body {
+    padding: 0 16px 16px 16px;
+    display: none;
+}
+.security-card-body.open {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+/* ========== PROGRESS BAR ========== */
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--w), #e67e22);
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* ========== NETWORK RESULT ========== */
+.network-result-box {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.network-overall {
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 14px;
+}
+.network-overall.excellent {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+.network-overall.good {
+    background: rgba(52, 152, 219, 0.15);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+.network-overall.poor {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+.network-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 10px;
+}
+.network-row:last-child {
+    border-bottom: none;
+}
+.network-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    width: 90px;
+    flex-shrink: 0;
+}
+.network-value {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    width: 60px;
+    text-align: right;
+    flex-shrink: 0;
+}
+.network-bar-wrap {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.network-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s ease;
+}
+.network-bar-fill.green { background: #2ecc71; }
+.network-bar-fill.yellow { background: #f39c12; }
+.network-bar-fill.red { background: #e74c3c; }
+.network-status {
+    font-size: 10px;
+    font-weight: 700;
+    width: 40px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.network-status.green { color: #2ecc71; }
+.network-status.yellow { color: #f39c12; }
+.network-status.red { color: #e74c3c; }
+.network-rating {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.network-rating span {
+    color: var(--w);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* ========== TEST STEP ========== */
+.test-progress {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+}
+.test-progress span {
+    display: block;
+    margin-bottom: 6px;
+}
+
+     /* ========== CHANCE CLEAR STYLES ========== */
+.clear-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+}
+.clear-item:hover {
+    background: rgba(231, 76, 60, 0.08);
+    border-color: rgba(231, 76, 60, 0.25);
+}
+.clear-all-item {
+    border-color: rgba(231, 76, 60, 0.3);
+    background: rgba(231, 76, 60, 0.05);
+    margin-top: 4px;
+}
+.clear-all-item:hover {
+    background: rgba(231, 76, 60, 0.12);
+    border-color: rgba(231, 76, 60, 0.5);
+}
+.clear-item-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+.clear-item-icon {
+    font-size: 24px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+.clear-item-title {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+}
+.clear-item-count {
+    display: block;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 2px;
+}
+.btn-clear {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    transition: all 0.3s;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.btn-clear:hover {
+    background: rgba(231, 76, 60, 0.3);
+    transform: scale(1.05);
+}
+.btn-clear-all {
+    background: rgba(231, 76, 60, 0.25);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.5);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    transition: all 0.3s;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.btn-clear-all:hover {
+    background: #e74c3c;
+    color: #fff;
+    transform: scale(1.05);
+}  
+        /* ========== PASSWORD GENERATOR STYLES ========== */
+.password-generator-box {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.char-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.char-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.char-option:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.char-option-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.char-option-icon {
+    font-size: 18px;
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.char-option-label {
+    font-size: 12px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.char-option-example {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.4);
+    display: block;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    transition: all 0.3s;
+}
+
+.toggle-slider:before {
+    content: "";
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: var(--w);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+}
+
+.char-option.disabled {
+    opacity: 0.4;
+}
+
+/* Length Control */
+.length-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.length-control label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    flex-shrink: 0;
+}
+
+.length-input {
+    width: 60px !important;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px !important;
+}
+
+.length-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    outline: none;
+}
+
+.length-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    background: var(--w);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Password Display */
+.password-display-box {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1.5px solid rgba(46, 204, 113, 0.3);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 10px;
+}
+
+.password-text {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2ecc71;
+    letter-spacing: 3px;
+    flex: 1;
+    text-align: center;
+    word-break: break-all;
+}
+
+.copy-btn {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    cursor: pointer;
+    font-size: 11px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.copy-btn:hover {
+    background: rgba(46, 204, 113, 0.3);
+    transform: scale(1.05);
+}
+
+.copy-btn.copied {
+    background: rgba(46, 204, 113, 0.5);
+}
+
+.password-warning {
+    font-size: 9px;
+    color: #e74c3c;
+    text-align: center;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+/* Type Badge */
+.type-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.type-badge {
+    font-size: 9px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: rgba(243, 156, 18, 0.2);
+    color: var(--w);
+    font-weight: 600;
+}
+
+.type-badge.inactive {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.3);
+    text-decoration: line-through;
+}
+    /* ========== INLINE PASSWORD GENERATOR ========== */
+.inline-generator-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(243, 156, 18, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 14px;
+}
+
+.inline-generator-title {
+    font-size: 11px;
+    color: var(--w);
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.char-options-mini {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.char-check {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.char-check:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.char-check.disabled {
+    opacity: 0.4;
+    text-decoration: line-through;
+}
+
+.char-check input {
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+}
+
+.length-control-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.length-control-mini span {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.length-control-mini input {
+    width: 50px !important;
+    text-align: center;
+    font-weight: bold;
+    font-size: 13px !important;
+    padding: 5px !important;
+}
+
+.password-display-mini {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 8px;
+}
+
+.password-text-mini {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    color: #2ecc71;
+    letter-spacing: 2px;
+    flex: 1;
+    text-align: center;
+    word-break: break-all;
+}
+
+.copy-btn-mini {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    cursor: pointer;
+    font-size: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.copy-btn-mini:hover {
+    background: rgba(46, 204, 113, 0.3);
+}
+
+.generator-actions-mini {
+    display: flex;
+    gap: 6px;
+}
+
+.generator-actions-mini .btn {
+    margin-top: 0;
+    padding: 8px;
+    font-size: 11px;
+}
+   /* ========== MINI SLIDER ========== */
+.length-slider-mini {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    outline: none;
+}
+
+.length-slider-mini::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--w);
+    border-radius: 50%;
+    cursor: pointer;
+}
+        /* ========== SIMPLE CHECKBOX STYLE ========== */
+.char-check-simple {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.char-check-simple:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.char-check-simple.disabled {
+    opacity: 0.4;
+}
+
+.char-check-simple.disabled span {
+    text-decoration: line-through;
+}
+
+.char-check-simple input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--w);
+}
+        /* ========== MINI SLIDER ========== */
+.length-slider-mini {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+}
+
+.length-slider-mini::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--w);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #000;
+}
+
+/* Number Input Style */
+.length-input-mini {
+    width: 50px !important;
+    text-align: center;
+    font-weight: bold;
+    font-size: 13px !important;
+    padding: 5px !important;
+}
+        /* ========== NETWORK BUTTONS ========== */
+.network-btn {
+    flex: 1;
+    padding: 8px 6px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+    transition: all 0.2s;
+    min-width: 55px;
+    text-align: center;
+}
+
+.network-btn:hover {
+    transform: translateY(-1px);
+}
+
+.network-btn.selected {
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+
+.network-btn.mpt { background: rgba(231, 76, 60, 0.3); border-color: rgba(231, 76, 60, 0.5); }
+.network-btn.mpt.selected { background: rgba(231, 76, 60, 0.6); }
+
+.network-btn.telenor { background: rgba(52, 152, 219, 0.3); border-color: rgba(52, 152, 219, 0.5); }
+.network-btn.telenor.selected { background: rgba(52, 152, 219, 0.6); }
+
+.network-btn.ooredoo { background: rgba(243, 156, 18, 0.3); border-color: rgba(243, 156, 18, 0.5); }
+.network-btn.ooredoo.selected { background: rgba(243, 156, 18, 0.6); }
+
+.network-btn.mytel { background: rgba(46, 204, 113, 0.3); border-color: rgba(46, 204, 113, 0.5); }
+.network-btn.mytel.selected { background: rgba(46, 204, 113, 0.6); }
+
+/* Signal Strength Meter */
+.signal-meter {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+    margin: 6px 0;
+}
+
+.signal-bar {
+    width: 6px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.2);
+    transition: all 0.3s;
+}
+
+.signal-bar.active {
+    background: #2ecc71;
+}
+
+.signal-bar:nth-child(1) { height: 8px; }
+.signal-bar:nth-child(2) { height: 14px; }
+.signal-bar:nth-child(3) { height: 20px; }
+.signal-bar:nth-child(4) { height: 26px; }
+.signal-bar:nth-child(5) { height: 32px; }
+
+.signal-bar.medium { background: #f39c12; }
+.signal-bar.weak { background: #e74c3c; }
+    /* ========== CLEAR DATA REDESIGN ========== */
+.clear-data-container {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.clear-data-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.clear-data-header .clear-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.clear-data-header .clear-badge {
+    font-size: 8px;
+    padding: 3px 7px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.clear-data-header .clear-badge.saved {
+    background: rgba(46,204,113,0.2);
+    color: #2ecc71;
+    border: 1px solid rgba(46,204,113,0.3);
+}
+
+.clear-data-header .clear-badge.empty {
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.clear-data-records {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 8px;
+}
+
+.clear-record-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0,0,0,0.2);
+    padding: 6px 8px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.04);
+    transition: all 0.2s;
+}
+
+.clear-record-item:hover {
+    background: rgba(0,0,0,0.35);
+    border-color: rgba(255,255,255,0.1);
+}
+
+.clear-record-title {
+    font-size: 9px;
+    color: rgba(255,255,255,0.7);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.clear-record-date {
+    font-size: 7px;
+    color: rgba(255,255,255,0.3);
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+
+/* Clear Button - Compact */
+.btn-clear-compact {
+    background: rgba(231,76,60,0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231,76,60,0.3);
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: 700;
+    transition: all 0.2s;
+    width: 100%;
+    text-align: center;
+}
+
+.btn-clear-compact:hover {
+    background: rgba(231,76,60,0.3);
+    border-color: #e74c3c;
+}
+
+/* Clear All Button */
+.btn-clear-all-compact {
+    background: rgba(231,76,60,0.25);
+    color: #e74c3c;
+    border: 1px solid rgba(231,76,60,0.5);
+    padding: 7px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 700;
+    transition: all 0.2s;
+    width: 100%;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.btn-clear-all-compact:hover {
+    background: #e74c3c;
+    color: #fff;
+    border-color: #e74c3c;
+}    
+        /* ========== NETWORK TEST REDESIGN ========== */
+.network-status-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.network-status-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.network-status-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.network-status-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    display: block;
+}
+
+.network-status-value {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    display: block;
+}
+
+/* Network Selector Buttons */
+.network-selector {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.network-opt {
+    flex: 1;
+    min-width: 55px;
+    padding: 10px 6px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.03);
+    transition: all 0.2s;
+    text-align: center;
+    user-select: none;
+}
+
+.network-opt:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.2);
+}
+
+.network-opt.selected {
+    border-color: #fff;
+    color: #fff;
+    background: rgba(255,255,255,0.1);
+}
+
+.network-opt.mpt { border-left: 3px solid #e74c3c; }
+.network-opt.mpt.selected { background: rgba(231,76,60,0.3); border-color: #e74c3c; }
+
+.network-opt.telenor { border-left: 3px solid #3498db; }
+.network-opt.telenor.selected { background: rgba(52,152,219,0.3); border-color: #3498db; }
+
+.network-opt.ooredoo { border-left: 3px solid #f39c12; }
+.network-opt.ooredoo.selected { background: rgba(243,156,18,0.3); border-color: #f39c12; }
+
+.network-opt.mytel { border-left: 3px solid #2ecc71; }
+.network-opt.mytel.selected { background: rgba(46,204,113,0.3); border-color: #2ecc71; }
+
+/* Test Type Selector */
+.test-type-selector {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.test-type-btn {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.03);
+    transition: all 0.2s;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.test-type-btn:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+.test-type-btn.selected {
+    border-color: var(--w);
+    color: var(--w);
+    background: rgba(243,156,18,0.15);
+}
+
+.test-type-btn.wifi {
+    border-left: 3px solid #3498db;
+}
+
+.test-type-btn.mobile {
+    border-left: 3px solid #2ecc71;
+}
+
+/* Test Steps Animation */
+.test-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 8px 0;
+}
+
+.test-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 5px;
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    transition: all 0.3s;
+}
+
+.test-step.active {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+}
+
+.test-step.done {
+    color: #2ecc71;
+}
+
+.test-step-icon {
+    width: 16px;
+    text-align: center;
+    font-size: 10px;
+}
+
+/* Signal Meter */
+.signal-meter-mini {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 24px;
+    justify-content: center;
+    margin: 6px 0;
+}
+
+.signal-bar-mini {
+    width: 5px;
+    border-radius: 2px;
+    transition: all 0.3s;
+    background: rgba(255,255,255,0.15);
+}
+
+.signal-bar-mini:nth-child(1) { height: 6px; }
+.signal-bar-mini:nth-child(2) { height: 10px; }
+.signal-bar-mini:nth-child(3) { height: 14px; }
+.signal-bar-mini:nth-child(4) { height: 18px; }
+.signal-bar-mini:nth-child(5) { height: 22px; }
+
+.signal-bar-mini.active.green { background: #2ecc71; }
+.signal-bar-mini.active.yellow { background: #f39c12; }
+.signal-bar-mini.active.red { background: #e74c3c; }
+        
+    </style>
+</head>
+<body>
+    <audio id="bgAudio" loop style="display:none"></audio>
+    <div class="notif" id="notif"></div>
+
+    <div class="container" id="mainContainer">
+        <!-- Maintenance Message -->
+        <div id="maintenanceMessage" style="display:none">
+            <div class="maintenance-container">
+                <div class="maintenance-icon"><i class="fas fa-tools"></i></div>
+                <div class="maintenance-title">ယခုစာမျက်နှာကို ပြုပြင်မွမ်းမံနေပါသည်</div>
+                <div class="maintenance-subtitle">စာမျက်နှာ ပြန်ဖွင့်ရန်</div>
+                <div class="maintenance-timer" id="maintenanceCountdown">--:--:--</div>
+                <a href="/dashboard" class="maintenance-btn"><i class="fas fa-arrow-left"></i> ပင်မစာမျက်နှာသို့</a>
+            </div>
+        </div>
+
+        <!-- Data Content -->
+        <div id="dataContent">
+            <!-- Header -->
+            <div class="header">
+                <a href="/dashboard"><i class="fas fa-arrow-left"></i></a>
+                <h2><i class="fas fa-database"></i> Data</h2>
+            </div>
+
+            <!-- Marquee -->
+            <div class="marquee-box">
+                <span class="marquee-text">
+                    🔒 သင်၏ Data များအားလုံးကို Encryption ဖြင့် လုံခြုံစွာ သိမ်းဆည်းထားပါသည် | 
+                    ✅ 100% လုံခြုံမှုရှိပြီး မည်သူမှ ခိုးယူ၍မရပါ | 
+                    📋 Gmail, MLBB, TikTok အကောင့်များကို စနစ်တကျ သိမ်းဆည်းနိုင်ပါသည် |
+                    🛡️ Admin မှလွဲ၍ မည်သူမှ ကြည့်ရှု၍မရပါ
+                </span>
+            </div>
+
+            <!-- Page Timer Banner -->
+            <div class="page-timer-banner" id="pageTimerBanner">
+                <div class="timer-icon"><i class="fas fa-clock"></i></div>
+                <div class="timer-title">စာမျက်နှာ ပြန်ဖွင့်ရန်</div>
+                <div class="timer-countdown" id="pageTimerCountdown">--:--:--</div>
+            </div>
+
+            <!-- Data Info Link + Modal -->
+<div class="data-info-link">
+    <a onclick="openDataInfo()"><i class="fas fa-info-circle"></i> အသေးစိတ်သိရှိရန် ဤနေရာကိုနှိပ်ပါ</a>
+    
+    <!-- Data Info Modal (ဒီထဲမှာပဲ ထည့်ထား) -->
+    <div class="modal" id="dataInfoModal">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeDataInfo()">&times;</span>
+            <h3><i class="fas fa-info-circle"></i> Data များအကြောင်း</h3>
+            
+            <div class="info-section">
+                <h4>📧 Gmail Data</h4>
+                <p>သင်၏ Gmail အကောင့်အချက်အလက်များကို လုံခြုံစွာ သိမ်းဆည်းနိုင်ပါသည်။</p>
+            </div>
+            
+            <div class="info-section">
+                <h4>🎮 MLBB Data</h4>
+                <p>သင်၏ Mobile Legends အကောင့်အချက်အလက်များကို သိမ်းဆည်းနိုင်ပါသည်။</p>
+            </div>
+            
+            <div class="info-section">
+                <h4>🎵 TikTok Data</h4>
+                <p>သင်၏ TikTok အကောင့်အချက်အလက်များကို သိမ်းဆည်းနိုင်ပါသည်။</p>
+            </div>
+            
+            <div class="info-section" style="border-left-color: var(--w); background: rgba(243,156,18,0.05);">
+                <h4>🔐 Password Generator စနစ်သစ်</h4>
+                <p style="font-size:11px;color:rgba(255,255,255,0.8);">
+                    📧 <b>Gmail</b>, 🎮 <b>MLBB</b>, 🎵 <b>TikTok</b> Tab တစ်ခုချင်းစီတွင် 
+                    <b>သီးသန့် Password Generator</b> များ ထည့်သွင်းထားပါသည်။
+                </p>
+                <p style="font-size:10px;color:rgba(255,255,255,0.6);margin-top:6px;">
+                    ✅ Character Type များ ကိုယ်တိုင်ရွေးချယ်နိုင်ပါသည်<br>
+                    ✅ Password Length ကိုယ်တိုင်သတ်မှတ်နိုင်ပါသည်<br>
+                    ✅ Generate လုပ်ပြီးပါက <b>Copy</b> ကူးကာ လုံခြုံစွာ သိမ်းဆည်းပါ<br>
+                    ⚠️ Password ကို <b>တစ်ကြိမ်သာ</b> မြင်ရမည်ဖြစ်ပါသည်
+                </p>
+            </div>
+
+            <div class="info-section">
+                <h4>🔑 Password အသစ်ပြန်ထုတ်ရန်</h4>
+                <p style="font-size:11px;color:rgba(255,255,255,0.8);">
+                    Password မေ့သွားပါက Tab တစ်ခုချင်းစီရှိ 
+                    <b>Password Generator</b> မှ အသစ်ပြန်ထုတ်ယူနိုင်ပါသည်။
+                </p>
+            </div>
+            
+            <div class="info-section" style="border-left-color: var(--g);">
+                <h4>🛡️ လုံခြုံရေး အာမခံချက်</h4>
+                <p>Data များအားလုံးကို Encryption ဖြင့် ကာကွယ်ထားပါသည်။</p>
+                <span class="security-badge"><i class="fas fa-shield-alt"></i> 256-bit Encrypted</span>
+           </div>
+           <div class="info-section" style="border-left-color: var(--g);">
+    <h4>🛡️ လုံခြုံရေး အဆင့်</h4>
+    
+    <!-- Layer 1 -->
+    <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;">
+            <span>🔒 Database လုံခြုံရေး</span><span>25%</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.1);height:4px;border-radius:2px;">
+            <div style="background:#2ecc71;height:100%;width:100%;border-radius:2px;"></div>
+        </div>
+        <p style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:3px;">
+            သင့်ရဲ့ Password တွေကို Database ထဲမှာ လျှို့ဝှက်ကုဒ် (Hash) အဖြစ်သာ သိမ်းထားပါတယ်။ 
+            ဆာဗာ ဟက်ခံရရင်တောင် သင့်ရဲ့ Password အစစ်ကို ဘယ်သူမှ မြင်ရမှာ မဟုတ်ပါဘူး။
+        </p>
+    </div>
+    
+    <!-- Layer 2 -->
+    <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;">
+            <span>👁️ တစ်ကြိမ်သာ ကြည့်ရှုခွင့်</span><span>25%</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.1);height:4px;border-radius:2px;">
+            <div style="background:#2ecc71;height:100%;width:100%;border-radius:2px;"></div>
+        </div>
+        <p style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:3px;">
+            Password ကို Generate လုပ်ပြီးတာနဲ့ ဒီတစ်ကြိမ်သာ မြင်ရမှာပါ။ 
+            စာမျက်နှာပိတ်လိုက်ရင် ဒါမှမဟုတ် Save လုပ်လိုက်ရင် နောက်တစ်ကြိမ် ပြန်မြင်ရမှာ မဟုတ်တော့ပါဘူး။ 
+            ဒါကြောင့် ချက်ချင်း Copy ကူးပြီး လုံခြုံတဲ့နေရာမှာ သိမ်းထားဖို့ အရေးကြီးပါတယ်။
+        </p>
+    </div>
+    
+    <!-- Layer 3 -->
+    <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;">
+            <span>🔐 အကောင့် ကာကွယ်ရေး</span><span>25%</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.1);height:4px;border-radius:2px;">
+            <div style="background:#2ecc71;height:100%;width:100%;border-radius:2px;"></div>
+        </div>
+        <p style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:3px;">
+            သင့်အကောင့်ကို JWT Token စနစ်နဲ့ ကာကွယ်ထားပါတယ်။ 
+            သင့်အကောင့်ထဲကို သင့် Token မရှိဘဲ ဘယ်သူမှ ဝင်ရောက်လို့မရပါဘူး။ 
+            Token သက်တမ်းကုန်ရင် အလိုအလျောက် ထွက်သွားမှာပါ။
+        </p>
+    </div>
+    
+    <!-- Layer 4 -->
+    <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;">
+            <span>📂 ဒေတာ သီးသန့်ခွဲခြင်း</span><span>25%</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.1);height:4px;border-radius:2px;">
+            <div style="background:#2ecc71;height:100%;width:100%;border-radius:2px;"></div>
+        </div>
+        <p style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:3px;">
+            Gmail, MLBB, TikTok တစ်ခုချင်းစီအတွက် သီးသန့် Password တွေ သတ်မှတ်ထားပါတယ်။ 
+            Password တစ်ခု ပေါက်သွားရင်တောင် ကျန်တဲ့ ဒေတာတွေ လုံခြုံနေမှာပါ။ 
+            ဥပမာ - MLBB Password ပေါက်သွားရင် Gmail နဲ့ TikTok ဒေတာတွေ လုံခြုံနေဆဲပါ။
+        </p>
+    </div>
+    
+    <!-- Overall -->
+    <div style="text-align:center;padding:12px;background:rgba(46,204,113,0.1);border-radius:8px;">
+        <p style="font-size:14px;font-weight:bold;color:#2ecc71;margin:0;">
+            🟢 အလုံးစုံ လုံခြုံမှု 100%
+        </p>
+        <p style="font-size:9px;color:rgba(255,255,255,0.5);margin:4px 0;">
+            ဒီစနစ်ကို Google, Facebook တို့လို ကုမ္ပဏီကြီးတွေ သုံးတဲ့ 
+            လုံခြုံရေး စံနှုန်းတွေနဲ့ တည်ဆောက်ထားပါတယ်။
+        </p>
+        <p style="font-size:11px;color:rgba(255,255,255,0.7);margin:4px 0 0;">
+            ⭐⭐⭐⭐⭐ 5/5
+        </p>
+    </div>
+    
+    <!-- Tips -->
+    <div style="margin-top:10px;padding:10px;background:rgba(243,156,18,0.05);border-radius:8px;border-left:3px solid var(--w);">
+        <p style="font-size:10px;color:var(--w);font-weight:bold;margin:0 0 4px;">
+            💡 လုံခြုံရေး အကြံပြုချက်
+        </p>
+        <p style="font-size:9px;color:rgba(255,255,255,0.7);margin:0;">
+            ✅ Password ကို ဖုန်းရဲ့ Notes ဒါမှမဟုတ် Password Manager မှာ သိမ်းပါ<br>
+            ✅ Password ကို ဘယ်သူ့ကိုမှ မပေးပါနဲ့<br>
+            ✅ အများသုံး Device တွေမှာ Login မလုပ်ပါနဲ့<br>
+            ✅ သံသယရှိရင် Password အသစ် ပြန်ထုတ်ပါ
+        </p>
+    </div>
+           </div>
+           </div>
+        </div>
+    </div>
+</div>
+
+            <!-- Main Panel -->
+            <div class="panel">
+                <!-- Card Select -->
+                <div class="data-select">
+                    <div class="data-card sel" onclick="showSub('gmailSub')">
+                        <img src="https://i.ibb.co/zWXRD2bF/88e14cc7e7fcbb0e0e09de26cec86c61.jpg" alt="Gmail">
+                        <p>📧 Gmail</p>
+                    </div>
+                    <div class="data-card" onclick="showSub('mlbbSub')">
+                        <img src="https://i.ibb.co/NDZp85p/85cef5aaf89054952dd0c1cb350d7061.jpg" alt="MLBB">
+                        <p>🎮 MLBB</p>
+                    </div>
+                    <div class="data-card" onclick="showSub('tiktokSub')">
+                        <img src="https://i.ibb.co/p6CbXtWg/0601998cbad712b7a2a22d80d62966cc.jpg" alt="TikTok">
+                        <p>🎵 TikTok</p>
+                    </div>
+                </div>
+
+                <!-- ==================== SECURITY CONTROL CENTER ==================== -->
+<div class="panel" id="securityPanel">
+    <h3><i class="fas fa-shield-alt"></i> Security Control Center</h3>
+    
+<!-- Network Test Card -->
+<div class="security-card" id="networkCard">
+    <div class="security-card-header" onclick="toggleSecurityCard('networkBody')">
+        <div class="security-card-icon">📶</div>
+        <div class="security-card-title">Network Test</div>
+        <div class="security-card-desc">WiFi • Mobile Data • Signal Strength</div>
+        <i class="fas fa-chevron-down security-card-arrow" id="networkArrow"></i>
+    </div>
+    <div class="security-card-body" id="networkBody">
+        
+        <!-- Connection Status -->
+        <div class="network-status-bar" id="networkStatusBar">
+            <div class="network-status-icon" id="networkStatusIcon">🔍</div>
+            <div class="network-status-info">
+                <span class="network-status-label">Current Connection</span>
+                <span class="network-status-value" id="networkStatusValue">Detecting...</span>
+            </div>
+        </div>
+        
+        <!-- Test Type Selector -->
+        <div class="test-type-selector">
+            <button class="test-type-btn wifi selected" id="wifiTestBtn" onclick="selectTestType('wifi')">
+                <i class="fas fa-wifi"></i> WiFi
+            </button>
+            <button class="test-type-btn mobile" id="mobileTestBtn" onclick="selectTestType('mobile')">
+                <i class="fas fa-signal"></i> Mobile Data
+            </button>
+        </div>
+        
+        <!-- Network Selector (Mobile Data ရွေးမှပဲ ပေါ်မယ်) -->
+        <div class="network-selector" id="networkSelector" style="display:none;">
+            <button class="network-opt mpt selected" onclick="selectNetwork('MPT')">📶 MPT</button>
+            <button class="network-opt telenor" onclick="selectNetwork('Telenor')">📶 Telenor</button>
+            <button class="network-opt ooredoo" onclick="selectNetwork('Ooredoo')">📶 Ooredoo</button>
+            <button class="network-opt mytel" onclick="selectNetwork('Mytel')">📶 Mytel</button>
+        </div>
+        
+        <!-- Start Test Button -->
+        <button class="btn btn-w" onclick="startNetworkTest()" id="startTestBtn">
+            <i class="fas fa-play"></i> Start Network Test
+        </button>
+        
+        <!-- Test Progress -->
+        <div id="networkTestProgress" style="display:none;margin-top:10px;">
+            <div class="test-steps">
+                <div class="test-step" id="stepPing">
+                    <span class="test-step-icon">⏳</span> Testing Ping...
+                </div>
+                <div class="test-step" id="stepDownload">
+                    <span class="test-step-icon">⏳</span> Testing Download Speed...
+                </div>
+                <div class="test-step" id="stepUpload">
+                    <span class="test-step-icon">⏳</span> Testing Upload Speed...
+                </div>
+                <div class="test-step" id="stepPacket">
+                    <span class="test-step-icon">⏳</span> Testing Packet Loss...
+                </div>
+                <div class="test-step" id="stepFinal">
+                    <span class="test-step-icon">⏳</span> Finalizing Results...
+                </div>
+            </div>
+            <div class="progress-bar" style="margin-top:6px;">
+                <div class="progress-fill" id="networkTestProgressBar" style="width:0%;"></div>
+            </div>
+        </div>
+        
+        <!-- Test Result -->
+        <div id="networkTestResult" style="display:none;margin-top:10px;">
+            <div class="network-result-box" id="networkTestResultBox"></div>
+        </div>
+    </div>
+</div>
+    
+                <!-- Chance Clear Card -->
+<div class="security-card" id="chanceClearCard">
+    <div class="security-card-header" onclick="toggleSecurityCard('chanceClearBody')">
+        <div class="security-card-icon">🧹</div>
+        <div class="security-card-title">Chance Clear</div>
+        <div class="security-card-desc">Data တွေကို ရွေးချယ်ဖျက်နိုင်ပါတယ်</div>
+        <i class="fas fa-chevron-down security-card-arrow" id="chanceClearArrow"></i>
+    </div>
+    <div class="security-card-body" id="chanceClearBody">
+        
+        <!-- Password Lock -->
+        <div id="clearLockSection">
+            <p style="font-size:10px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:8px;">
+                ⚠️ Data ဖျက်ရန် Generator Password ထည့်ပါ
+            </p>
+            <div class="pass-wrapper" style="margin-bottom:8px;">
+                <input type="password" id="clearPassInput" placeholder="Enter Generator Password">
+                <button class="eye-btn" onclick="togglePass('clearPassInput', this)"><i class="fas fa-eye"></i></button>
+            </div>
+            <button class="btn btn-w" onclick="unlockClearPanel()">
+                <i class="fas fa-unlock"></i> Unlock
+            </button>
+        </div>
+        
+        <!-- Clear Options (Hidden by default) -->
+<div id="clearOptionsSection" style="display:none;">
+    <p style="font-size:9px;color:#e74c3c;text-align:center;margin-bottom:8px;">
+        ⚠️ ဖျက်လိုက်ရင် ပြန်ပြင်လို့မရပါ!
+    </p>
+    
+    <!-- Gmail Data Section -->
+    <div class="clear-data-container">
+        <div class="clear-data-header">
+            <span class="clear-title">📧 Gmail Records</span>
+            <span class="clear-badge saved" id="gmailClearBadge">Loading...</span>
+        </div>
+        <div class="clear-data-records" id="gmailClearRecords">
+            <div class="clear-record-item">
+                <span class="clear-record-title" style="color:rgba(255,255,255,0.3);">Loading...</span>
+            </div>
+        </div>
+        <button class="btn-clear-compact" onclick="clearData('gmail')">
+            <i class="fas fa-trash"></i> Clear All Gmail Records
+        </button>
+    </div>
+    
+    <!-- MLBB Data Section -->
+    <div class="clear-data-container">
+        <div class="clear-data-header">
+            <span class="clear-title">🎮 MLBB Records</span>
+            <span class="clear-badge saved" id="mlbbClearBadge">Loading...</span>
+        </div>
+        <div class="clear-data-records" id="mlbbClearRecords">
+            <div class="clear-record-item">
+                <span class="clear-record-title" style="color:rgba(255,255,255,0.3);">Loading...</span>
+            </div>
+        </div>
+        <button class="btn-clear-compact" onclick="clearData('mlbb')">
+            <i class="fas fa-trash"></i> Clear All MLBB Records
+        </button>
+    </div>
+    
+    <!-- TikTok Data Section -->
+    <div class="clear-data-container">
+        <div class="clear-data-header">
+            <span class="clear-title">🎵 TikTok Records</span>
+            <span class="clear-badge saved" id="tiktokClearBadge">Loading...</span>
+        </div>
+        <div class="clear-data-records" id="tiktokClearRecords">
+            <div class="clear-record-item">
+                <span class="clear-record-title" style="color:rgba(255,255,255,0.3);">Loading...</span>
+            </div>
+        </div>
+        <button class="btn-clear-compact" onclick="clearData('tiktok')">
+            <i class="fas fa-trash"></i> Clear All TikTok Records
+        </button>
+    </div>
+    
+    <!-- Login History Section -->
+    <div class="clear-data-container">
+        <div class="clear-data-header">
+            <span class="clear-title">📋 Login History</span>
+            <span class="clear-badge saved" id="loginClearBadge">Loading...</span>
+        </div>
+        <button class="btn-clear-compact" onclick="clearData('login_history')">
+            <i class="fas fa-trash"></i> Clear Login History
+        </button>
+    </div>
+    
+    <!-- CLEAR ALL -->
+    <button class="btn-clear-all-compact" onclick="clearData('all')">
+        <i class="fas fa-skull"></i> ⚠️ Clear ALL Data (Reset Everything)
+    </button>
+</div>
+        <!-- Progress -->
+        <div id="clearProgress" style="display:none;text-align:center;margin-top:10px;">
+            <span id="clearProgressText" style="font-size:11px;color:rgba(255,255,255,0.7);">⏳ Clearing...</span>
+            <div class="progress-bar" style="margin-top:6px;">
+                <div class="progress-fill" id="clearProgressBar" style="width:0%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal" id="clearConfirmModal">
+    <div class="modal-box">
+        <span class="modal-close" onclick="closeClearConfirm()">&times;</span>
+        <h3 style="color:#e74c3c;"><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h3>
+        <p style="font-size:12px;color:rgba(255,255,255,0.8);text-align:center;margin-bottom:6px;" id="clearConfirmText"></p>
+        <p style="font-size:10px;color:#e74c3c;text-align:center;margin-bottom:12px;">⚠️ ဖျက်လိုက်ရင် ပြန်ပြင်လို့မရပါ!</p>
+        <div style="display:flex;gap:8px;">
+            <button class="btn" onclick="closeClearConfirm()" style="background:rgba(255,255,255,0.1);color:#fff;flex:1;">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+            <button class="btn" id="confirmClearBtn" style="background:#e74c3c;color:#fff;flex:1;">
+                <i class="fas fa-check"></i> Yes, Delete
+            </button>
+        </div>
+    </div>
+</div>              
+    <!-- GMAIL SUB TAB -->
+<div class="sub-tab active" id="gmailSub">
+    
+    <!-- ==================== GMAIL PASSWORD GENERATOR ==================== -->
+    <div class="inline-generator-box">
+        <p class="inline-generator-title">🔐 Gmail Password Generator</p>
+        
+        <div class="char-options-mini">
+            <label class="char-check-simple" id="gmailOptLower">
+                <input type="checkbox" id="gmailChkLower" checked onchange="updateMiniChar('gmail', 'lower', this.checked)"> 
+                <span>a-z</span>
+            </label>
+            <label class="char-check-simple" id="gmailOptUpper">
+                <input type="checkbox" id="gmailChkUpper" checked onchange="updateMiniChar('gmail', 'upper', this.checked)"> 
+                <span>A-Z</span>
+            </label>
+            <label class="char-check-simple" id="gmailOptNumbers">
+                <input type="checkbox" id="gmailChkNumbers" checked onchange="updateMiniChar('gmail', 'numbers', this.checked)"> 
+                <span>0-9</span>
+            </label>
+            <label class="char-check-simple" id="gmailOptSymbols">
+                <input type="checkbox" id="gmailChkSymbols" onchange="updateMiniChar('gmail', 'symbols', this.checked)"> 
+                <span>@#*!?"</span>
+            </label>
+        </div>
+        
+        <div class="length-control-mini">
+            <span>Length:</span>
+            <input type="number" id="gmailPassLength" class="length-input-mini" value="10" min="6" max="30" onchange="syncMiniLength('gmail', this.value)">
+            <input type="range" id="gmailPassLengthSlider" class="length-slider-mini" min="6" max="30" value="10" oninput="syncMiniLength('gmail', this.value)">
+        </div>
+        
+        <!-- Cooldown Timer -->
+        <div id="gmailCooldownBox" style="display:none;text-align:center;padding:10px;background:rgba(231,76,60,0.1);border-radius:8px;margin-bottom:8px;border:1px solid rgba(231,76,60,0.3);">
+            <p style="font-size:10px;color:#e74c3c;margin:0 0 4px;">⏳ နောက်တစ်ကြိမ် ထုတ်ရန် စောင့်ဆိုင်းပါ</p>
+            <p style="font-size:16px;font-weight:bold;color:#fff;margin:0;font-family:'Courier New',monospace;" id="gmailCooldownTimer">--:--:--</p>
+        </div>
+        
+        <!-- Old Password Input -->
+        <div id="gmailOldPassBox" style="display:none;margin-bottom:8px;">
+            <p style="font-size:9px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:4px;">🔑 Password အဟောင်းထည့်ပါ</p>
+            <div class="pass-wrapper">
+                <input type="password" id="gmailOldPassInput" placeholder="Password အဟောင်းထည့်ပါ">
+                <button class="eye-btn" onclick="togglePass('gmailOldPassInput', this)"><i class="fas fa-eye"></i></button>
+            </div>
+        </div>
+        
+        <div class="password-display-mini" id="gmailPasswordDisplayBox" style="display:none;">
+            <span class="password-text-mini" id="gmailGeneratedPassword"></span>
+            <button class="copy-btn-mini" onclick="copyMiniPassword('gmail')">📋</button>
+        </div>
+        
+        <div class="generator-actions-mini">
+            <button class="btn btn-w" onclick="generateAndShowMiniPassword('gmail')" style="flex:1;">
+                <i class="fas fa-magic"></i> Generate
+            </button>
+            <button class="btn btn-g" id="gmailSavePasswordBtn" style="display:none;flex:1;" onclick="saveMiniPassword('gmail')">
+                <i class="fas fa-save"></i> Save
+            </button>
+        </div>
+    </div>
+    
+    <!-- Unlock Section -->
+    <div class="form-group">
+        <label>🔐 Enter Password to Unlock</label>
+        <div class="pass-wrapper">
+            <input type="password" id="dataGmailPass" placeholder="Enter Gmail password to unlock">
+            <button class="eye-btn" onclick="togglePass('dataGmailPass', this)"><i class="fas fa-eye"></i></button>
+        </div>
+    </div>
+    <button class="btn btn-w" onclick="unlockData('gmail')"><i class="fas fa-unlock"></i> Unlock Gmail</button>
+    
+    <!-- Gmail Form ထဲမှာ (ပထမဆုံး Field အဖြစ်) -->
+    <div id="gmailForm" style="display:none;margin-top:14px">
+        <div class="form-group">
+    <label>📝 Title / Header (ခေါင်းစဉ်)</label>
+    <input type="text" id="gTitle" placeholder="ဥပမာ - Main Gmail Account, Gaming Gmail">
+        </div>
+        <div class="form-group"><label>👤 Full Name</label><input type="text" id="gName" placeholder="Enter full name"></div>
+        <div class="form-group"><label>📧 Email Address</label><div id="gmailEmailList"><div class="input-row"><input type="email" class="gmail-email" placeholder="Enter email"><button class="add-btn" onclick="addGmailEmail()">+</button></div></div></div>
+        <div class="form-group"><label>📱 Phone Number</label><div id="gmailPhoneList"><div class="input-row"><input type="text" class="gmail-phone" placeholder="Enter phone"><button class="add-btn" onclick="addGmailPhone()">+</button></div></div></div>
+        <div class="form-group"><label>🔑 Password</label><div class="pass-wrapper"><input type="password" id="gPw" placeholder="Enter password"><button class="eye-btn" onclick="togglePass('gPw', this)"><i class="fas fa-eye"></i></button></div></div>
+        <div class="form-group"><label>🔑 Confirm Password</label><div class="pass-wrapper"><input type="password" id="gConfirmPw" placeholder="Confirm password"><button class="eye-btn" onclick="togglePass('gConfirmPw', this)"><i class="fas fa-eye"></i></button></div></div>
+        <div class="form-group"><label>🎂 Date of Birth</label><input type="date" id="gAge"></div>
+        <div class="form-group"><label>🌍 Country</label><select id="gCountry" onchange="loadRegions('gCountry', 'gRegion')"><option value="">Select Country...</option></select></div>
+        <div class="form-group"><label>📍 Region/State</label><select id="gRegion"><option value="">Select Region...</option></select></div>
+        <button class="btn btn-g" onclick="saveGmailData()"><i class="fas fa-save"></i> Save Gmail Data</button>
+    </div>
+</div>
+                <!-- MLBB SUB TAB -->
+<div class="sub-tab" id="mlbbSub">
+    
+    <!-- ==================== MLBB PASSWORD GENERATOR ==================== -->
+    <div class="inline-generator-box">
+        <p class="inline-generator-title">🔐 MLBB Password Generator</p>
+        
+        <div class="char-options-mini">
+            <label class="char-check-simple" id="mlbbOptLower">
+                <input type="checkbox" id="mlbbChkLower" checked onchange="updateMiniChar('mlbb', 'lower', this.checked)"> 
+                <span>a-z</span>
+            </label>
+            <label class="char-check-simple" id="mlbbOptUpper">
+                <input type="checkbox" id="mlbbChkUpper" checked onchange="updateMiniChar('mlbb', 'upper', this.checked)"> 
+                <span>A-Z</span>
+            </label>
+            <label class="char-check-simple" id="mlbbOptNumbers">
+                <input type="checkbox" id="mlbbChkNumbers" checked onchange="updateMiniChar('mlbb', 'numbers', this.checked)"> 
+                <span>0-9</span>
+            </label>
+            <label class="char-check-simple" id="mlbbOptSymbols">
+                <input type="checkbox" id="mlbbChkSymbols" onchange="updateMiniChar('mlbb', 'symbols', this.checked)"> 
+                <span>@#*!?"</span>
+            </label>
+        </div>
+        
+        <div class="length-control-mini">
+            <span>Length:</span>
+            <input type="number" id="mlbbPassLength" class="length-input-mini" value="10" min="6" max="30" onchange="syncMiniLength('mlbb', this.value)">
+            <input type="range" id="mlbbPassLengthSlider" class="length-slider-mini" min="6" max="30" value="10" oninput="syncMiniLength('mlbb', this.value)">
+        </div>
+        
+        <!-- Cooldown Timer -->
+        <div id="mlbbCooldownBox" style="display:none;text-align:center;padding:10px;background:rgba(231,76,60,0.1);border-radius:8px;margin-bottom:8px;border:1px solid rgba(231,76,60,0.3);">
+            <p style="font-size:10px;color:#e74c3c;margin:0 0 4px;">⏳ နောက်တစ်ကြိမ် ထုတ်ရန် စောင့်ဆိုင်းပါ</p>
+            <p style="font-size:16px;font-weight:bold;color:#fff;margin:0;font-family:'Courier New',monospace;" id="mlbbCooldownTimer">--:--:--</p>
+        </div>
+        
+        <!-- Old Password Input -->
+        <div id="mlbbOldPassBox" style="display:none;margin-bottom:8px;">
+            <p style="font-size:9px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:4px;">🔑 Password အဟောင်းထည့်ပါ</p>
+            <div class="pass-wrapper">
+                <input type="password" id="mlbbOldPassInput" placeholder="Password အဟောင်းထည့်ပါ">
+                <button class="eye-btn" onclick="togglePass('mlbbOldPassInput', this)"><i class="fas fa-eye"></i></button>
+            </div>
+        </div>
+        
+        <div class="password-display-mini" id="mlbbPasswordDisplayBox" style="display:none;">
+            <span class="password-text-mini" id="mlbbGeneratedPassword"></span>
+            <button class="copy-btn-mini" onclick="copyMiniPassword('mlbb')">📋</button>
+        </div>
+        
+        <div class="generator-actions-mini">
+            <button class="btn btn-w" onclick="generateAndShowMiniPassword('mlbb')" style="flex:1;">
+                <i class="fas fa-magic"></i> Generate
+            </button>
+            <button class="btn btn-g" id="mlbbSavePasswordBtn" style="display:none;flex:1;" onclick="saveMiniPassword('mlbb')">
+                <i class="fas fa-save"></i> Save
+            </button>
+        </div>
+    </div>
+    
+    <!-- Unlock Section -->
+    <div class="form-group">
+        <label>🔐 Enter Password to Unlock</label>
+        <div class="pass-wrapper">
+            <input type="password" id="dataMlbbPass" placeholder="Enter MLBB password to unlock">
+            <button class="eye-btn" onclick="togglePass('dataMlbbPass', this)"><i class="fas fa-eye"></i></button>
+        </div>
+    </div>
+    <button class="btn btn-w" onclick="unlockData('mlbb')"><i class="fas fa-unlock"></i> Unlock MLBB</button>
+    
+    <!-- Gmail Form ထဲမှာ (ပထမဆုံး Field အဖြစ်) -->
+    <div id="mlbbForm" style="display:none;margin-top:14px">
+         <div class="form-group">
+    <label>📝 Title / Header (ခေါင်းစဉ်)</label>
+    <input type="text" id="mTitle" placeholder="ဥပမာ - Main Gmail Account, Gaming Gmail">
+         </div>
+        <div class="form-group"><label>🎮 In-Game Name</label><input type="text" id="mName" placeholder="Enter in-game name"></div>
+        <div class="form-group"><label>🆔 In-Game ID</label><input type="text" id="mId" placeholder="Enter game ID"></div>
+        <div class="form-group"><label>🖥️ Server ID</label><input type="text" id="mServer" placeholder="Enter server ID"></div>
+        <div class="form-group"><label>📧 Gmail</label><div id="mlbbEmailList"><div class="input-row"><input type="email" class="mlbb-email" placeholder="Enter Gmail"><button class="add-btn" onclick="addMlbbEmail()">+</button></div></div></div>
+        <div class="form-group"><label>🔑 Password</label><div class="pass-wrapper"><input type="password" id="mPw" placeholder="Enter password"><button class="eye-btn" onclick="togglePass('mPw', this)"><i class="fas fa-eye"></i></button></div></div>
+        <div class="form-group"><label>🔑 Confirm Password</label><div class="pass-wrapper"><input type="password" id="mConfirmPw" placeholder="Confirm password"><button class="eye-btn" onclick="togglePass('mConfirmPw', this)"><i class="fas fa-eye"></i></button></div></div>
+        <div class="form-group"><label>🎂 Date of Birth</label><input type="date" id="mAge"></div>
+        <div class="form-group"><label>🌍 Country</label><select id="mCountry" onchange="loadRegions('mCountry', 'mRegion')"><option value="">Select Country...</option></select></div>
+        <div class="form-group"><label>📍 Region/State</label><select id="mRegion"><option value="">Select Region...</option></select></div>
+        <button class="btn btn-g" onclick="saveMlbbData()"><i class="fas fa-save"></i> Save MLBB Data</button>
+    </div>
+</div>
+                <!-- TIKTOK SUB TAB -->
+<div class="sub-tab" id="tiktokSub">
+    
+    <!-- ==================== TIKTOK PASSWORD GENERATOR ==================== -->
+    <div class="inline-generator-box">
+        <p class="inline-generator-title">🔐 TikTok Password Generator</p>
+        
+        <div class="char-options-mini">
+            <label class="char-check-simple" id="tiktokOptLower">
+                <input type="checkbox" id="tiktokChkLower" checked onchange="updateMiniChar('tiktok', 'lower', this.checked)"> 
+                <span>a-z</span>
+            </label>
+            <label class="char-check-simple" id="tiktokOptUpper">
+                <input type="checkbox" id="tiktokChkUpper" checked onchange="updateMiniChar('tiktok', 'upper', this.checked)"> 
+                <span>A-Z</span>
+            </label>
+            <label class="char-check-simple" id="tiktokOptNumbers">
+                <input type="checkbox" id="tiktokChkNumbers" checked onchange="updateMiniChar('tiktok', 'numbers', this.checked)"> 
+                <span>0-9</span>
+            </label>
+            <label class="char-check-simple" id="tiktokOptSymbols">
+                <input type="checkbox" id="tiktokChkSymbols" onchange="updateMiniChar('tiktok', 'symbols', this.checked)"> 
+                <span>@#*!?"</span>
+            </label>
+        </div>
+        
+        <div class="length-control-mini">
+            <span>Length:</span>
+            <input type="number" id="tiktokPassLength" class="length-input-mini" value="10" min="6" max="30" onchange="syncMiniLength('tiktok', this.value)">
+            <input type="range" id="tiktokPassLengthSlider" class="length-slider-mini" min="6" max="30" value="10" oninput="syncMiniLength('tiktok', this.value)">
+        </div>
+        
+        <!-- Cooldown Timer -->
+        <div id="tiktokCooldownBox" style="display:none;text-align:center;padding:10px;background:rgba(231,76,60,0.1);border-radius:8px;margin-bottom:8px;border:1px solid rgba(231,76,60,0.3);">
+            <p style="font-size:10px;color:#e74c3c;margin:0 0 4px;">⏳ နောက်တစ်ကြိမ် ထုတ်ရန် စောင့်ဆိုင်းပါ</p>
+            <p style="font-size:16px;font-weight:bold;color:#fff;margin:0;font-family:'Courier New',monospace;" id="tiktokCooldownTimer">--:--:--</p>
+        </div>
+        
+        <!-- Old Password Input -->
+        <div id="tiktokOldPassBox" style="display:none;margin-bottom:8px;">
+            <p style="font-size:9px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:4px;">🔑 Password အဟောင်းထည့်ပါ</p>
+            <div class="pass-wrapper">
+                <input type="password" id="tiktokOldPassInput" placeholder="Password အဟောင်းထည့်ပါ">
+                <button class="eye-btn" onclick="togglePass('tiktokOldPassInput', this)"><i class="fas fa-eye"></i></button>
+            </div>
+        </div>
+        
+        <div class="password-display-mini" id="tiktokPasswordDisplayBox" style="display:none;">
+            <span class="password-text-mini" id="tiktokGeneratedPassword"></span>
+            <button class="copy-btn-mini" onclick="copyMiniPassword('tiktok')">📋</button>
+        </div>
+        
+        <div class="generator-actions-mini">
+            <button class="btn btn-w" onclick="generateAndShowMiniPassword('tiktok')" style="flex:1;">
+                <i class="fas fa-magic"></i> Generate
+            </button>
+            <button class="btn btn-g" id="tiktokSavePasswordBtn" style="display:none;flex:1;" onclick="saveMiniPassword('tiktok')">
+                <i class="fas fa-save"></i> Save
+            </button>
+        </div>
+    </div>
+    
+    <!-- Unlock Section -->
+    <div class="form-group">
+        <label>🔐 Enter Password to Unlock</label>
+        <div class="pass-wrapper">
+            <input type="password" id="dataTiktokPass" placeholder="Enter TikTok password to unlock">
+            <button class="eye-btn" onclick="togglePass('dataTiktokPass', this)"><i class="fas fa-eye"></i></button>
+        </div>
+    </div>
+    <button class="btn btn-w" onclick="unlockData('tiktok')"><i class="fas fa-unlock"></i> Unlock TikTok</button>
+    
+    <!-- Gmail Form ထဲမှာ (ပထမဆုံး Field အဖြစ်) -->
+    <div id="tiktokForm" style="display:none;margin-top:14px">
+         <div class="form-group">
+    <label>📝 Title / Header (ခေါင်းစဉ်)</label>
+    <input type="text" id="tTitle" placeholder="ဥပမာ - Main Gmail Account, Gaming Gmail">
+         </div>  
+        <div class="form-group"><label>👤 Full Name</label><input type="text" id="tFullName" placeholder="Enter full name"></div>
+        <div class="form-group"><label>👤 Last Name</label><input type="text" id="tLastName" placeholder="Enter last name"></div>
+        <div class="form-group"><label>📧 Email</label><div id="tiktokEmailList"><div class="input-row"><input type="email" class="tiktok-email" placeholder="Enter email"><button class="add-btn" onclick="addTiktokEmail()">+</button></div></div></div>
+        <div class="form-group"><label>📱 Phone</label><div id="tiktokPhoneList"><div class="input-row"><input type="text" class="tiktok-phone" placeholder="Enter phone"><button class="add-btn" onclick="addTiktokPhone()">+</button></div></div></div>
+        <div class="form-group"><label>🔑 Password</label><div class="pass-wrapper"><input type="password" id="tPw" placeholder="Enter password"><button class="eye-btn" onclick="togglePass('tPw', this)"><i class="fas fa-eye"></i></button></div></div>
+        <div class="form-group"><label>🔑 Confirm Password</label><div class="pass-wrapper"><input type="password" id="tConfirmPw" placeholder="Confirm password"><button class="eye-btn" onclick="togglePass('tConfirmPw', this)"><i class="fas fa-eye"></i></button></div></div>
+        <div class="form-group"><label>🎂 Date of Birth</label><input type="date" id="tAge"></div>
+        <div class="form-group"><label>🌍 Country</label><select id="tCountry" onchange="loadRegions('tCountry', 'tRegion')"><option value="">Select Country...</option></select></div>
+        <div class="form-group"><label>📍 Region/State</label><select id="tRegion"><option value="">Select Region...</option></select></div>
+        <button class="btn btn-g" onclick="saveTiktokData()"><i class="fas fa-save"></i> Save TikTok Data</button>
+    </div>
+</div>
+<script>
+  // ==================== COUNTRIES DATA - 195 COUNTRIES ====================
+const COUNTRIES_DATA = [
+    { name: "Afghanistan", flag: "🇦🇫", regions: ["Kabul", "Kandahar", "Herat", "Mazar-i-Sharif", "Jalalabad", "Bamyan", "Kunduz", "Ghazni"] },
+    { name: "Albania", flag: "🇦🇱", regions: ["Tirana", "Durrës", "Vlorë", "Shkodër", "Fier", "Berat", "Korçë", "Elbasan"] },
+    { name: "Algeria", flag: "🇩🇿", regions: ["Algiers", "Oran", "Constantine", "Annaba", "Batna", "Tlemcen", "Sétif", "Biskra"] },
+    { name: "Andorra", flag: "🇦🇩", regions: ["Andorra la Vella", "Escaldes-Engordany", "Encamp", "La Massana", "Ordino", "Sant Julià de Lòria"] },
+    { name: "Angola", flag: "🇦🇴", regions: ["Luanda", "Huambo", "Benguela", "Lobito", "Lubango", "Malanje", "Cabinda", "Namibe"] },
+    { name: "Antigua and Barbuda", flag: "🇦🇬", regions: ["St. John's", "Codrington", "Parham", "Bolands", "Falmouth", "Liberta"] },
+    { name: "Argentina", flag: "🇦🇷", regions: ["Buenos Aires", "Córdoba", "Rosario", "Mendoza", "Tucumán", "La Plata", "Mar del Plata", "Salta"] },
+    { name: "Armenia", flag: "🇦🇲", regions: ["Yerevan", "Gyumri", "Vanadzor", "Vagharshapat", "Hrazdan", "Abovyan", "Kapan", "Armavir"] },
+    { name: "Australia", flag: "🇦🇺", regions: ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast", "Canberra", "Hobart", "Darwin"] },
+    { name: "Austria", flag: "🇦🇹", regions: ["Vienna", "Salzburg", "Graz", "Innsbruck", "Linz", "Klagenfurt", "Bregenz", "St. Pölten"] },
+    { name: "Azerbaijan", flag: "🇦🇿", regions: ["Baku", "Ganja", "Sumgait", "Lankaran", "Nakhchivan", "Quba", "Shaki", "Khankendi"] },
+    { name: "Bahamas", flag: "🇧🇸", regions: ["Nassau", "Freeport", "Marsh Harbour", "Alice Town", "George Town", "Dunmore Town"] },
+    { name: "Bahrain", flag: "🇧🇭", regions: ["Manama", "Riffa", "Muharraq", "Hamad Town", "Isa Town", "Sitra", "Budaiya"] },
+    { name: "Bangladesh", flag: "🇧🇩", regions: ["Dhaka", "Chittagong", "Khulna", "Rajshahi", "Sylhet", "Barisal", "Rangpur", "Mymensingh", "Comilla"] },
+    { name: "Barbados", flag: "🇧🇧", regions: ["Bridgetown", "Speightstown", "Oistins", "Holetown", "Bathsheba", "Six Cross Roads"] },
+    { name: "Belarus", flag: "🇧🇾", regions: ["Minsk", "Gomel", "Mogilev", "Vitebsk", "Grodno", "Brest", "Baranovichi", "Pinsk"] },
+    { name: "Belgium", flag: "🇧🇪", regions: ["Brussels", "Antwerp", "Ghent", "Bruges", "Liège", "Leuven", "Namur", "Charleroi"] },
+    { name: "Belize", flag: "🇧🇿", regions: ["Belize City", "Belmopan", "San Ignacio", "Orange Walk", "Dangriga", "Corozal", "Punta Gorda"] },
+    { name: "Benin", flag: "🇧🇯", regions: ["Cotonou", "Porto-Novo", "Parakou", "Abomey", "Natitingou", "Ouidah", "Kandi", "Lokossa"] },
+    { name: "Bhutan", flag: "🇧🇹", regions: ["Thimphu", "Phuntsholing", "Paro", "Punakha", "Bumthang", "Trongsa", "Wangdue Phodrang"] },
+    { name: "Bolivia", flag: "🇧🇴", regions: ["La Paz", "Santa Cruz", "Cochabamba", "Sucre", "Oruro", "Tarija", "Potosí", "Trinidad"] },
+    { name: "Bosnia and Herzegovina", flag: "🇧🇦", regions: ["Sarajevo", "Banja Luka", "Mostar", "Tuzla", "Zenica", "Bijeljina", "Brčko", "Trebinje"] },
+    { name: "Botswana", flag: "🇧🇼", regions: ["Gaborone", "Francistown", "Molepolole", "Maun", "Serowe", "Kasane", "Jwaneng", "Lobatse"] },
+    { name: "Brazil", flag: "🇧🇷", regions: ["São Paulo", "Rio de Janeiro", "Salvador", "Brasília", "Fortaleza", "Manaus", "Curitiba", "Recife", "Porto Alegre"] },
+    { name: "Brunei", flag: "🇧🇳", regions: ["Bandar Seri Begawan", "Kuala Belait", "Seria", "Tutong", "Muara", "Bangar"] },
+    { name: "Bulgaria", flag: "🇧🇬", regions: ["Sofia", "Plovdiv", "Varna", "Burgas", "Ruse", "Stara Zagora", "Pleven", "Dobrich"] },
+    { name: "Burkina Faso", flag: "🇧🇫", regions: ["Ouagadougou", "Bobo-Dioulasso", "Koudougou", "Banfora", "Ouahigouya", "Fada N'gourma", "Tenkodogo"] },
+    { name: "Burundi", flag: "🇧🇮", regions: ["Bujumbura", "Gitega", "Ngozi", "Rumonge", "Kayanza", "Muyinga", "Ruyigi", "Makamba"] },
+    { name: "Cambodia", flag: "🇰🇭", regions: ["Phnom Penh", "Siem Reap", "Battambang", "Sihanoukville", "Kampot", "Kep", "Kampong Cham", "Poipet"] },
+    { name: "Cameroon", flag: "🇨🇲", regions: ["Yaoundé", "Douala", "Bamenda", "Garoua", "Maroua", "Bafoussam", "Limbe", "Kumba"] },
+    { name: "Canada", flag: "🇨🇦", regions: ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Edmonton", "Quebec City", "Winnipeg", "Halifax"] },
+    { name: "Cape Verde", flag: "🇨🇻", regions: ["Praia", "Mindelo", "Santa Maria", "Assomada", "Tarrafal", "Sal Rei", "São Filipe"] },
+    { name: "Central African Republic", flag: "🇨🇫", regions: ["Bangui", "Bimbo", "Berbérati", "Carnot", "Bambari", "Bouar", "Bossangoa", "Mbaïki"] },
+    { name: "Chad", flag: "🇹🇩", regions: ["N'Djamena", "Moundou", "Sarh", "Abéché", "Kélo", "Am Timan", "Doba", "Pala"] },
+    { name: "Chile", flag: "🇨🇱", regions: ["Santiago", "Valparaíso", "Concepción", "La Serena", "Antofagasta", "Puerto Montt", "Temuco", "Iquique"] },
+    { name: "China", flag: "🇨🇳", regions: ["Beijing", "Shanghai", "Guangzhou", "Shenzhen", "Chengdu", "Hangzhou", "Wuhan", "Nanjing", "Chongqing"] },
+    { name: "Colombia", flag: "🇨🇴", regions: ["Bogotá", "Medellín", "Cali", "Barranquilla", "Cartagena", "Bucaramanga", "Pereira", "Santa Marta"] },
+    { name: "Comoros", flag: "🇰🇲", regions: ["Moroni", "Mutsamudu", "Fomboni", "Domoni", "Tsémbehou", "Ouani"] },
+    { name: "Congo (DRC)", flag: "🇨🇩", regions: ["Kinshasa", "Lubumbashi", "Mbuji-Mayi", "Kisangani", "Bukavu", "Goma", "Matadi", "Kananga"] },
+    { name: "Congo (Republic)", flag: "🇨🇬", regions: ["Brazzaville", "Pointe-Noire", "Dolisie", "Nkayi", "Owando", "Ouésso", "Madingou"] },
+    { name: "Costa Rica", flag: "🇨🇷", regions: ["San José", "Alajuela", "Cartago", "Heredia", "Liberia", "Puntarenas", "Limón", "San Isidro"] },
+    { name: "Croatia", flag: "🇭🇷", regions: ["Zagreb", "Split", "Dubrovnik", "Rijeka", "Zadar", "Osijek", "Pula", "Šibenik"] },
+    { name: "Cuba", flag: "🇨🇺", regions: ["Havana", "Santiago de Cuba", "Camagüey", "Holguín", "Santa Clara", "Trinidad", "Cienfuegos", "Varadero"] },
+    { name: "Cyprus", flag: "🇨🇾", regions: ["Nicosia", "Limassol", "Larnaca", "Paphos", "Famagusta", "Kyrenia", "Ayia Napa", "Protaras"] },
+    { name: "Czech Republic", flag: "🇨🇿", regions: ["Prague", "Brno", "Ostrava", "Plzeň", "Liberec", "Olomouc", "České Budějovice", "Karlovy Vary"] },
+    { name: "Denmark", flag: "🇩🇰", regions: ["Copenhagen", "Aarhus", "Odense", "Aalborg", "Esbjerg", "Randers", "Kolding", "Vejle"] },
+    { name: "Djibouti", flag: "🇩🇯", regions: ["Djibouti City", "Ali Sabieh", "Tadjourah", "Obock", "Dikhil", "Arta", "Holhol"] },
+    { name: "Dominica", flag: "🇩🇲", regions: ["Roseau", "Portsmouth", "Marigot", "Castle Bruce", "Salisbury", "Wesley"] },
+    { name: "Dominican Republic", flag: "🇩🇴", regions: ["Santo Domingo", "Santiago", "Puerto Plata", "La Romana", "Punta Cana", "San Pedro", "Boca Chica"] },
+    { name: "Ecuador", flag: "🇪🇨", regions: ["Quito", "Guayaquil", "Cuenca", "Manta", "Ambato", "Esmeraldas", "Loja", "Machala"] },
+    { name: "Egypt", flag: "🇪🇬", regions: ["Cairo", "Alexandria", "Giza", "Luxor", "Aswan", "Sharm El Sheikh", "Hurghada", "Port Said", "Mansoura"] },
+    { name: "El Salvador", flag: "🇸🇻", regions: ["San Salvador", "Santa Ana", "San Miguel", "Sonsonate", "Santa Tecla", "Usulután"] },
+    { name: "Equatorial Guinea", flag: "🇬🇶", regions: ["Malabo", "Bata", "Ebebiyín", "Mongomo", "Evinayong", "Luba"] },
+    { name: "Eritrea", flag: "🇪🇷", regions: ["Asmara", "Keren", "Massawa", "Assab", "Mendefera", "Barentu", "Adi Keyh"] },
+    { name: "Estonia", flag: "🇪🇪", regions: ["Tallinn", "Tartu", "Narva", "Pärnu", "Kohtla-Järve", "Viljandi", "Rakvere", "Kuressaare"] },
+    { name: "Eswatini", flag: "🇸🇿", regions: ["Mbabane", "Manzini", "Lobamba", "Siteki", "Piggs Peak", "Nhlangano"] },
+    { name: "Ethiopia", flag: "🇪🇹", regions: ["Addis Ababa", "Dire Dawa", "Mekelle", "Adama", "Gondar", "Bahir Dar", "Hawassa", "Jimma"] },
+    { name: "Fiji", flag: "🇫🇯", regions: ["Suva", "Nadi", "Lautoka", "Labasa", "Ba", "Levuka", "Savusavu"] },
+    { name: "Finland", flag: "🇫🇮", regions: ["Helsinki", "Espoo", "Tampere", "Vantaa", "Oulu", "Turku", "Jyväskylä", "Lahti"] },
+    { name: "France", flag: "🇫🇷", regions: ["Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Bordeaux", "Lille", "Strasbourg", "Nantes"] },
+    { name: "Gabon", flag: "🇬🇦", regions: ["Libreville", "Port-Gentil", "Franceville", "Oyem", "Moanda", "Mouila", "Lambaréné"] },
+    { name: "Gambia", flag: "🇬🇲", regions: ["Banjul", "Serekunda", "Brikama", "Bakau", "Farafenni", "Basse", "Bansang"] },
+    { name: "Georgia", flag: "🇬🇪", regions: ["Tbilisi", "Batumi", "Kutaisi", "Rustavi", "Zugdidi", "Gori", "Poti", "Sokhumi"] },
+    { name: "Germany", flag: "🇩🇪", regions: ["Berlin", "Munich", "Hamburg", "Frankfurt", "Cologne", "Stuttgart", "Düsseldorf", "Leipzig", "Dresden"] },
+    { name: "Ghana", flag: "🇬🇭", regions: ["Accra", "Kumasi", "Tamale", "Takoradi", "Cape Coast", "Sunyani", "Ho", "Obuasi"] },
+    { name: "Greece", flag: "🇬🇷", regions: ["Athens", "Thessaloniki", "Patras", "Heraklion", "Larissa", "Volos", "Rhodes", "Corfu"] },
+    { name: "Grenada", flag: "🇬🇩", regions: ["St. George's", "Grenville", "Sauteurs", "Victoria", "Hillsborough", "Gouyave"] },
+    { name: "Guatemala", flag: "🇬🇹", regions: ["Guatemala City", "Antigua", "Quetzaltenango", "Escuintla", "Cobán", "Flores", "Chichicastenango"] },
+    { name: "Guinea", flag: "🇬🇳", regions: ["Conakry", "Nzérékoré", "Kankan", "Kindia", "Labé", "Mamou", "Faranah"] },
+    { name: "Guinea-Bissau", flag: "🇬🇼", regions: ["Bissau", "Gabú", "Bafatá", "Cacheu", "Bolama", "Buba", "Farim"] },
+    { name: "Guyana", flag: "🇬🇾", regions: ["Georgetown", "Linden", "New Amsterdam", "Bartica", "Lethem", "Mabaruma"] },
+    { name: "Haiti", flag: "🇭🇹", regions: ["Port-au-Prince", "Cap-Haïtien", "Gonaïves", "Jacmel", "Les Cayes", "Port-de-Paix", "Jérémie"] },
+    { name: "Honduras", flag: "🇭🇳", regions: ["Tegucigalpa", "San Pedro Sula", "La Ceiba", "Comayagua", "Roatán", "Copán", "Trujillo"] },
+    { name: "Hungary", flag: "🇭🇺", regions: ["Budapest", "Debrecen", "Szeged", "Miskolc", "Pécs", "Győr", "Nyíregyháza", "Kecskemét"] },
+    { name: "Iceland", flag: "🇮🇸", regions: ["Reykjavik", "Kópavogur", "Hafnarfjörður", "Akureyri", "Reykjanesbær", "Garðabær", "Selfoss"] },
+    { name: "India", flag: "🇮🇳", regions: ["Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Pune", "Jaipur", "Ahmedabad"] },
+    { name: "Indonesia", flag: "🇮🇩", regions: ["Jakarta", "Surabaya", "Bandung", "Medan", "Bali", "Yogyakarta", "Semarang", "Makassar", "Palembang"] },
+    { name: "Iran", flag: "🇮🇷", regions: ["Tehran", "Mashhad", "Isfahan", "Tabriz", "Shiraz", "Qom", "Ahvaz", "Kermanshah"] },
+    { name: "Iraq", flag: "🇮🇶", regions: ["Baghdad", "Mosul", "Basra", "Erbil", "Najaf", "Karbala", "Sulaymaniyah", "Kirkuk"] },
+    { name: "Ireland", flag: "🇮🇪", regions: ["Dublin", "Cork", "Limerick", "Galway", "Waterford", "Kilkenny", "Sligo", "Dundalk"] },
+    { name: "Israel", flag: "🇮🇱", regions: ["Jerusalem", "Tel Aviv", "Haifa", "Eilat", "Netanya", "Ashdod", "Beersheba", "Nazareth"] },
+    { name: "Italy", flag: "🇮🇹", regions: ["Rome", "Milan", "Naples", "Turin", "Florence", "Venice", "Bologna", "Genoa", "Verona"] },
+    { name: "Ivory Coast", flag: "🇨🇮", regions: ["Abidjan", "Yamoussoukro", "Bouaké", "Daloa", "Korhogo", "San-Pédro", "Man"] },
+    { name: "Jamaica", flag: "🇯🇲", regions: ["Kingston", "Montego Bay", "Negril", "Ocho Rios", "Port Antonio", "Spanish Town", "Mandeville"] },
+    { name: "Japan", flag: "🇯🇵", regions: ["Tokyo", "Osaka", "Kyoto", "Yokohama", "Sapporo", "Fukuoka", "Nagoya", "Kobe", "Hiroshima"] },
+    { name: "Jordan", flag: "🇯🇴", regions: ["Amman", "Petra", "Aqaba", "Irbid", "Zarqa", "Madaba", "Jerash", "Wadi Rum"] },
+    { name: "Kazakhstan", flag: "🇰🇿", regions: ["Almaty", "Nur-Sultan", "Shymkent", "Karaganda", "Aktobe", "Taraz", "Pavlodar", "Atyrau"] },
+    { name: "Kenya", flag: "🇰🇪", regions: ["Nairobi", "Mombasa", "Kisumu", "Nakuru", "Eldoret", "Malindi", "Lamu", "Nyeri"] },
+    { name: "Kiribati", flag: "🇰🇮", regions: ["Tarawa", "Betio", "Bikenibeu", "Taburao", "Bairiki", "Eita"] },
+    { name: "Kuwait", flag: "🇰🇼", regions: ["Kuwait City", "Hawalli", "Farwaniya", "Ahmadi", "Jahra", "Salmiya", "Fahaheel"] },
+    { name: "Kyrgyzstan", flag: "🇰🇬", regions: ["Bishkek", "Osh", "Jalal-Abad", "Karakol", "Tokmok", "Naryn", "Batken", "Talas"] },
+    { name: "Laos", flag: "🇱🇦", regions: ["Vientiane", "Luang Prabang", "Savannakhet", "Pakse", "Vang Vieng", "Phonsavan", "Thakhek", "Udomxai"] },
+    { name: "Latvia", flag: "🇱🇻", regions: ["Riga", "Daugavpils", "Liepāja", "Jelgava", "Jūrmala", "Ventspils", "Rēzekne", "Valmiera"] },
+    { name: "Lebanon", flag: "🇱🇧", regions: ["Beirut", "Tripoli", "Sidon", "Tyre", "Byblos", "Zahle", "Baalbek", "Jounieh"] },
+    { name: "Lesotho", flag: "🇱🇸", regions: ["Maseru", "Teyateyaneng", "Mafeteng", "Mohale's Hoek", "Quthing", "Butha-Buthe", "Leribe"] },
+    { name: "Liberia", flag: "🇱🇷", regions: ["Monrovia", "Gbarnga", "Kakata", "Harper", "Voinjama", "Buchanan", "Zwedru"] },
+    { name: "Libya", flag: "🇱🇾", regions: ["Tripoli", "Benghazi", "Misrata", "Sabha", "Zawiya", "Tobruk", "Sirte", "Derna"] },
+    { name: "Liechtenstein", flag: "🇱🇮", regions: ["Vaduz", "Schaan", "Balzers", "Triesen", "Eschen", "Mauren", "Ruggell"] },
+    { name: "Lithuania", flag: "🇱🇹", regions: ["Vilnius", "Kaunas", "Klaipėda", "Šiauliai", "Panevėžys", "Alytus", "Marijampolė", "Utena"] },
+    { name: "Luxembourg", flag: "🇱🇺", regions: ["Luxembourg City", "Esch-sur-Alzette", "Differdange", "Dudelange", "Ettelbruck", "Wiltz"] },
+    { name: "Madagascar", flag: "🇲🇬", regions: ["Antananarivo", "Toamasina", "Antsirabe", "Mahajanga", "Fianarantsoa", "Toliara", "Nosy Be"] },
+    { name: "Malawi", flag: "🇲🇼", regions: ["Lilongwe", "Blantyre", "Mzuzu", "Zomba", "Mangochi", "Karonga", "Salima"] },
+    { name: "Malaysia", flag: "🇲🇾", regions: ["Kuala Lumpur", "Penang", "Johor Bahru", "Kota Kinabalu", "Kuching", "Malacca", "Ipoh", "Langkawi", "Putrajaya"] },
+    { name: "Maldives", flag: "🇲🇻", regions: ["Malé", "Addu City", "Fuvahmulah", "Hulhumalé", "Villingili", "Thinadhoo"] },
+    { name: "Mali", flag: "🇲🇱", regions: ["Bamako", "Sikasso", "Mopti", "Timbuktu", "Gao", "Kayes", "Kidal", "Ségou"] },
+    { name: "Malta", flag: "🇲🇹", regions: ["Valletta", "Birkirkara", "Sliema", "St. Julian's", "Mosta", "Qormi", "Żabbar", "Gozo"] },
+    { name: "Marshall Islands", flag: "🇲🇭", regions: ["Majuro", "Ebeye", "Kwajalein", "Jaluit", "Wotje", "Rongelap"] },
+    { name: "Mauritania", flag: "🇲🇷", regions: ["Nouakchott", "Nouadhibou", "Rosso", "Kaédi", "Zouérat", "Atar", "Kiffa"] },
+    { name: "Mauritius", flag: "🇲🇺", regions: ["Port Louis", "Curepipe", "Beau Bassin", "Quatre Bornes", "Vacoas", "Mahébourg", "Flic en Flac"] },
+    { name: "Mexico", flag: "🇲🇽", regions: ["Mexico City", "Guadalajara", "Monterrey", "Cancún", "Puebla", "Tijuana", "Mérida", "Oaxaca", "Puerto Vallarta"] },
+    { name: "Micronesia", flag: "🇫🇲", regions: ["Palikir", "Weno", "Kolonia", "Tofol", "Colonia", "Lelu"] },
+    { name: "Moldova", flag: "🇲🇩", regions: ["Chișinău", "Bălți", "Tiraspol", "Cahul", "Orhei", "Ungheni", "Soroca"] },
+    { name: "Monaco", flag: "🇲🇨", regions: ["Monaco-Ville", "Monte Carlo", "La Condamine", "Fontvieille", "Larvotto", "Moneghetti"] },
+    { name: "Mongolia", flag: "🇲🇳", regions: ["Ulaanbaatar", "Erdenet", "Darkhan", "Choibalsan", "Mörön", "Khovd", "Ölgii"] },
+    { name: "Montenegro", flag: "🇲🇪", regions: ["Podgorica", "Nikšić", "Budva", "Kotor", "Bar", "Herceg Novi", "Cetinje", "Tivat"] },
+    { name: "Morocco", flag: "🇲🇦", regions: ["Casablanca", "Rabat", "Marrakech", "Fez", "Tangier", "Agadir", "Chefchaouen", "Essaouira"] },
+    { name: "Mozambique", flag: "🇲🇿", regions: ["Maputo", "Beira", "Nampula", "Pemba", "Quelimane", "Tete", "Inhambane", "Lichinga"] },
+    { name: "Myanmar", flag: "🇲🇲", regions: ["Yangon", "Mandalay", "Naypyidaw", "Bago", "Taunggyi", "Mawlamyine", "Pathein", "Sittwe", "Myitkyina"] },
+    { name: "Namibia", flag: "🇳🇦", regions: ["Windhoek", "Swakopmund", "Walvis Bay", "Oshakati", "Lüderitz", "Gobabis", "Keetmanshoop"] },
+    { name: "Nauru", flag: "🇳🇷", regions: ["Yaren", "Denigomodu", "Meneng", "Aiwo", "Boe", "Buada"] },
+    { name: "Nepal", flag: "🇳🇵", regions: ["Kathmandu", "Pokhara", "Lalitpur", "Biratnagar", "Chitwan", "Bhaktapur", "Lumbini", "Nagarkot"] },
+    { name: "Netherlands", flag: "🇳🇱", regions: ["Amsterdam", "Rotterdam", "The Hague", "Utrecht", "Eindhoven", "Groningen", "Maastricht", "Leiden"] },
+    { name: "New Zealand", flag: "🇳🇿", regions: ["Auckland", "Wellington", "Christchurch", "Queenstown", "Hamilton", "Tauranga", "Dunedin", "Rotorua"] },
+    { name: "Nicaragua", flag: "🇳🇮", regions: ["Managua", "León", "Granada", "Masaya", "Estelí", "Matagalpa", "San Juan del Sur"] },
+    { name: "Niger", flag: "🇳🇪", regions: ["Niamey", "Zinder", "Maradi", "Agadez", "Tahoua", "Dosso", "Diffa"] },
+    { name: "Nigeria", flag: "🇳🇬", regions: ["Lagos", "Abuja", "Kano", "Ibadan", "Port Harcourt", "Benin City", "Enugu", "Calabar", "Warri"] },
+    { name: "North Korea", flag: "🇰🇵", regions: ["Pyongyang", "Hamhung", "Chongjin", "Nampo", "Wonsan", "Kaesong", "Sinuiju"] },
+    { name: "North Macedonia", flag: "🇲🇰", regions: ["Skopje", "Bitola", "Ohrid", "Tetovo", "Kumanovo", "Prilep", "Struga"] },
+    { name: "Norway", flag: "🇳🇴", regions: ["Oslo", "Bergen", "Trondheim", "Stavanger", "Tromsø", "Drammen", "Bodø", "Ålesund"] },
+    { name: "Oman", flag: "🇴🇲", regions: ["Muscat", "Salalah", "Nizwa", "Sohar", "Sur", "Barka", "Khasab", "Ibri"] },
+    { name: "Pakistan", flag: "🇵🇰", regions: ["Karachi", "Lahore", "Islamabad", "Rawalpindi", "Peshawar", "Quetta", "Multan", "Faisalabad", "Sialkot"] },
+    { name: "Palau", flag: "🇵🇼", regions: ["Ngerulmud", "Koror", "Melekeok", "Airai", "Peleliu", "Angaur"] },
+    { name: "Palestine", flag: "🇵🇸", regions: ["Gaza", "Ramallah", "Bethlehem", "Hebron", "Nablus", "Jenin", "Jericho"] },
+    { name: "Panama", flag: "🇵🇦", regions: ["Panama City", "Colón", "David", "Bocas del Toro", "Boquete", "El Valle", "Santiago"] },
+    { name: "Papua New Guinea", flag: "🇵🇬", regions: ["Port Moresby", "Lae", "Mount Hagen", "Madang", "Goroka", "Rabaul", "Wewak"] },
+    { name: "Paraguay", flag: "🇵🇾", regions: ["Asunción", "Ciudad del Este", "Encarnación", "San Lorenzo", "Luque", "Pedro Juan Caballero"] },
+    { name: "Peru", flag: "🇵🇪", regions: ["Lima", "Cusco", "Arequipa", "Trujillo", "Iquitos", "Puno", "Piura", "Chiclayo"] },
+    { name: "Philippines", flag: "🇵🇭", regions: ["Manila", "Cebu", "Davao", "Quezon City", "Makati", "Baguio", "Iloilo", "Cagayan de Oro", "Zamboanga"] },
+    { name: "Poland", flag: "🇵🇱", regions: ["Warsaw", "Krakow", "Gdansk", "Wroclaw", "Poznan", "Lodz", "Szczecin", "Lublin"] },
+    { name: "Portugal", flag: "🇵🇹", regions: ["Lisbon", "Porto", "Faro", "Braga", "Coimbra", "Aveiro", "Sintra", "Lagos"] },
+    { name: "Qatar", flag: "🇶🇦", regions: ["Doha", "Al Wakrah", "Al Khor", "Al Rayyan", "Umm Salal", "Mesaieed", "Lusail"] },
+    { name: "Romania", flag: "🇷🇴", regions: ["Bucharest", "Cluj-Napoca", "Timișoara", "Brașov", "Iași", "Constanța", "Sibiu", "Oradea"] },
+    { name: "Russia", flag: "🇷🇺", regions: ["Moscow", "St. Petersburg", "Novosibirsk", "Kazan", "Sochi", "Vladivostok", "Yekaterinburg", "Kaliningrad"] },
+    { name: "Rwanda", flag: "🇷🇼", regions: ["Kigali", "Butare", "Gisenyi", "Ruhengeri", "Gitarama", "Cyangugu", "Kibuye"] },
+    { name: "Saint Kitts and Nevis", flag: "🇰🇳", regions: ["Basseterre", "Charlestown", "Sandy Point", "Cayon", "Gingerland", "Newcastle"] },
+    { name: "Saint Lucia", flag: "🇱🇨", regions: ["Castries", "Vieux Fort", "Soufrière", "Gros Islet", "Rodney Bay", "Dennery"] },
+    { name: "Saint Vincent", flag: "🇻🇨", regions: ["Kingstown", "Barrouallie", "Chateaubelair", "Georgetown", "Layou", "Port Elizabeth"] },
+    { name: "Samoa", flag: "🇼🇸", regions: ["Apia", "Salelologa", "Mulifanua", "Leulumoega", "Safotu", "Falealupo"] },
+    { name: "San Marino", flag: "🇸🇲", regions: ["San Marino", "Serravalle", "Borgo Maggiore", "Domagnano", "Fiorentino", "Montegiardino"] },
+    { name: "Sao Tome and Principe", flag: "🇸🇹", regions: ["São Tomé", "Santo António", "Neves", "Guadalupe", "Trindade", "Santana"] },
+    { name: "Saudi Arabia", flag: "🇸🇦", regions: ["Riyadh", "Jeddah", "Mecca", "Medina", "Dammam", "Taif", "Abha", "Tabuk", "Al Khobar"] },
+    { name: "Senegal", flag: "🇸🇳", regions: ["Dakar", "Saint-Louis", "Thiès", "Touba", "Kaolack", "Ziguinchor", "Mbour"] },
+    { name: "Serbia", flag: "🇷🇸", regions: ["Belgrade", "Novi Sad", "Niš", "Kragujevac", "Subotica", "Zrenjanin", "Čačak"] },
+    { name: "Seychelles", flag: "🇸🇨", regions: ["Victoria", "Anse Royale", "Beau Vallon", "Anse Boileau", "Takamaka", "Grand Anse"] },
+    { name: "Sierra Leone", flag: "🇸🇱", regions: ["Freetown", "Makeni", "Bo", "Kenema", "Koidu", "Port Loko", "Waterloo"] },
+    { name: "Singapore", flag: "🇸🇬", regions: ["Central", "North East", "North West", "South East", "South West", "East", "Orchard", "Marina Bay"] },
+    { name: "Slovakia", flag: "🇸🇰", regions: ["Bratislava", "Košice", "Prešov", "Žilina", "Nitra", "Banská Bystrica", "Trnava"] },
+    { name: "Slovenia", flag: "🇸🇮", regions: ["Ljubljana", "Maribor", "Celje", "Kranj", "Koper", "Velenje", "Novo Mesto"] },
+    { name: "Solomon Islands", flag: "🇸🇧", regions: ["Honiara", "Gizo", "Auki", "Kirakira", "Tulagi", "Lata"] },
+    { name: "Somalia", flag: "🇸🇴", regions: ["Mogadishu", "Hargeisa", "Kismayo", "Baidoa", "Bosaso", "Marka", "Berbera"] },
+    { name: "South Africa", flag: "🇿🇦", regions: ["Johannesburg", "Cape Town", "Durban", "Pretoria", "Port Elizabeth", "Bloemfontein", "Knysna", "Stellenbosch"] },
+    { name: "South Korea", flag: "🇰🇷", regions: ["Seoul", "Busan", "Incheon", "Daegu", "Gwangju", "Daejeon", "Jeju", "Suwon", "Ulsan"] },
+    { name: "South Sudan", flag: "🇸🇸", regions: ["Juba", "Malakal", "Wau", "Yei", "Yambio", "Rumbek", "Bor", "Aweil"] },
+    { name: "Spain", flag: "🇪🇸", regions: ["Madrid", "Barcelona", "Valencia", "Seville", "Bilbao", "Málaga", "Granada", "Palma", "Ibiza"] },
+    { name: "Sri Lanka", flag: "🇱🇰", regions: ["Colombo", "Kandy", "Galle", "Jaffna", "Negombo", "Anuradhapura", "Trincomalee", "Bentota"] },
+    { name: "Sudan", flag: "🇸🇩", regions: ["Khartoum", "Omdurman", "Port Sudan", "Kassala", "Nyala", "El Obeid", "Wad Madani"] },
+    { name: "Suriname", flag: "🇸🇷", regions: ["Paramaribo", "Lelydorp", "Nieuw Nickerie", "Moengo", "Albina", "Brokopondo"] },
+    { name: "Sweden", flag: "🇸🇪", regions: ["Stockholm", "Gothenburg", "Malmö", "Uppsala", "Västerås", "Örebro", "Linköping", "Lund"] },
+    { name: "Switzerland", flag: "🇨🇭", regions: ["Zurich", "Geneva", "Basel", "Bern", "Lucerne", "Lausanne", "Interlaken", "Zermatt"] },
+    { name: "Syria", flag: "🇸🇾", regions: ["Damascus", "Aleppo", "Homs", "Latakia", "Hama", "Deir ez-Zor", "Tartus"] },
+    { name: "Taiwan", flag: "🇹🇼", regions: ["Taipei", "Kaohsiung", "Taichung", "Tainan", "Hsinchu", "Keelung", "Chiayi"] },
+    { name: "Tajikistan", flag: "🇹🇯", regions: ["Dushanbe", "Khujand", "Kulob", "Bokhtar", "Istaravshan", "Panjakent", "Khorugh"] },
+    { name: "Tanzania", flag: "🇹🇿", regions: ["Dar es Salaam", "Dodoma", "Arusha", "Zanzibar", "Mwanza", "Mbeya", "Moshi", "Kigoma"] },
+    { name: "Thailand", flag: "🇹🇭", regions: ["Bangkok", "Chiang Mai", "Phuket", "Pattaya", "Krabi", "Hua Hin", "Koh Samui", "Ayutthaya", "Chiang Rai"] },
+    { name: "Timor-Leste", flag: "🇹🇱", regions: ["Dili", "Baucau", "Maliana", "Suai", "Same", "Ainaro"] },
+    { name: "Togo", flag: "🇹🇬", regions: ["Lomé", "Sokodé", "Kara", "Kpalimé", "Atakpamé", "Dapaong", "Bassar"] },
+    { name: "Tonga", flag: "🇹🇴", regions: ["Nuku'alofa", "Neiafu", "Pangai", "'Ohonua", "Haveluloto", "Vaini"] },
+    { name: "Trinidad and Tobago", flag: "🇹🇹", regions: ["Port of Spain", "San Fernando", "Chaguanas", "Arima", "Scarborough", "Tunapuna"] },
+    { name: "Tunisia", flag: "🇹🇳", regions: ["Tunis", "Sfax", "Sousse", "Kairouan", "Bizerte", "Gabès", "Djerba", "Hammamet"] },
+    { name: "Turkey", flag: "🇹🇷", regions: ["Istanbul", "Ankara", "Izmir", "Antalya", "Bursa", "Gaziantep", "Konya", "Bodrum", "Trabzon"] },
+    { name: "Turkmenistan", flag: "🇹🇲", regions: ["Ashgabat", "Turkmenabat", "Dashoguz", "Mary", "Balkanabat", "Tejen", "Serdar"] },
+    { name: "Tuvalu", flag: "🇹🇻", regions: ["Funafuti", "Vaiaku", "Nanumea", "Nukufetau", "Niutao", "Nui"] },
+    { name: "UAE", flag: "🇦🇪", regions: ["Dubai", "Abu Dhabi", "Sharjah", "Ajman", "Ras Al Khaimah", "Fujairah", "Umm Al Quwain"] },
+    { name: "Uganda", flag: "🇺🇬", regions: ["Kampala", "Entebbe", "Jinja", "Gulu", "Mbarara", "Fort Portal", "Mbale", "Arua"] },
+    { name: "UK", flag: "🇬🇧", regions: ["London", "Manchester", "Birmingham", "Liverpool", "Edinburgh", "Glasgow", "Bristol", "Oxford", "Cardiff"] },
+    { name: "Ukraine", flag: "🇺🇦", regions: ["Kyiv", "Lviv", "Odesa", "Kharkiv", "Dnipro", "Zaporizhzhia", "Vinnytsia", "Chernihiv"] },
+    { name: "Uruguay", flag: "🇺🇾", regions: ["Montevideo", "Punta del Este", "Colonia", "Salto", "Rivera", "Maldonado", "Piriápolis"] },
+    { name: "USA", flag: "🇺🇸", regions: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Miami", "San Francisco", "Boston", "Seattle"] },
+    { name: "Uzbekistan", flag: "🇺🇿", regions: ["Tashkent", "Samarkand", "Bukhara", "Khiva", "Namangan", "Andijan", "Fergana", "Nukus"] },
+    { name: "Vanuatu", flag: "🇻🇺", regions: ["Port Vila", "Luganville", "Sola", "Isangel", "Lakatoro", "Saratamata"] },
+    { name: "Vatican City", flag: "🇻🇦", regions: ["Vatican City"] },
+    { name: "Venezuela", flag: "🇻🇪", regions: ["Caracas", "Maracaibo", "Valencia", "Barquisimeto", "Maracay", "Ciudad Guayana", "Mérida"] },
+    { name: "Vietnam", flag: "🇻🇳", regions: ["Ho Chi Minh City", "Hanoi", "Da Nang", "Nha Trang", "Hue", "Hoi An", "Sapa", "Hai Phong", "Can Tho"] },
+    { name: "Yemen", flag: "🇾🇪", regions: ["Sana'a", "Aden", "Taiz", "Al Hudaydah", "Mukalla", "Ibb", "Dhamar"] },
+    { name: "Zambia", flag: "🇿🇲", regions: ["Lusaka", "Livingstone", "Ndola", "Kitwe", "Chipata", "Kabwe", "Mongu"] },
+    { name: "Zimbabwe", flag: "🇿🇼", regions: ["Harare", "Bulawayo", "Victoria Falls", "Mutare", "Gweru", "Masvingo", "Chinhoyi"] }
+];
+
+// ==================== CHAR SETS (ONE TIME DECLARE) ====================
+const CHAR_SETS = {
+    lower: 'abcdefghijklmnopqrstuvwxyz',
+    upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    numbers: '0123456789',
+    symbols: '@#*!?"'
+};
+
+// ==================== TOAST NOTIFICATION ====================
+function n(m, t = "success") {
+    const e = document.getElementById("notif");
+    e.textContent = m;
+    e.style.background = t === "success" ? "#2ecc71" : "#e74c3c";
+    e.style.display = "block";
+    setTimeout(() => e.style.display = "none", 3000);
+}
+
+// ==================== TAB SWITCHING ====================
+function showSub(id) {
+    document.querySelectorAll('.data-card').forEach(c => c.classList.remove('sel'));
+    event.target.closest('.data-card').classList.add('sel');
+    document.querySelectorAll('.sub-tab').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    
+    // ✅ Tab ပြောင်းတိုင်း Generator အလုပ်လုပ်အောင်
+    setTimeout(() => {
+        if (id === 'gmailSub') {
+            generateMiniPassword('gmail');
+        } else if (id === 'mlbbSub') {
+            generateMiniPassword('mlbb');
+        } else if (id === 'tiktokSub') {
+            generateMiniPassword('tiktok');
+        }
+    }, 100);
+    }
+
+// ==================== PASSWORD TOGGLE ====================
+function togglePass(i, b) {
+    const inp = document.getElementById(i);
+    const ic = b.querySelector('i');
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        ic.className = 'fas fa-eye-slash';
+    } else {
+        inp.type = 'password';
+        ic.className = 'fas fa-eye';
+    }
+}
+
+// ==================== COUNTRY DROPDOWNS ====================
+function populateCountries() {
+    const selects = ['gCountry', 'mCountry', 'tCountry'];
+    selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        let html = '<option value="">🌍 Select Country...</option>';
+        COUNTRIES_DATA.forEach(country => {
+            html += `<option value="${country.name}">${country.flag} ${country.name}</option>`;
+        });
+        select.innerHTML = html;
+    });
+}
+
+function loadRegions(countryId, regionId) {
+    const countrySelect = document.getElementById(countryId);
+    const regionSelect = document.getElementById(regionId);
+    const countryName = countrySelect.value;
+    regionSelect.innerHTML = '<option value="">📍 Select Region...</option>';
+    if (!countryName) return;
+    const country = COUNTRIES_DATA.find(c => c.name === countryName);
+    if (country && country.regions) {
+        country.regions.forEach(region => {
+            regionSelect.innerHTML += `<option value="${region}">📍 ${region}</option>`;
+        });
+    }
+}
+
+// ==================== MODAL FUNCTIONS ====================
+function openDataInfo() { document.getElementById("dataInfoModal").classList.add("active"); }
+function closeDataInfo() { document.getElementById("dataInfoModal").classList.remove("active"); }
+function copyPassText(t) {
+    navigator.clipboard.writeText(t).then(() => n("✅ Password Copied!", "success")).catch(() => n("❌ Copy Failed", "error"));
+}
+
+// ==================== UNLOCK DATA (SERVER-SIDE VERIFY) ====================
+async function unlockData(type) {
+    const passInput = document.getElementById('data' + type.charAt(0).toUpperCase() + type.slice(1) + 'Pass');
+    const pass = passInput.value;
+    if (!pass) return n('❌ Password ထည့်ပါ', 'error');
+    
+    try {
+        const token = localStorage.getItem('auth_token');
+        const r = await fetch('/api/verify_data_password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, type, password: pass })
+        });
+        const d = await r.json();
+        
+        if (d.success) {
+            document.getElementById(type + 'Form').style.display = 'block';
+            passInput.value = '';
+            n('✅ Unlocked successfully!', 'success');
+        } else {
+            n('❌ ' + (d.message || 'Wrong password!'), 'error');
+        }
+    } catch(e) {
+        n('❌ Connection error', 'error');
+    }
+}
+
+// ==================== DYNAMIC INPUTS (ADD/REMOVE) ====================
+function addInput(listId, cls, type, ph) {
+    const d = document.getElementById(listId);
+    const div = document.createElement('div');
+    div.className = 'input-row';
+    div.innerHTML = `<input type="${type}" class="${cls}" placeholder="${ph}"><button class="remove-btn" onclick="this.parentElement.remove()">×</button>`;
+    d.appendChild(div);
+    n("➕ Field added!", "success");
+}
+function getValues(cls) {
+    return Array.from(document.getElementsByClassName(cls)).map(i => i.value).filter(v => v.trim());
+}
+function addGmailEmail() { addInput('gmailEmailList', 'gmail-email', 'email', 'Enter email address'); }
+function addGmailPhone() { addInput('gmailPhoneList', 'gmail-phone', 'text', 'Enter phone number'); }
+function addMlbbEmail() { addInput('mlbbEmailList', 'mlbb-email', 'email', 'Enter Gmail address'); }
+function addTiktokEmail() { addInput('tiktokEmailList', 'tiktok-email', 'email', 'Enter email address'); }
+function addTiktokPhone() { addInput('tiktokPhoneList', 'tiktok-phone', 'text', 'Enter phone number'); }
+
+// ==================== SAVE FUNCTIONS ====================
+async function saveGmailData() {
+    const name = document.getElementById("gName").value.trim();
+    if (!name) return n("❌ Name is required!", "error");
+    if (document.getElementById("gPw").value !== document.getElementById("gConfirmPw").value) return n("❌ Passwords don't match!", "error");
+    try {
+        await fetch("/api/save_user_data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: localStorage.getItem("auth_token"),
+                type: 'gmail',
+                data: {
+                    title: document.getElementById("gTitle").value,
+                    name: name,
+                    emails: getValues('gmail-email'),
+                    phones: getValues('gmail-phone'),
+                    password: document.getElementById("gPw").value,
+                    dob: document.getElementById("gAge").value,
+                    country: document.getElementById("gCountry").value,
+                    region: document.getElementById("gRegion").value
+                }
+            })
+        });
+        n("✅ Gmail data saved!", "success");
+        document.getElementById("gmailForm").style.display = 'none';
+    } catch(e) { n("❌ Error saving data", "error"); }
+}
+
+async function saveMlbbData() {
+    const name = document.getElementById("mName").value.trim();
+    if (!name) return n("❌ In-Game Name is required!", "error");
+    if (document.getElementById("mPw").value !== document.getElementById("mConfirmPw").value) return n("❌ Passwords don't match!", "error");
+    try {
+        await fetch("/api/save_user_data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: localStorage.getItem("auth_token"),
+                type: 'mlbb',
+                data: {
+                    title: document.getElementById("mTitle").value,
+                    ingameName: name,
+                    ingameId: document.getElementById("mId").value,
+                    serverId: document.getElementById("mServer").value,
+                    emails: getValues('mlbb-email'),
+                    password: document.getElementById("mPw").value,
+                    dob: document.getElementById("mAge").value,
+                    country: document.getElementById("mCountry").value,
+                    region: document.getElementById("mRegion").value
+                }
+            })
+        });
+        n("✅ MLBB data saved!", "success");
+        document.getElementById("mlbbForm").style.display = 'none';
+    } catch(e) { n("❌ Error saving data", "error"); }
+}
+
+async function saveTiktokData() {
+    const name = document.getElementById("tFullName").value.trim();
+    if (!name) return n("❌ Full Name is required!", "error");
+    if (document.getElementById("tPw").value !== document.getElementById("tConfirmPw").value) return n("❌ Passwords don't match!", "error");
+    try {
+        await fetch("/api/save_user_data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: localStorage.getItem("auth_token"),
+                type: 'tiktok',
+                data: {
+                    title: document.getElementById("tTitle").value,
+                    fullName: name,
+                    lastName: document.getElementById("tLastName").value,
+                    emails: getValues('tiktok-email'),
+                    phones: getValues('tiktok-phone'),
+                    password: document.getElementById("tPw").value,
+                    dob: document.getElementById("tAge").value,
+                    country: document.getElementById("tCountry").value,
+                    region: document.getElementById("tRegion").value
+                }
+            })
+        });
+        n("✅ TikTok data saved!", "success");
+        document.getElementById("tiktokForm").style.display = 'none';
+    } catch(e) { n("❌ Error saving data", "error"); }
+}
+
+// ==================== PAGE ACCESS CHECK ====================
+async function checkPageAccess() {
+    try {
+        const r = await fetch('/api/admin/page_status');
+        const d = await r.json();
+        if (d.pages) {
+            const dp = d.pages.find(p => p.id === 'data');
+            if (dp && dp.status === 'off') {
+                document.getElementById('maintenanceMessage').style.display = 'block';
+                document.getElementById('dataContent').style.display = 'none';
+                await checkPageTimer();
+                return false;
+            }
+        }
+        document.getElementById('maintenanceMessage').style.display = 'none';
+        document.getElementById('dataContent').style.display = 'block';
+        return true;
+    } catch(e) {
+        document.getElementById('maintenanceMessage').style.display = 'none';
+        document.getElementById('dataContent').style.display = 'block';
+        return true;
+    }
+}
+
+// ==================== PAGE TIMER COUNTDOWN ====================
+async function checkPageTimer() {
+    const pageId = window.location.pathname.replace('.html','').replace('/','') || 'data';
+    let timer = null;
+    try {
+        const saved = localStorage.getItem('pageTimers');
+        if (saved) { const timers = JSON.parse(saved); timer = timers[pageId]; }
+        if (!timer) {
+            const cookieTimers = getCookie('pageTimers');
+            if (cookieTimers) { const timers = JSON.parse(decodeURIComponent(cookieTimers)); timer = timers[pageId]; }
+        }
+        if (!timer) {
+            const sessionTimers = sessionStorage.getItem('pageTimers');
+            if (sessionTimers) { const timers = JSON.parse(sessionTimers); timer = timers[pageId]; }
+        }
+    } catch(e) {}
+    
+    if (!timer || timer <= Date.now()) {
+        document.getElementById('maintenanceMessage').style.display = 'none';
+        document.getElementById('dataContent').style.display = 'block';
+        document.getElementById('pageTimerBanner').style.display = 'none';
+        return;
+    }
+    
+    const maintMsg = document.getElementById('maintenanceMessage');
+    const dataContent = document.getElementById('dataContent');
+    const pageBanner = document.getElementById('pageTimerBanner');
+    if (maintMsg) maintMsg.style.display = 'block';
+    if (dataContent) dataContent.style.display = 'none';
+    if (pageBanner) pageBanner.style.display = 'block';
+    
+    const maintTimer = document.getElementById('maintenanceCountdown');
+    const pageCountdown = document.getElementById('pageTimerCountdown');
+    
+    const update = () => {
+        const rem = timer - Date.now();
+        if (rem <= 0) {
+            try {
+                const saved = localStorage.getItem('pageTimers');
+                if (saved) { const timers = JSON.parse(saved); delete timers[pageId]; localStorage.setItem('pageTimers', JSON.stringify(timers)); }
+                setCookie('pageTimers', '', -1);
+                sessionStorage.removeItem('pageTimers');
+            } catch(e) {}
+            location.reload();
+            return;
+        }
+        const s = Math.floor(rem / 1000);
+        const h = Math.floor(s / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const sec = s % 60;
+        const timeStr = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+        if (maintTimer) maintTimer.textContent = timeStr;
+        if (pageCountdown) pageCountdown.textContent = timeStr;
+    };
+    update();
+    setInterval(update, 1000);
+}
+
+function setCookie(name, value, days) {
+    let expires = '';
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = '; expires=' + date.toUTCString();
+    }
+    document.cookie = name + '=' + encodeURIComponent(value || '') + expires + '; path=/';
+}
+
+function getCookie(name) {
+    const nameEQ = name + '=';
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+// ==================== BG MUSIC PLAYER ====================
+(function() {
+    const a = document.getElementById('bgAudio');
+    if (!a) return;
+    let p = [], i = 0;
+    a.volume = 0.5; a.loop = false;
+    const fl = !sessionStorage.getItem('mp');
+    if (fl) { i = 0; localStorage.setItem('bgi','0'); localStorage.setItem('bgt0','0'); }
+    else { i = parseInt(localStorage.getItem('bgi')||'0'); }
+    sessionStorage.setItem('mp','1');
+    async function fp() {
+        try {
+            const r = await fetch('/api/bg_music?t='+Date.now());
+            const d = await r.json();
+            if (d.playlist && d.playlist.length>0) { p = d.playlist; return true; }
+            return false;
+        } catch(e) { return false; }
+    }
+    function pl() {
+        if (!p.length) return;
+        if (i >= p.length) i = 0;
+        const u = p[i]; a.src = u; a.load();
+        a.addEventListener('canplay', function h() { a.play().catch(()=>{}); a.removeEventListener('canplay',h); });
+    }
+    a.addEventListener('ended', function() {
+        localStorage.setItem('bgt'+i,'0'); i = (i+1) % p.length;
+        localStorage.setItem('bgi',i); localStorage.setItem('bgt'+i,'0'); pl();
+    });
+    a.addEventListener('error', function() {
+        i = (i+1) % p.length; localStorage.setItem('bgi',i); localStorage.setItem('bgt'+i,'0'); pl();
+    });
+    setInterval(() => {
+        if (!a.paused && p.length>0 && a.currentTime>0) {
+            localStorage.setItem('bgi',i); localStorage.setItem('bgt'+i, a.currentTime);
+        }
+    }, 1000);
+    fp().then(h => { if(h) { if(fl) i=0; pl(); } });
+    setInterval(fp, 3000);
+})();
+
+// ==================== SECURITY CARD TOGGLE ====================
+function toggleSecurityCard(bodyId) {
+    const body = document.getElementById(bodyId);
+    const arrow = document.getElementById(bodyId.replace('Body', 'Arrow'));
+    const allBodies = document.querySelectorAll('.security-card-body');
+    const allArrows = document.querySelectorAll('.security-card-arrow');
+    allBodies.forEach(b => { if (b.id !== bodyId) b.classList.remove('open'); });
+    allArrows.forEach(a => { if (a.id !== bodyId.replace('Body', 'Arrow')) a.classList.remove('open'); });
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+}
+// ✅ ဒါတွေ ထည့်ပါ
+async function testPing() {
+    const times = [];
+    for (let i = 0; i < 3; i++) {
+        const start = performance.now();
+        try {
+            await fetch(NETWORK_TEST_URL + '/api/ping?t=' + Date.now(), { method: 'GET', cache: 'no-store' });
+            const end = performance.now();
+            times.push(Math.round(end - start));
+        } catch(e) { times.push(999); }
+    }
+    const avgPing = Math.round(times.reduce((a, b) => a + b, 0) / times.length);
+    return { ping: avgPing };
+}
+
+async function testDownload() {
+    const testSize = 100 * 1024;
+    const testUrl = NETWORK_TEST_URL + '/api/speedtest?size=' + testSize + '&t=' + Date.now();
+    const start = performance.now();
+    try {
+        const response = await fetch(testUrl, { cache: 'no-store' });
+        const data = await response.arrayBuffer();
+        const end = performance.now();
+        const durationSec = (end - start) / 1000;
+        const sizeMb = data.byteLength / (1024 * 1024);
+        const speedMbps = (sizeMb * 8) / durationSec;
+        return { download: Math.round(speedMbps * 10) / 10 };
+    } catch(e) { return { download: 0 }; }
+}
+
+async function testUpload() {
+    const testData = new Uint8Array(50 * 1024);
+    for (let i = 0; i < testData.length; i++) { testData[i] = Math.floor(Math.random() * 256); }
+    const start = performance.now();
+    try {
+        await fetch(NETWORK_TEST_URL + '/api/speedtest/upload?t=' + Date.now(), { method: 'POST', body: testData, cache: 'no-store' });
+        const end = performance.now();
+        const durationSec = (end - start) / 1000;
+        const sizeMb = testData.byteLength / (1024 * 1024);
+        const speedMbps = (sizeMb * 8) / durationSec;
+        return { upload: Math.round(speedMbps * 10) / 10 };
+    } catch(e) { return { upload: 0 }; }
+}
+
+async function testPacketLoss() {
+    const totalPings = 5;
+    let lost = 0;
+    const jitterValues = [];
+    let prevPing = null;
+    for (let i = 0; i < totalPings; i++) {
+        const start = performance.now();
+        try {
+            await fetch(NETWORK_TEST_URL + '/api/ping?t=' + Date.now() + '&i=' + i, { method: 'GET', cache: 'no-store' });
+            const end = performance.now();
+            const pingTime = Math.round(end - start);
+            if (prevPing !== null) { jitterValues.push(Math.abs(pingTime - prevPing)); }
+            prevPing = pingTime;
+        } catch(e) { lost++; }
+    }
+    const packetLoss = Math.round((lost / totalPings) * 100);
+    const jitter = jitterValues.length > 0 ? Math.round(jitterValues.reduce((a, b) => a + b, 0) / jitterValues.length) : 0;
+    return { packetLoss, jitter };
+}
+
+function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+// ==================== NETWORK TEST SYSTEM ====================
+let currentTestType = 'wifi';
+let selectedNetwork = 'MPT';
+const NETWORK_TEST_URL = 'https://solo-m-store-security-system-and-user.onrender.com';
+
+// Detect connection on load
+function detectConnection() {
+    const statusIcon = document.getElementById('networkStatusIcon');
+    const statusValue = document.getElementById('networkStatusValue');
+    
+    if (navigator.connection) {
+        const conn = navigator.connection;
+        if (conn.type === 'wifi') {
+            statusIcon.textContent = '📶';
+            statusValue.textContent = 'WiFi Connected';
+            selectTestType('wifi');
+        } else if (conn.type === 'cellular') {
+            statusIcon.textContent = '📱';
+            statusValue.textContent = 'Mobile Data';
+            selectTestType('mobile');
+        } else {
+            statusIcon.textContent = '🔍';
+            statusValue.textContent = 'Unknown Connection';
+        }
+    } else {
+        statusIcon.textContent = '🔍';
+        statusValue.textContent = 'Select test type below';
+    }
+}
+
+function selectTestType(type) {
+    currentTestType = type;
+    
+    document.getElementById('wifiTestBtn').classList.toggle('selected', type === 'wifi');
+    document.getElementById('mobileTestBtn').classList.toggle('selected', type === 'mobile');
+    document.getElementById('networkSelector').style.display = type === 'mobile' ? 'flex' : 'none';
+    
+    // Update status
+    if (type === 'wifi') {
+        document.getElementById('networkStatusIcon').textContent = '📶';
+        document.getElementById('networkStatusValue').textContent = 'WiFi Test Selected';
+    } else {
+        document.getElementById('networkStatusIcon').textContent = '📱';
+        document.getElementById('networkStatusValue').textContent = 'Mobile Data: ' + selectedNetwork;
+    }
+    
+    // Hide previous results
+    document.getElementById('networkTestResult').style.display = 'none';
+}
+
+function selectNetwork(network) {
+    selectedNetwork = network;
+    document.querySelectorAll('.network-opt').forEach(b => b.classList.remove('selected'));
+    event.target.classList.add('selected');
+    document.getElementById('networkStatusValue').textContent = 'Mobile Data: ' + network;
+}
+
+async function startNetworkTest() {
+    const testName = currentTestType === 'wifi' ? 'WiFi' : selectedNetwork;
+    
+    // Show progress
+    document.getElementById('networkTestProgress').style.display = 'block';
+    document.getElementById('networkTestResult').style.display = 'none';
+    document.getElementById('startTestBtn').disabled = true;
+    document.getElementById('startTestBtn').style.opacity = '0.5';
+    
+    // Reset steps
+    ['stepPing','stepDownload','stepUpload','stepPacket','stepFinal'].forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('active','done');
+        el.querySelector('.test-step-icon').textContent = '⏳';
+    });
+    
+    const results = { networkType: testName };
+    const progressBar = document.getElementById('networkTestProgressBar');
+    
+    // Step 1: Ping
+    updateStep('stepPing', 'active');
+    progressBar.style.width = '10%';
+    const pingResult = await testPing();
+    Object.assign(results, pingResult);
+    updateStep('stepPing', 'done', pingResult.ping + 'ms');
+    progressBar.style.width = '25%';
+    await sleep(300);
+    
+    // Step 2: Download
+    updateStep('stepDownload', 'active');
+    const dlResult = await testDownload();
+    Object.assign(results, dlResult);
+    updateStep('stepDownload', 'done', (dlResult.download || 0) + ' Mbps');
+    progressBar.style.width = '50%';
+    await sleep(300);
+    
+    // Step 3: Upload
+    updateStep('stepUpload', 'active');
+    const ulResult = await testUpload();
+    Object.assign(results, ulResult);
+    updateStep('stepUpload', 'done', (ulResult.upload || 0) + ' Mbps');
+    progressBar.style.width = '75%';
+    await sleep(300);
+    
+    // Step 4: Packet Loss
+    updateStep('stepPacket', 'active');
+    const plResult = await testPacketLoss();
+    Object.assign(results, plResult);
+    updateStep('stepPacket', 'done', (plResult.packetLoss || 0) + '% loss');
+    progressBar.style.width = '90%';
+    await sleep(300);
+    
+    // Step 5: Finalize
+    updateStep('stepFinal', 'active');
+    results.signalStrength = getSignalStrength();
+    await sleep(300);
+    updateStep('stepFinal', 'done', '✅');
+    progressBar.style.width = '100%';
+    
+    await sleep(300);
+    document.getElementById('networkTestProgress').style.display = 'none';
+    document.getElementById('startTestBtn').disabled = false;
+    document.getElementById('startTestBtn').style.opacity = '1';
+    
+    displayNetworkTestResult(results);
+    document.getElementById('networkTestResult').style.display = 'block';
+}
+
+function updateStep(stepId, status, text) {
+    const el = document.getElementById(stepId);
+    el.classList.remove('active', 'done');
+    if (status === 'active') {
+        el.classList.add('active');
+        el.querySelector('.test-step-icon').textContent = '🔄';
+    } else if (status === 'done') {
+        el.classList.add('done');
+        el.querySelector('.test-step-icon').textContent = '✅';
+        el.childNodes[1].textContent = el.childNodes[1].textContent.split(':')[0] + ': ' + (text || '');
+    }
+}
+
+function getSignalStrength() {
+    if (navigator.connection && navigator.connection.downlink) {
+        const mbps = navigator.connection.downlink;
+        if (mbps > 20) return { percent: 90, label: 'Excellent', color: 'green' };
+        if (mbps > 10) return { percent: 70, label: 'Good', color: 'green' };
+        if (mbps > 5) return { percent: 50, label: 'Fair', color: 'yellow' };
+        if (mbps > 1) return { percent: 30, label: 'Weak', color: 'red' };
+        return { percent: 15, label: 'Very Weak', color: 'red' };
+    }
+    return { percent: 60, label: 'Good', color: 'green' };
+}
+
+function displayNetworkTestResult(r) {
+    const ping = r.ping || 999;
+    const download = r.download || 0;
+    const upload = r.upload || 0;
+    const packetLoss = r.packetLoss || 0;
+    const jitter = r.jitter || 0;
+    const signal = r.signalStrength || { percent: 50, label: 'Unknown', color: 'green' };
+    
+    // Signal bars
+    const maxBars = 5;
+    const activeBars = Math.round(signal.percent / 20);
+    let signalHTML = '<div class="signal-meter-mini">';
+    for (let i = 1; i <= maxBars; i++) {
+        const active = i <= activeBars ? ' active ' + signal.color : '';
+        signalHTML += `<div class="signal-bar-mini${active}"></div>`;
+    }
+    signalHTML += '</div>';
+    
+    const pingStatus = ping < 60 ? ['green', 'Excellent'] : ping < 120 ? ['yellow', 'Normal'] : ['red', 'Poor'];
+    const dlStatus = download > 20 ? ['green', 'Fast'] : download > 10 ? ['yellow', 'Normal'] : ['red', 'Slow'];
+    const ulStatus = upload > 10 ? ['green', 'Fast'] : upload > 5 ? ['yellow', 'Normal'] : ['red', 'Slow'];
+    const plStatus = packetLoss === 0 ? ['green', 'None'] : packetLoss < 5 ? ['yellow', 'Low'] : ['red', 'High'];
+    
+    let score = 5;
+    if (ping > 120) score--;
+    if (download < 10) score--;
+    if (upload < 5) score--;
+    if (packetLoss > 5) score--;
+    score = Math.max(1, Math.min(5, score));
+    const stars = '⭐'.repeat(score) + '☆'.repeat(5 - score);
+    
+    document.getElementById('networkTestResultBox').innerHTML = `
+        <div style="text-align:center;margin-bottom:8px;">
+            <span style="font-size:12px;font-weight:bold;color:#fff;">${r.networkType === 'WiFi' ? '📶 WiFi' : '📱 ' + r.networkType}</span>
+            ${signalHTML}
+            <span style="font-size:9px;color:rgba(255,255,255,0.5);">Signal: ${signal.label} (${signal.percent}%)</span>
+        </div>
+        <div class="network-row"><span class="network-label">📡 Ping</span><span class="network-value">${ping}ms</span><div class="network-bar-wrap"><div class="network-bar-fill ${pingStatus[0]}" style="width:${Math.min(100,ping/3)}%"></div></div><span class="network-status ${pingStatus[0]}">${pingStatus[1]}</span></div>
+        <div class="network-row"><span class="network-label">⬇️ Download</span><span class="network-value">${download} Mbps</span><div class="network-bar-wrap"><div class="network-bar-fill ${dlStatus[0]}" style="width:${Math.min(100,download*4)}%"></div></div><span class="network-status ${dlStatus[0]}">${dlStatus[1]}</span></div>
+        <div class="network-row"><span class="network-label">⬆️ Upload</span><span class="network-value">${upload} Mbps</span><div class="network-bar-wrap"><div class="network-bar-fill ${ulStatus[0]}" style="width:${Math.min(100,upload*8)}%"></div></div><span class="network-status ${ulStatus[0]}">${ulStatus[1]}</span></div>
+        <div class="network-row"><span class="network-label">📦 Packet Loss</span><span class="network-value">${packetLoss}%</span><div class="network-bar-wrap"><div class="network-bar-fill ${plStatus[0]}" style="width:${Math.min(100,packetLoss*20)}%"></div></div><span class="network-status ${plStatus[0]}">${plStatus[1]}</span></div>
+        <div class="network-row"><span class="network-label">📊 Jitter</span><span class="network-value">${jitter}ms</span><div class="network-bar-wrap"><div class="network-bar-fill ${jitter<15?'green':jitter<30?'yellow':'red'}" style="width:${Math.min(100,jitter*3)}%"></div></div><span class="network-status ${jitter<15?'green':jitter<30?'yellow':'red'}">${jitter<15?'Good':jitter<30?'Okay':'Bad'}</span></div>
+        <div class="network-rating">Rating: <span>${stars}</span> (${score}/5)</div>
+    `;
+}
+
+// Init
+setTimeout(detectConnection, 500);
+// ==================== CHANCE CLEAR SYSTEM ====================
+let clearUnlocked = false;
+let pendingClearType = null;
+
+function unlockClearPanel() {
+    const passInput = document.getElementById('clearPassInput');
+    const pass = passInput.value.trim();
+    if (!pass) { n('❌ Password ထည့်ပါ', 'error'); return; }
+    verifyClearPassword(pass);
+}
+
+async function verifyClearPassword(password) {
+    try {
+        const token = localStorage.getItem('auth_token');
+        const types = ['gmail', 'mlbb', 'tiktok'];
+        let verified = false;
+        for (const type of types) {
+            const r = await fetch('/api/verify_data_password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, type, password })
+            });
+            const d = await r.json();
+            if (d.success) { verified = true; break; }
+        }
+        if (verified) {
+            clearUnlocked = true;
+            document.getElementById('clearLockSection').style.display = 'none';
+            document.getElementById('clearOptionsSection').style.display = 'block';
+            document.getElementById('clearPassInput').value = '';
+            n('✅ Unlocked!', 'success');
+            loadClearDataCounts();
+        } else { n('❌ Password မှားပါတယ်', 'error'); }
+    } catch(e) { n('❌ Connection error', 'error'); }
+}
+
+async function loadClearDataCounts() {
+    try {
+        const token = localStorage.getItem('auth_token');
+        
+        // Get counts
+        const countRes = await fetch('/api/user/data-counts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token })
+        });
+        const countData = await countRes.json();
+        
+        // Get records for display
+        const dataRes = await fetch('/api/get_my_data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token })
+        });
+        const data = await dataRes.json();
+        
+        // Update Gmail Section
+        updateClearSection('gmail', data.gmail || [], countData.counts?.gmail || 0);
+        
+        // Update MLBB Section
+        updateClearSection('mlbb', data.mlbb || [], countData.counts?.mlbb || 0);
+        
+        // Update TikTok Section
+        updateClearSection('tiktok', data.tiktok || [], countData.counts?.tiktok || 0);
+        
+        // Update Login History
+        const loginCount = countData.counts?.login_history || 0;
+        document.getElementById('loginClearBadge').textContent = loginCount > 0 ? `${loginCount} records` : 'No records';
+        document.getElementById('loginClearBadge').className = loginCount > 0 ? 'clear-badge saved' : 'clear-badge empty';
+        
+    } catch(e) {
+        console.error('Load counts error:', e);
+    }
+}
+
+function updateClearSection(type, records, count) {
+    // Update badge
+    const badge = document.getElementById(type + 'ClearBadge');
+    if (badge) {
+        badge.textContent = count > 0 ? `${count} records` : 'No records';
+        badge.className = count > 0 ? 'clear-badge saved' : 'clear-badge empty';
+    }
+    
+    // Update records list
+    const recordsDiv = document.getElementById(type + 'ClearRecords');
+    if (recordsDiv) {
+        if (records.length === 0) {
+            recordsDiv.innerHTML = `<div class="clear-record-item">
+                <span class="clear-record-title" style="color:rgba(255,255,255,0.3);">No records found</span>
+            </div>`;
+        } else {
+            recordsDiv.innerHTML = records.slice(0, 5).map(r => {
+                const title = r.title || r.name || r.ingame_name || r.full_name || 'Untitled';
+                const date = r.created_at ? new Date(r.created_at).toLocaleDateString() : '';
+                return `<div class="clear-record-item">
+                    <span class="clear-record-title">📝 ${title}</span>
+                    <span class="clear-record-date">${date}</span>
+                </div>`;
+            }).join('');
+            
+            if (records.length > 5) {
+                recordsDiv.innerHTML += `<div class="clear-record-item">
+                    <span class="clear-record-title" style="color:rgba(255,255,255,0.3);">... and ${records.length - 5} more records</span>
+                </div>`;
+            }
+        }
+    }
+    }
+function clearData(type) {
+    if (!clearUnlocked) { n('🔐 Password အရင်ထည့်ပါ', 'error'); return; }
+    pendingClearType = type;
+    const typeNames = { gmail: 'Gmail Data အားလုံး', mlbb: 'MLBB Data အားလုံး', tiktok: 'TikTok Data အားလုံး', login_history: 'Login History အားလုံး', all: 'ဒေတာအားလုံး (Gmail + MLBB + TikTok + Login History)' };
+    document.getElementById('clearConfirmText').textContent = `"${typeNames[type]}" ကို အပြီးအပိုင် ဖျက်မှာ သေချာပါသလား?`;
+    document.getElementById('clearConfirmModal').classList.add('active');
+    document.getElementById('confirmClearBtn').onclick = () => executeClearData(type);
+}
+
+async function executeClearData(type) {
+    closeClearConfirm();
+    const progressDiv = document.getElementById('clearProgress');
+    const progressText = document.getElementById('clearProgressText');
+    const progressBar = document.getElementById('clearProgressBar');
+    progressDiv.style.display = 'block';
+    progressText.textContent = '⏳ Clearing ' + type + ' data...';
+    progressBar.style.width = '30%';
+    try {
+        const token = localStorage.getItem('auth_token');
+        const r = await fetch('/api/user/clear-data', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, type }) });
+        const d = await r.json();
+        progressBar.style.width = '100%';
+        progressText.textContent = '✅ ' + d.message;
+        await sleep(800);
+        progressDiv.style.display = 'none';
+        n('✅ ' + d.message, 'success');
+        loadClearDataCounts();
+    } catch(e) { progressDiv.style.display = 'none'; n('❌ Error clearing data', 'error'); }
+}
+
+function closeClearConfirm() {
+    document.getElementById('clearConfirmModal').classList.remove('active');
+    pendingClearType = null;
+}
+// ==================== INLINE PASSWORD GENERATOR ====================
+const activeCharTypes = {
+    gmail: { lower: true, upper: true, numbers: true, symbols: false },
+    mlbb: { lower: true, upper: true, numbers: true, symbols: false },
+    tiktok: { lower: true, upper: true, numbers: true, symbols: false }
+};
+
+const currentPasswords = { gmail: '', mlbb: '', tiktok: '' };
+
+function updateMiniChar(type, charType, isChecked) {
+    activeCharTypes[type][charType] = isChecked;
+    const chk = document.getElementById(type + 'Chk' + charType.charAt(0).toUpperCase() + charType.slice(1));
+    if (chk) chk.checked = isChecked;
+    const opt = document.getElementById(type + 'Opt' + charType.charAt(0).toUpperCase() + charType.slice(1));
+    if (opt) {
+        if (isChecked) { opt.classList.remove('disabled'); }
+        else { opt.classList.add('disabled'); }
+    }
+    const anyChecked = Object.values(activeCharTypes[type]).some(v => v);
+    if (!anyChecked) {
+        activeCharTypes[type][charType] = true;
+        if (chk) chk.checked = true;
+        if (opt) opt.classList.remove('disabled');
+        n('⚠️ အနည်းဆုံး တစ်ခုရွေးထားရပါမည်', 'error');
+    }
+    generateMiniPassword(type);
+}
+
+function generateMiniPassword(type) {
+    let chars = '';
+    for (const [charType, isActive] of Object.entries(activeCharTypes[type])) {
+        if (isActive) chars += CHAR_SETS[charType];
+    }
+    if (!chars) return '';
+    const length = parseInt(document.getElementById(type + 'PassLength').value) || 10;
+    let password = '';
+    for (let i = 0; i < length; i++) { password += chars.charAt(Math.floor(Math.random() * chars.length)); }
+    currentPasswords[type] = password;
+    const displayEl = document.getElementById(type + 'GeneratedPassword');
+    if (displayEl) displayEl.textContent = password;
+    return password;
+}
+
+// ✅ Old Password Verified Flag (5 min valid)
+const oldPasswordVerified = {
+    gmail: false,
+    mlbb: false,
+    tiktok: false
+};
+
+async function generateAndShowMiniPassword(type) {
+    const token = localStorage.getItem('auth_token');
+    
+    if (!token || token === 'guest' || token === 'null' || token === 'undefined') {
+        n('❌ Please login first!', 'error');
+        return;
+    }
+    
+    try {
+        const statusRes = await fetch('/api/check_gen_status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, type })
+        });
+        const statusData = await statusRes.json();
+        
+        if (!statusData.success) {
+            n('❌ ' + (statusData.message || 'Error'), 'error');
+            return;
+        }
+        
+        // ✅ First time - can generate directly
+        if (statusData.isFirstTime) {
+            generateAndShowPassword(type);
+            return;
+        }
+        
+        // ✅ Cooldown active - show timer
+        if (statusData.cooldownActive) {
+            document.getElementById(type + 'CooldownBox').style.display = 'block';
+            document.getElementById(type + 'OldPassBox').style.display = 'none';
+            disableGenButton(type);
+            startCooldownTimer(type, statusData.remainingMs);
+            n('⏳ ' + statusData.remainingText, 'error');
+            return;
+        }
+        
+        // ✅ Cooldown passed - check if old password already verified
+        if (statusData.needsOldPassword) {
+            if (oldPasswordVerified[type]) {
+                // ✅ Already verified - can generate directly
+                generateAndShowPassword(type);
+                return;
+            }
+            
+            // Need old password
+            document.getElementById(type + 'OldPassBox').style.display = 'block';
+            document.getElementById(type + 'CooldownBox').style.display = 'none';
+            
+            const btn = document.querySelector(`#${type}Sub .btn-w`);
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-redo"></i> Regenerate';
+                btn.onclick = () => regeneratePassword(type);
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            }
+            return;
+        }
+        
+    } catch(e) {
+        n('❌ Connection error', 'error');
+    }
+}
+
+// ✅ Helper function
+function generateAndShowPassword(type) {
+    const password = generateMiniPassword(type);
+    if (password) {
+        document.getElementById(type + 'PasswordDisplayBox').style.display = 'flex';
+        document.getElementById(type + 'SavePasswordBtn').style.display = 'block';
+        document.getElementById(type + 'OldPassBox').style.display = 'none';
+        document.getElementById(type + 'CooldownBox').style.display = 'none';
+        enableGenButton(type);
+    }
+    }
+    // ==================== COOLDOWN TIMER ====================
+const cooldownIntervals = {};
+
+function startCooldownTimer(type, remainingMs) {
+    // Clear existing interval
+    if (cooldownIntervals[type]) {
+        clearInterval(cooldownIntervals[type]);
+    }
+    
+    const timerEl = document.getElementById(type + 'CooldownTimer');
+    const boxEl = document.getElementById(type + 'CooldownBox');
+    const oldPassBox = document.getElementById(type + 'OldPassBox');
+    
+    if (!timerEl || !boxEl) return;
+    
+    boxEl.style.display = 'block';
+    if (oldPassBox) oldPassBox.style.display = 'none';
+    
+    // Disable button
+    disableGenButton(type);
+    
+    let remaining = remainingMs;
+    
+    const update = () => {
+        if (remaining <= 0) {
+            clearInterval(cooldownIntervals[type]);
+            boxEl.style.display = 'none';
+            
+            // Show old password input
+            if (oldPassBox) oldPassBox.style.display = 'block';
+            
+            // Enable button and change to Regenerate
+            const btn = document.querySelector(`#${type}Sub .btn-w`);
+            if (btn) {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.innerHTML = '<i class="fas fa-redo"></i> Regenerate';
+                btn.onclick = () => regeneratePassword(type);
+            }
+            
+            n('✅ စောင့်ဆိုင်းချိန် ပြည့်ပါပြီ။ Password အဟောင်းထည့်၍ အသစ်ထုတ်နိုင်ပါပြီ', 'success');
+            return;
+        }
+        
+        const totalSec = Math.floor(remaining / 1000);
+        const days = Math.floor(totalSec / 86400);
+        const hours = Math.floor((totalSec % 86400) / 3600);
+        const min = Math.floor((totalSec % 3600) / 60);
+        const sec = totalSec % 60;
+        
+        timerEl.textContent = `${days}ရက် ${hours.toString().padStart(2,'0')}:${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+        
+        remaining -= 1000;
+    };
+    
+    update();
+    cooldownIntervals[type] = setInterval(update, 1000);
+    }
+
+    async function regeneratePassword(type) {
+    const oldPassInput = document.getElementById(type + 'OldPassInput');
+    const oldPassword = oldPassInput ? oldPassInput.value.trim() : '';
+    
+    // ✅ Old Password မထည့်ရသေးရင် တောင်းမယ်
+    if (!oldPassword && !oldPasswordVerified[type]) {
+        n('❌ Password အဟောင်း ထည့်ပါ', 'error');
+        return;
+    }
+    
+    try {
+        const token = localStorage.getItem('auth_token');
+        
+        const options = {
+            useLower: activeCharTypes[type].lower,
+            useUpper: activeCharTypes[type].upper,
+            useNumbers: activeCharTypes[type].numbers,
+            useSymbols: activeCharTypes[type].symbols,
+            length: parseInt(document.getElementById(type + 'PassLength').value) || 10
+        };
+        
+        // ✅ Old Password ရှိရင် API ကို ပို့၊ မရှိရင် (already verified) မပို့
+        const body = oldPassword ? 
+            { token, type, oldPassword, options } : 
+            { token, type, options };
+        
+        const r = await fetch('/api/regenerate_password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        const d = await r.json();
+        
+        if (d.success) {
+            // ✅ Old Password မှန်ရင် ၅ မိနစ် Flag ထား
+            if (oldPassword) {
+                oldPasswordVerified[type] = true;
+                
+                // ၅ မိနစ်ကြာရင် Flag ပြန်ဖျက်
+                setTimeout(() => {
+                    oldPasswordVerified[type] = false;
+                }, 5 * 60 * 1000);
+            }
+            
+            // Show new password
+            currentPasswords[type] = d.password;
+            document.getElementById(type + 'GeneratedPassword').textContent = d.password;
+            document.getElementById(type + 'PasswordDisplayBox').style.display = 'flex';
+            document.getElementById(type + 'SavePasswordBtn').style.display = 'block';
+            document.getElementById(type + 'OldPassBox').style.display = 'none';
+            document.getElementById(type + 'CooldownBox').style.display = 'none';
+            
+            if (oldPassInput) oldPassInput.value = '';
+            
+            // Button ကို Generate Mode ပြန်ပြောင်း
+            enableGenButton(type);
+            
+            n('✅ Password အသစ် ထုတ်ပေးပြီးပါပြီ', 'success');
+            
+        } else {
+            n('❌ ' + (d.message || 'Error'), 'error');
+        }
+        
+    } catch(e) {
+        n('❌ Connection error', 'error');
+    }
+    }
+
+function copyMiniPassword(type) {
+    const password = currentPasswords[type];
+    if (!password) { n('❌ Password အရင် Generate လုပ်ပါ', 'error'); return; }
+    navigator.clipboard.writeText(password).then(() => { n('✅ Copied!', 'success'); }).catch(() => { n('❌ Copy Failed', 'error'); });
+}
+
+async function saveMiniPassword(type) {
+    const password = currentPasswords[type];
+    if (!password) { n('❌ Password အရင် Generate လုပ်ပါ', 'error'); return; }
+    
+    // ✅ Token ရှိမရှိ အရင်စစ်
+    const token = localStorage.getItem('auth_token');
+    if (!token || token === 'guest' || token === 'null' || token === 'undefined') {
+        n('❌ Please login first!', 'error');
+        return;
+    }
+    
+    try {
+        const r = await fetch('/api/save_type_password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, type, password })
+        });
+        const d = await r.json();
+        
+        if (d.success) {
+            n('✅ ' + type.toUpperCase() + ' Password Saved!', 'success');
+            document.getElementById(type + 'PasswordDisplayBox').style.display = 'none';
+            document.getElementById(type + 'SavePasswordBtn').style.display = 'none';
+            currentPasswords[type] = '';
+            
+            document.getElementById(type + 'CooldownBox').style.display = 'block';
+            startCooldownTimer(type, 7 * 24 * 60 * 60 * 1000);
+        } else {
+            n('❌ ' + (d.message || 'Save failed'), 'error');
+        }
+    } catch(e) {
+        n('❌ Connection error', 'error');
+    }
+    }
+    
+function syncMiniLength(type, value) {
+    let numValue = parseInt(value);
+    if (isNaN(numValue) || numValue < 6) { numValue = 6; }
+    else if (numValue > 30) { numValue = 30; }
+    const numInput = document.getElementById(type + 'PassLength');
+    if (numInput) numInput.value = numValue;
+    const slider = document.getElementById(type + 'PassLengthSlider');
+    if (slider) slider.value = numValue;
+    generateMiniPassword(type);
+    }
+    // ==================== CHECK ALL COOLDOWNS ON PAGE LOAD ====================
+async function checkAllCooldowns() {
+    const types = ['gmail', 'mlbb', 'tiktok'];
+    const token = localStorage.getItem('auth_token');
+    
+    if (!token || token === 'guest') return;
+    
+    for (const type of types) {
+        try {
+            const r = await fetch('/api/check_gen_status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, type })
+            });
+            const d = await r.json();
+            
+            if (d.success && d.cooldownActive && d.remainingMs > 0) {
+                // Show cooldown box
+                document.getElementById(type + 'CooldownBox').style.display = 'block';
+                
+                // Disable generate button
+                disableGenButton(type);
+                
+                // Start timer
+                startCooldownTimer(type, d.remainingMs);
+            }
+        } catch(e) {
+            console.error('Check cooldown error for ' + type, e);
+        }
+    }
+    }
+    // ==================== DISABLE/ENABLE GENERATE BUTTON ====================
+function disableGenButton(type) {
+    const btn = document.querySelector(`#${type}Sub .btn-w`);
+    if (btn) {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'not-allowed';
+        btn.innerHTML = '<i class="fas fa-lock"></i> Locked';
+    }
+}
+
+function enableGenButton(type) {
+    const btn = document.querySelector(`#${type}Sub .btn-w`);
+    if (btn) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = '<i class="fas fa-magic"></i> Generate';
+        btn.onclick = () => generateAndShowMiniPassword(type);
+    }
+    }
+    
+// ==================== INIT ====================
+(async function init() {
+    await checkPageTimer();
+    const pageOn = await checkPageAccess();
+    if (!pageOn) return;
+    document.getElementById('dataContent').style.display = 'block';
+    document.getElementById('maintenanceMessage').style.display = 'none';
+    populateCountries();
+    
+    // ✅ Page Load တိုင်း Cooldown Status စစ်
+    await checkAllCooldowns();
+})();
+</script>
+</body>
+</html>
