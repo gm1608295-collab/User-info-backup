@@ -279,18 +279,7 @@
                 <div class="timer-title">စာမျက်နှာ ပြန်ဖွင့်ရန်</div>
                 <div class="timer-countdown" id="pageTimerCountdown">--:--:--</div>
             </div>
-
-            <div class="slider-container" id="sliderContainer" style="display:none">
-                <div class="slider-wrapper" id="sliderWrapper"></div>
-                <div class="slider-dots" id="sliderDots"></div>
-            </div>
-  
-            <div class="notice-banner" id="noticeBanner" style="display:none">
-                <div class="notice-header">📢 SOLO M Game Shop မှ အသိပေးခြင်း</div>
-                <div class="notice-msg" id="noticeMsgDisplay"></div>
-                <div class="notice-time" id="noticeTime"></div>
-            </div>
-
+            
             <div style="background:linear-gradient(rgba(12,14,39,0.85),rgba(12,14,39,0.85)),url('https://i.ibb.co/Xr8z4PBY/43bce9d1caae.jpg') center/cover no-repeat;border:1px solid rgba(255,255,255,0.1);padding:20px;margin:8px 0;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
                 <div style="font-size:14px;font-weight:bold;color:#fff;margin-bottom:2px;">📱 SOLO M Game Store App</div>
                 <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:16px;">Version 10+ • 10 MB • Android 10+</div>
@@ -324,37 +313,11 @@
             
             <div style="font-size:8px;color:rgba(255,255,255,0.4);margin-top:10px;">Powered by Median.co</div>
         </div>
-
-        <div id="forceUpdateBottomBar" class="force-update-bottom-bar" style="display: none;">
-            <div class="force-update-inner">
-                <div class="force-update-icon"><i class="fas fa-bolt"></i></div>
-                <div class="force-update-content">
-                    <div class="force-update-title">ဗားရှင်း အဆင့်မြှင့်တင်ခြင်း</div>
-                    <div class="force-update-message" id="forceUpdateMessageText">📱 APK latest version အသစ်ထွက်ရှိပြီးဖြစ်ပါသည်။ ကျေးဇူးပြု၍ နောက်ဆုံး ဗားရှင်းအသစ်သို့ အဆင့်မြှင့်တင်ပါ။(မှတ်ချက်- ကြာမြင့်ချိန် ၁ မိနစ်မှ ၂ မိနစ်အတွင်း)</div>
-                    <div class="force-update-version" id="forceUpdateVersionText">Version: 1.0.0</div>
-                </div>
-                <div class="force-update-buttons"><button class="force-update-btn" onclick="performForceUpdate()"><i class="fas fa-sync-alt"></i> ယခု အဆင့်မြှင့်တင်ရန်</button></div>
-            </div>
-        </div>
-        
-        <div class="video-container" id="videoContainer" style="display:none">
-            <video id="dashboardVideo" controls playsinline webkit-playsinline muted autoplay style="display:none"></video>
-            <iframe id="dashboardYoutube" style="display:none" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-        </div>
         
         <div class="sec-note"><i class="fas fa-shield-alt"></i> <strong>System Security:</strong> All data is encrypted. Use <strong>☰ Menu</strong> to navigate.</div>
         </div>
         
         <div class="footer"> 2026 SOLO M Game Shop | Contact: @Solo_m28</div>
-    </div>
-
-    <!-- Confirm Logout Modal -->
-    <div class="confirm-modal" id="logoutConfirmModal">
-        <div class="confirm-box">
-            <h3><i class="fas fa-sign-out-alt"></i> Logout</h3>
-            <p>အကောင့်မှ ထွက်ခွာမှာ သေချာပါသလား?</p>
-            <div class="confirm-btns"><button class="confirm-yes" onclick="logout()">Yes, Logout</button><button class="confirm-no" onclick="closeLogoutConfirm()">Cancel</button></div>
-        </div>
     </div>
 
     <!-- Sidebar -->
@@ -675,51 +638,8 @@
         }
         setInterval(updateTime,1000);updateTime();
 
-        // ==================== LOGOUT WITH CONFIRM ====================
-        function showLogoutConfirm(){document.getElementById("logoutConfirmModal").classList.add("active")}
-        function closeLogoutConfirm(){document.getElementById("logoutConfirmModal").classList.remove("active")}
-        async function logout(){try{await fetch("/api/logout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:localStorage.getItem("auth_token")})})}catch(e){}localStorage.removeItem("auth_token");localStorage.removeItem("user");window.location.href="/"}
-
         // ==================== MASK EMAIL ====================
         function maskEmail(email){if(!email)return'---';const p=email.split('@');if(p.length<2)return'****'+email.slice(-2);const n=p[0],d=p[1];if(n.length<=4)return n[0]+'***@'+d;return n.slice(0,2)+'****'+n.slice(-1)+'@'+d}
-
-        // ==================== SLIDER ====================
-        let sliderImages=[],currentSlide=0,slideInterval=null;
-        function renderSlider(){const c=document.getElementById('sliderContainer'),w=document.getElementById('sliderWrapper'),d=document.getElementById('sliderDots');const ca=localStorage.getItem('sliderImagesCache');if(ca){try{sliderImages=JSON.parse(ca)}catch(e){sliderImages=[]}}if(!sliderImages||sliderImages.length===0){c.style.display='none';return}c.style.display='block';w.innerHTML=sliderImages.map(u=>`<div class="slider-slide"><img src="${u}" onerror="this.parentElement.remove()"></div>`).join('');d.innerHTML=sliderImages.map((_,i)=>`<div class="slider-dot ${i===currentSlide?'active':''}"></div>`).join('');goToSlide(currentSlide);if(sliderImages.length>1){if(slideInterval)clearInterval(slideInterval);slideInterval=setInterval(()=>{currentSlide=(currentSlide+1)%sliderImages.length;goToSlide(currentSlide)},5000)}}
-        function goToSlide(i){currentSlide=i;document.getElementById('sliderWrapper').style.transform=`translateX(-${i*100}%)`;document.querySelectorAll('.slider-dot').forEach((d,j)=>{d.classList.toggle('active',j===i)})}
-        async function loadSliderImages(){
-            try{
-                const r=await fetch('/api/slider_images');
-                const d=await r.json();
-                if(d.success && d.images && d.images.length>0){
-                    localStorage.setItem('sliderImagesCache', JSON.stringify(d.images));
-                    sliderImages = d.images;
-                    renderSlider();
-                } else {
-                    localStorage.removeItem('sliderImagesCache');
-                    document.getElementById('sliderContainer').style.display='none';
-                }
-            }catch(e){}
-        }
-        
-        // ==================== NOTICE ====================
-        function renderNotice(d){const b=document.getElementById('noticeBanner'),m=document.getElementById('noticeMsgDisplay'),t=document.getElementById('noticeTime');if(d&&d.message){b.style.display='block';m.textContent=d.message;m.style.color=d.color||'var(--t)';t.textContent=new Date(d.created_at).toLocaleString()}else{b.style.display='none'}}
-        async function loadNotice(){const ca=localStorage.getItem('noticeCache');if(ca){try{const d=JSON.parse(ca);if(d.message)renderNotice(d)}catch(e){}}try{const r=await fetch("/api/notice");const d=await r.json();if(d.success&&d.message){const cn={message:d.message,color:d.color,id:d.id,created_at:d.created_at};const old=localStorage.getItem('noticeCache');if(old!==JSON.stringify(cn)){localStorage.setItem('noticeCache',JSON.stringify(cn));renderNotice(cn)}}else{localStorage.removeItem('noticeCache')}}catch(e){}}
-        
-        // ==================== VIDEO PLAYER ====================
-        async function loadDashboardVideo() {
-            const c=document.getElementById('videoContainer'),v=document.getElementById('dashboardVideo'),yt=document.getElementById('dashboardYoutube');
-            if (v.src&&!v.paused&&v.currentTime>0)return;
-            if (yt.src&&yt.style.display!=='none')return;
-            try{
-                const r=await fetch('/api/video');const d=await r.json();
-                console.log('[VIDEO] API Response:',d);
-                if(d.success&&d.url){
-                    c.style.display='block';
-                    if(d.isYouTube){console.log('[VIDEO] YouTube detected');v.style.display='none';yt.style.display='block';yt.src=d.url;}else{console.log('[VIDEO] Direct video detected');yt.style.display='none';v.style.display='block';v.src=d.url;v.muted=true;v.autoplay=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('webkit-playsinline','');v.load();setTimeout(()=>{v.play().catch(e=>{console.log('[VIDEO] Play failed:',e.message);v.controls=true;})},500);}
-                } else {console.log('[VIDEO] No video found');c.style.display='none';}
-            }catch(e){console.error('[VIDEO] Error:',e.message);}
-        }
         
         // ==================== PAGE ACCESS CHECK ====================
         async function checkPageAccess() {
