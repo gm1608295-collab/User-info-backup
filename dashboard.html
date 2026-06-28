@@ -640,80 +640,38 @@
 
         // ==================== MASK EMAIL ====================
         function maskEmail(email){if(!email)return'---';const p=email.split('@');if(p.length<2)return'****'+email.slice(-2);const n=p[0],d=p[1];if(n.length<=4)return n[0]+'***@'+d;return n.slice(0,2)+'****'+n.slice(-1)+'@'+d}
+        // ==================== INIT (ပြင်ထားတဲ့ Version) ====================
+window.onload = async function(){
+    const pageOn = await checkPageAccess();
+    if(!pageOn)return;
+    if(!localStorage.getItem("auth_token")){window.location.href="/";return;}
+    try{
+        const user=JSON.parse(localStorage.getItem("user")||'{}');
+        document.getElementById("myUserIdDisp").textContent=user.id?'U ID - '+user.id.toString().padStart(6,'0'):'U ID - ------';
+        document.getElementById("myEmail").textContent=maskEmail(user.email||'');
+        document.getElementById("sidebarName").textContent=user.username||'User';
+        document.getElementById("sidebarEmail").textContent=user.email||'user@mlbb.com';
         
-        // ==================== PAGE ACCESS CHECK ====================
-        async function checkPageAccess() {
-            try{
-                const r=await fetch('/api/admin/page_status');const d=await r.json();
-                if(d.pages){const dp=d.pages.find(p=>p.id==='dashboard');if(dp&&dp.status==='off'){document.getElementById('maintenanceMessage').style.display='block';const content=document.querySelector('.content');const footer=document.querySelector('.footer');if(content)content.style.display='none';if(footer)footer.style.display='none';checkPageTimer();return false;}}
-                return true;
-            }catch(e){return true;}
-        }
         
-        // ==================== PAGE TIMER COUNTDOWN ====================
-        async function checkPageTimer() {
-            const pageId=window.location.pathname.replace('.html','').replace('/','')||'dashboard';
-            let timer=null;
-            try{
-                const saved=localStorage.getItem('pageTimers');
-                if(saved){const timers=JSON.parse(saved);timer=timers[pageId];}
-                if(!timer){const cookieTimers=getCookie('pageTimers');if(cookieTimers){const timers=JSON.parse(decodeURIComponent(cookieTimers));timer=timers[pageId];}}
-                if(!timer){const sessionTimers=sessionStorage.getItem('pageTimers');if(sessionTimers){const timers=JSON.parse(sessionTimers);timer=timers[pageId];}}
-            }catch(e){}
-            if(!timer||timer<=Date.now())return;
-            const maintMsg=document.getElementById('maintenanceMessage');
-            if(maintMsg)maintMsg.style.display='block';
-            const pageBanner=document.getElementById('pageTimerBanner');
-            if(pageBanner)pageBanner.style.display='block';
-            const maintTimer=document.getElementById('maintenanceCountdown');
-            const pageCountdown=document.getElementById('pageTimerCountdown');
-            const update=()=>{
-                const rem=timer-Date.now();
-                if(rem<=0){
-                    try{
-                        const saved=localStorage.getItem('pageTimers');
-                        if(saved){const timers=JSON.parse(saved);delete timers[pageId];localStorage.setItem('pageTimers',JSON.stringify(timers));}
-                        setCookie('pageTimers','',-1);sessionStorage.removeItem('pageTimers');
-                    }catch(e){}
-                    location.reload();return;
-                }
-                const s=Math.floor(rem/1000);const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);const sec=s%60;const timeStr=`${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
-                if(maintTimer)maintTimer.textContent=timeStr;if(pageCountdown)pageCountdown.textContent=timeStr;
-            };
-            update();setInterval(update,1000);
+        
+        // ✅ setInterval တွေကို ဖယ်လိုက်ပါ (Refresh မဖြစ်အောင်)
+        // setInterval(loadSliderImages, 5000);
+        // setInterval(loadNotice, 3000);
+        // setInterval(loadDashboardVideo, 30000);
+        
+        // ✅ Video Update ကိုပဲ ဆက်ထားနိုင်ပါတယ်
+        setInterval(async()=>{
+            try{const r=await fetch('/api/video');const d=await r.json();const v=document.getElementById('dashboardVideo');const yt=document.getElementById('dashboardYoutube');if(d.success&&d.url){const cur=v.style.display!=='none'?v.src:yt.src;if(d.url!==cur&&d.originalUrl!==cur){v.src='';yt.src='';loadDashboardVideo();}}}catch(e){}
+        },30000);
+        
+        if(user.id){
+            fetch("/api/check_banned",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({userId:user.id.toString()})}).then(r=>r.json()).then(d=>{
+                if(d.banned){document.body.innerHTML=`<div class="banned-container"><div class="banned-icon">🚫</div><h2 class="banned-title">သင်၏အကောင့် ဘန်းခံထားရပါသည်</h2><div class="banned-contact"><h4>ဆက်သွယ်ရန်</h4><p>📧 gm1608295@gmail.com</p><p>📞 09672093790</p><p>💬 @Solo_m28</p></div><div class="banned-btns"><button class="btn-stay" onclick="location.reload()">ဆက်နေမည်</button><button class="btn-new" onclick="localStorage.clear();window.location.href='/'">အကောင့်သစ်ဖွင့်မည်</button></div></div>`;}
+            }).catch(()=>{});
         }
-        function setCookie(name,value,days){let expires='';if(days){const date=new Date();date.setTime(date.getTime()+(days*24*60*60*1000));expires='; expires='+date.toUTCString();}document.cookie=name+'='+encodeURIComponent(value||'')+expires+'; path=/';}
-        function getCookie(name){const nameEQ=name+'=';const ca=document.cookie.split(';');for(let i=0;i<ca.length;i++){let c=ca[i];while(c.charAt(0)===' ')c=c.substring(1,c.length);if(c.indexOf(nameEQ)===0)return c.substring(nameEQ.length,c.length);}return null;}
+    }catch(e){console.error('[DASHBOARD ERROR]',e);}
+};
 
-        // ==================== INIT ====================
-        window.onload=async function(){
-            const pageOn=await checkPageAccess();
-            if(!pageOn)return;
-            if(!localStorage.getItem("auth_token")){window.location.href="/";return;}
-            try{
-                const user=JSON.parse(localStorage.getItem("user")||'{}');
-                document.getElementById("myUserIdDisp").textContent=user.id?'U ID - '+user.id.toString().padStart(6,'0'):'U ID - ------';
-                document.getElementById("myEmail").textContent=maskEmail(user.email||'');
-                document.getElementById("sidebarName").textContent=user.username||'User';
-                document.getElementById("sidebarEmail").textContent=user.email||'user@mlbb.com';
-                loadSliderImages();loadNotice();loadDashboardVideo();checkPageTimer();
-                setInterval(loadSliderImages,5000);setInterval(loadNotice,3000);setInterval(loadDashboardVideo,30000);
-                setInterval(async()=>{
-                    try{const r=await fetch('/api/video');const d=await r.json();const v=document.getElementById('dashboardVideo');const yt=document.getElementById('dashboardYoutube');if(d.success&&d.url){const cur=v.style.display!=='none'?v.src:yt.src;if(d.url!==cur&&d.originalUrl!==cur){v.src='';yt.src='';loadDashboardVideo();}}}catch(e){}
-                },30000);
-                if(user.id){
-                    fetch("/api/check_banned",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({userId:user.id.toString()})}).then(r=>r.json()).then(d=>{
-                        if(d.banned){document.body.innerHTML=`<div class="banned-container"><div class="banned-icon">🚫</div><h2 class="banned-title">သင်၏အကောင့် ဘန်းခံထားရပါသည်</h2><div class="banned-contact"><h4>ဆက်သွယ်ရန်</h4><p>📧 gm1608295@gmail.com</p><p>📞 09672093790</p><p>💬 @Solo_m28</p></div><div class="banned-btns"><button class="btn-stay" onclick="location.reload()">ဆက်နေမည်</button><button class="btn-new" onclick="localStorage.clear();window.location.href='/'">အကောင့်သစ်ဖွင့်မည်</button></div></div>`;}
-                    }).catch(()=>{});
-                }
-            }catch(e){console.error('[DASHBOARD ERROR]',e);}
-        };
-        
-        async function checkAccountStatus(){const token=localStorage.getItem('auth_token');const user=JSON.parse(localStorage.getItem('user')||'{}');if(!token||token==='guest')return;if(!user||!user.id)return;try{const r=await fetch('/api/check_banned',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:user.id.toString()})});const d=await r.json();if(d.banned){alert('⚠️ သင်၏အကောင့်ကို Admin မှ ပိတ်သိမ်းထားပါသည်။\n\nဆက်သွယ်ရန်: @Solo_m28');localStorage.removeItem('auth_token');localStorage.removeItem('user');window.location.href='/';}}catch(e){}}
-        async function checkUserBan(){const token=localStorage.getItem('auth_token');if(!token||token==='guest')return;try{const uid=token.replace('token_','');const r=await fetch('/api/check_banned',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:parseInt(uid)})});const d=await r.json();if(d.banned){alert('⛔ Your account has been banned. Contact @Solo_m28');localStorage.removeItem('auth_token');localStorage.removeItem('user');window.location.href='/';}}catch(e){}}
-        checkUserBan();setInterval(checkUserBan,30000);setInterval(checkAccountStatus,10000);checkAccountStatus();
-        function updateChatBadge(){const token=localStorage.getItem('auth_token');if(!token||token==='guest')return;fetch('/api/chat/unread',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})}).then(r=>r.json()).then(d=>{const badge=document.getElementById('chatBadge');if(badge&&d.count>0){badge.textContent=d.count>99?'99+':d.count;badge.style.display='inline-block';}else if(badge){badge.style.display='none';}});}
-        setInterval(updateChatBadge,10000);updateChatBadge();
     </script>
 </body>
 </html>
